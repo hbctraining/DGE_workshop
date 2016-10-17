@@ -103,7 +103,7 @@ We have three sample classes so we can make three possible pairwise comparisons:
 2. Control vs. Mov10 knockdown
 3. Mov10 knockdown vs. Mov10 overexpression
 
-We are really only interested in #1 and #2 from above. Using the design formula we provided `~sampletype`, DESeq 2 internally created the following design matrix:
+**We are really only interested in #1 and #2 from above**. Using the design formula we provided `~sampletype`, DESeq 2 internally created the following design matrix:
 
 ```
    	      Intercept	sampletypecontrol sampletypeMOV10_knockdown	sampletypeMOV10_overexpression
