@@ -10,12 +10,12 @@ Approximate time: 75 minutes
 
 * Exploring our significant genes using data visualization
 * Using volcano plots to evaluate relationships between DEG statistics
-* Plottting expression of significant genes using heatmaps
+* Plotting expression of significant genes using heatmaps
 
 
 ## Visualizing the results
 
-<ADD AN INTRO TO HERE TO DESCRIBE THE IMPORTANCE OF VISUALIZATION>
+When we are working with large amounts of data it can be useful to display that information graphically to gain more insight. Visualization deserves an entire course of its own (there is that much to know!). During this lesson we will get you started with some basic plots commonly used when exploring differntial gene expression data.
 
 One way to visualize results would be to simply plot the expression data for a handful of our top genes. We could do that by picking out specific genes of interest, for example Mov10:
 
