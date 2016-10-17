@@ -185,7 +185,7 @@ Let's go through some of the columns in the results table to get a better idea o
 
 ### Summarizing results and identifying DEGs
 
-To summarize the results table, a handy function in DESeq2 is `summary()`. Confusingly it has the same name as the function used to inspect data frames. This function when called with a DESeq results table as input, will summarize the results at a given FDR threshold. 
+To summarize the results table, a handy function in DESeq2 is `summary()`. Confusingly it has the same name as the function used to inspect data frames. This function when called with a DESeq results table as input, will summarize the results at a and FDR < 0.1. 
 
 	## Summarize results
 	summary(res_tableOE)
@@ -203,7 +203,7 @@ low counts [2]   : 3912, 20%
 [2] see 'independentFiltering' argument of ?results
 ```
 
-In addition to the number of genes up- and down-regulated at and FDR < 0.1, the function also reports the number of genes that were tested (genes with non-zero total read count), and the number of genes not included in multiple test correction due to a low mean count (which in our case is < 4).
+In addition to the number of genes up- and down-regulated at the default threshold, the function also reports the number of genes that were tested (genes with non-zero total read count), and the number of genes not included in multiple test correction due to a low mean count (which in our case is < 4).
 
 The default FDR threshold is set to `alpha = 0.1`, which is quite liberal. Let's try changing that to `0.05` -- *how many genes are we left with*?
 
