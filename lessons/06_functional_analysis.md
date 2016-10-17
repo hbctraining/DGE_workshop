@@ -41,7 +41,7 @@ Tools that investigate **enrichment of biological functions or interactions** ca
 
 To describe the roles of genes and gene products, GO terms are organized into three independent controlled vocabularies (ontologies) in a species-independent manner: 
 
-- **Biological process:** refers to the biological process the gene or gene product is involved in, and could include "transcription", "signal transduction", and "apoptosis". A biological process generally involves a chemical or physical change of the starting material or input.
+- **Biological process:** refers to the biological process the gene or gene product is involved in (e.g. "transcription", "signal transduction", "apoptosis", etc.). A biological process generally involves a chemical or physical change of the starting material or input.
 - **Molecular function:** represents the biochemical activity of the gene product, such activities could include "ligand", "GTPase", and "transporter". 
 - **Cellular component:** refers to the location in the cell of the gene product. Cellular components could include "nucleus", "lysosome", and "plasma membrane".
 
