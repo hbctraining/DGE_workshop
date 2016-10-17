@@ -50,7 +50,7 @@ final dispersion estimates
 fitting model and testing
 ``` 
 
-<img src="../img/slide16+33_DGE.png" width="400">
+<img src="../img/slide16+33_DGE.png" width="600">
 
 
 **Everything from normalization to linear modeling was carried out by the use of a single function!** The results of each step were inserted into the object that you initialized.
