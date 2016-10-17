@@ -173,7 +173,7 @@ Open `GOs_oe.txt` and copy and paste the GO ids into the REVIGO search box, and 
 
 ![REVIGO_output](../img/revigo_output.png)
 
-***gProfiler and REVIGO are great tools to validate experimental results and to make hypotheses. These tools suggest pathways that may be involved with your condition of interest, and you should NOT use these tools to make conclusions about the pathways involved in your experimental process.***
+***gProfiler and REVIGO are great tools to validate experimental results and to make hypotheses. These tools suggest pathways that may be involved with your condition of interest; you should NOT use these tools to make conclusions about the pathways involved in your experimental process.***
 
 J. Reimand, T. Arak, P. Adler, L. Kolberg, S. Reisberg, H. Peterson, J. Vilo. g:Profiler -- a web server for functional interpretation of gene lists (2016 update). Nucleic Acids Research 2016; doi: 10.1093/nar/gkw199
 
