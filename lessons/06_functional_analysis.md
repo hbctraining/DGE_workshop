@@ -73,7 +73,7 @@ For example, let's suppose there are 13,000 total genes in the honeybee genome a
 
 By comparing the ratios, 85/13,000 in "background" dataset and 50/1,000 in your gene list, it's evident that the GO term "DNA repair" is over-represented in your dataset.
 
-To determine whether a GO term or pathway is significantly over- or under-represented, tools often perform **hypergeometric testing**. "The hypergeometric distribution is a discrete probability distribution that describes the probability of _k_ successes in _n_ draws, without replacement, from a finite population of size _N_ that contains exactly _K_ successes, wherein each draw is either a success or a failure" [[4](https://en.wikipedia.org/wiki/Hypergeometric_distribution)]. 
+To determine whether a GO term or pathway is *significantly* over- or under-represented, tools often perform **hypergeometric testing**. "The hypergeometric distribution is a discrete probability distribution that describes the probability of _k_ successes in _n_ draws, without replacement, from a finite population of size _N_ that contains exactly _K_ successes, wherein each draw is either a success or a failure" [[4](https://en.wikipedia.org/wiki/Hypergeometric_distribution)]. 
 
 Therefore, using our example, the hypergeometric distribution describes the probability of 50 genes (k) being associated with "DNA repair", for all genes in our gene list (n=1,000), from a population of all of the genes in entire genome (N=13,000) which contains 85 genes (K) associated with "DNA repair".
 
