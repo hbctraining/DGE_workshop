@@ -203,7 +203,7 @@ low counts [2]   : 3912, 20%
 [2] see 'independentFiltering' argument of ?results
 ```
 
-In addition to the number of genes up- and down-regulated at the default threshold, **he function also reports the number of genes that were tested (genes with non-zero total read count), and the number of genes not included in multiple test correction due to a low mean count** (which in our case is < 4).
+In addition to the number of genes up- and down-regulated at the default threshold, **the function also reports the number of genes that were tested (genes with non-zero total read count), and the number of genes not included in multiple test correction due to a low mean count** (which in our case is < 4).
 
 The default FDR threshold is set to `alpha = 0.1`, which is quite liberal. Let's try changing that to `0.05` -- *how many genes are we left with*?
 
@@ -232,7 +232,7 @@ Now, finally we will put all of that inside the `summary()` function. This is a 
 	summary(subset(res_tableOE, padj < padj.cutoff & abs(log2FoldChange) > lfc.cutoff), alpha =0.05)
 
 
-Does this reduce our results? How many genes are up-regulated and down-regulated at this new threshold?
+**Does this reduce our results? How many genes are up-regulated and down-regulated at this new threshold?**
 
 We should have a total of 884 genes (682 up-regulated and 202 down-regulated) that are significantly differentially expressed. To denote these genes as significant we can add a column in our results table. The column will be a logical vector, where `TRUE` means the gene passes our threshold and `FALSE` means it fails.
 
