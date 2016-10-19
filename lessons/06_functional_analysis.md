@@ -84,7 +84,7 @@ The calculation of probability of k successes follows the formula:
 
 ### gProfiler
 
-[gProfileR](http://biit.cs.ut.ee/gprofiler/index.cgi) is a web-based tool for the interpretation of large gene lists. The core tool takes a gene list as input and performs statistical enrichment analysis using hypergeometric testing to provide interpretation to user-provided gene lists. Multiple sources of functional evidence are considered, including Gene Ontology terms, biological pathways, regulatory motifs of transcription factors and microRNAs, human disease annotations and protein-protein interactions. The user selects the organism and the sources of evidence to test. There are also additional parameters to change various thresholds and tweak the stringency to the desired level. 
+[gProfileR](http://biit.cs.ut.ee/gprofiler/index.cgi) is a tool for the interpretation of large gene lists which can be run using a web interface or through R. The core tool takes a gene list as input and performs statistical enrichment analysis using hypergeometric testing to provide interpretation to user-provided gene lists. Multiple sources of functional evidence are considered, including Gene Ontology terms, biological pathways, regulatory motifs of transcription factors and microRNAs, human disease annotations and protein-protein interactions. The user selects the organism and the sources of evidence to test. There are also additional parameters to change various thresholds and tweak the stringency to the desired level. 
 
 ![gprofiler](../img/gProfiler.png)
 
@@ -98,34 +98,13 @@ Also, due to the hierarchical structure of GO terms, you may return many terms t
 
 #### Running gProfiler
 
-For our gProfiler analysis, we are going to use the Mov10_kd results table subsetted using the thresholds of logFC = 0.58 (1.5x) and padj = 0.05. 
-**You can download the subsetted Mov10_kd results file using this [link](https://github.com/hbc/NGS_Data_Analysis_Summer2016/raw/master/sessionIII/data/Mov10_kd_logFC_0.58_pVal_0.05.txt).**
-
-Save the file to your results directory in your `DEanalysis` project.
-
-
-* Under **Options**: keep all defaults checked and for `Hierarchical Filtering` use the pulldown to select `Best per parent`
-* Click on **Advanced Options** and for `Significance Threshold` select `Benjamini-Hochberg FDR`
-* From the functional evidence selections choose the following: Gene Ontology (biological process, molecular function), [KEGG](http://www.genome.jp/kegg/) ([KEGG paper](http://nar.oxfordjournals.org/content/44/D1/D457.full.pdf)), and [Reactome](http://www.reactome.org).
-* Press **g:Profile!** 
-
-
-> Take a look at the list of terms that appear. Do you see anything relevant, given what you know about this dataset? Run the analysis again but this time change the appropriate parameter to export your results to file. 
-
-#### gProfiler in R
-
-While the web interface for gProfiler is a bit more intuitive to understand, we don't actually need to leave R to run gProfiler. 
-
-Go to RStudio and click on the File menu and select 'Open project ...'
-
-Navigate to `~/Desktop/DEanalysis/` and double click on the `DEanalysis.Rproj` file.
-
+For our gProfiler analysis, we are going to use the Mov10_oe results table subsetted using the thresholds of logFC = 1 (2x) and padj = 0.05, which is saved as `SigOE`. 
 ```
 ### Functional analysis of MOV10 Overexpression using gProfileR (some of these are defaults; check help pages) 
 
 library(gProfileR)
 
-gprofiler_results_kd <- gprofiler(query = sigOE, 
+gprofiler_results_oe <- gprofiler(query = sigOE, 
                                   organism = "hsapiens",
                                   ordered_query = F, 
                                   exclude_iea = F, 
