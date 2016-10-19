@@ -60,32 +60,6 @@ The number of significant genes observed from the LRT is quite high. We are **un
 
 ***
 
-## Exporting significant gene lists
-
-The next step in our workflow is interpretation of gene lists using various tools for functional analysis. Depending on the tool you choose to use downstream, you will require different information from the results table as input. To be safe it is wise to keep atleast one copy of the full results table with relevant information. 
-	
-Let's use the `write.table()` function to write the ordered results to file:
-
-	### Write sorted results to file
-	write.table(res_tableOE_sorted, file="results/results_OE_sortedPval.txt", sep="\t", quote=F, col.names=NA)
-	
-	write.table(res_tableKD_sorted, file="results/results_KD_sortedPval.txt", sep="\t", quote=F, col.names=NA)
-
-One of the tools we will be using for functional analysis (gProfiler) will require only the gene names of the significant genes, but ordered by adjusted p-value. These lists we had created above for visualization.
-
-To write these lists to file we will use the `write()` function which will write the contents to file on single line, or if `ncol` is specified, into a certain number of columns:
-
-	### Write genes to file
-	write(sigOE, file="results/Mov10_oe_logFC_1_pVal_0.05.txt", ncol=1)
-	write(sigKD, file="results/Mov10_kd_logFC_1_pVal_0.05.txt", ncol=1)
-	
-
-	
-## Saving the project
-
-Now we are set up for functional analysis of our gene lists. Make sure you save your R session as you quit RStudio to your DEanalysis project, so you don't lose all your work from this DE analysis module!
-
-
 ---
 *This lesson has been developed by members of the teaching team at the [Harvard Chan Bioinformatics Core (HBC)](http://bioinformatics.sph.harvard.edu/). These are open access materials distributed under the terms of the [Creative Commons Attribution license](https://creativecommons.org/licenses/by/4.0/) (CC BY 4.0), which permits unrestricted use, distribution, and reproduction in any medium, provided the original author and source are credited.*
 
