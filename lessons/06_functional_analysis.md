@@ -9,30 +9,10 @@ Approximate time: 60 minutes
 Learning Objectives:
 -------------------
 
-*  Determine how functions are attributed to genes using Gene Ontology terms
+*  Determine how biological functions are attributed to genes using Gene Ontology terms
 *  Understand the theory of how functional enrichment tools yield statistically enriched functions or interactions
 *  Discuss functional analysis using over-representation analysis, functional class scoring, and pathway topology methods
 *  Explore functional analysis tools
-
-
-# Exporting significant gene lists
-
-The next step in our workflow is interpretation of gene lists using various tools for functional analysis. Depending on the tool you choose to use downstream, you will require different information from the results table as input. To be safe it is wise to keep atleast one copy of the full results table with relevant information. 
-	
-Let's use the `write.table()` function to write the ordered results to file:
-
-	### Write sorted results to file
-	write.table(res_tableOE_sorted, file="results/results_OE_sortedPval.txt", sep="\t", quote=F, col.names=NA)
-	
-	write.table(res_tableKD_sorted, file="results/results_KD_sortedPval.txt", sep="\t", quote=F, col.names=NA)
-
-One of the tools we will be using for functional analysis (gProfiler) will require only the gene names of the significant genes, but ordered by adjusted p-value. These lists we had created above for visualization.
-
-To write these lists to file we will use the `write()` function which will write the contents to file on single line, or if `ncol` is specified, into a certain number of columns:
-
-	### Write genes to file
-	write(sigOE, file="results/Mov10_oe_logFC_1_pVal_0.05.txt", ncol=1)
-	write(sigKD, file="results/Mov10_kd_logFC_1_pVal_0.05.txt", ncol=1)
 
 # Functional analysis 
 
@@ -145,9 +125,7 @@ Navigate to `~/Desktop/DEanalysis/` and double click on the `DEanalysis.Rproj` f
 
 library(gProfileR)
 
-sigKD_FC58 <- scan(file="results/Mov10_kd_logFC_0.58_pVal_0.05.txt", what="character")
-
-gprofiler_results_kd <- gprofiler(query = sigKD_FC58, 
+gprofiler_results_kd <- gprofiler(query = sigOE, 
                                   organism = "hsapiens",
                                   ordered_query = F, 
                                   exclude_iea = F, 
@@ -165,8 +143,8 @@ Let's save the gProfiler results to file:
 ```
 ## Write results to file
 
-write.table(gprofiler_results_kd, 
-            "results/gprofiler_MOV10_kd.txt", 
+write.table(gprofiler_results_oe, 
+            "results/gprofiler_MOV10_oe.txt", 
             sep="\t", quote=F, row.names=F)
 ```
 
@@ -175,17 +153,16 @@ Now, extract only the lines in the gProfiler results with GO term accession numb
 ```
 ## Extract GO IDs for downstream analysis
 
-allterms_kd <- gprofiler_results_kd$term.id
+allterms_oe <- gprofiler_results_oe$term.id
 
-GOs_kd <- allterms_kd[grep('GO:', allterms_kd)]
+GOs_oe <- allterms_oe[grep('GO:', allterms_oe)]
 
-write.table(GOs_kd, "results/GOs_kd.txt", sep="\t", quote=F, row.names=F, col.names=F)
+write.table(GOs_oe, "results/GOs_oe.txt", sep="\t", quote=F, row.names=F, col.names=F)
 ```
 
 ### REVIGO
 
 [REVIGO](http://revigo.irb.hr/) is a web-based tool that can take our list of GO terms, collapse redundant terms by semantic similarity, and summarize them graphically. 
-
 
 ![REVIGO_input](../img/revigo_input.png)
 
@@ -201,10 +178,9 @@ Supek F, Bošnjak M, Škunca N, Šmuc T. REVIGO summarizes and visualizes long l
 
 ## [Other functional analysis methods](https://github.com/hbc/DGE_workshop/blob/master/lessons/functional_analysis_other_methods.md)
 
-Over-representation analyses are only a single type of functional analysis method that is available for teasing apart the biological processes important to your condition of interest. Other types of analyses can be equally important or informative. Functional class scoring methods most often take as input the foldchanges for all genes, then look to see whether gene sets for particular biological processes are enriched for high or low fold changes. This type of analysis can be particularly helpful if a small list of DE genes was returned as significant. Finally, pathway topology analysis often takes into account both fold changes and adjusted p-values to identify dysregulated pathways and outputs whether pathways are inhibited/activated. We have [materials](https://github.com/hbc/DGE_workshop/blob/master/lessons/functional_analysis_other_methods.md) to lead you through these other types of functional analyses, and we encourage you to take the time to work through them.
+Over-representation analyses are only a single type of functional analysis method that is available for teasing apart the biological processes important to your condition of interest. Other types of analyses can be equally important or informative, including functional class scoring and pathway topology methods. Functional class scoring methods most often take as input the foldchanges for all genes, then look to see whether gene sets for particular biological processes are enriched among the high or low fold changes. This type of analysis can be particularly helpful if differential expression analysis only output a small list of significant DE genes. Finally, pathway topology analysis often takes into account both fold changes and adjusted p-values to identify dysregulated pathways and outputs whether pathways are inhibited/activated. We have [materials](https://github.com/hbc/DGE_workshop/blob/master/lessons/functional_analysis_other_methods.md) to lead you through these other types of functional analyses, and we encourage you to take the time to work through them.
 
 ![Pathway analysis tools](../img/pathway_analysis.png)
-
 
 ## Resources for functional analysis
 
