@@ -208,7 +208,7 @@ spia_result <- spia(de=sig_genes, all=background_genes, organism="hsa")
 head(spia_result, n=20)
 ```
 
-SPIA outputs a table showing significantly dysregulated pathways based on over-representation and signaling perturbations accumulation. The table shows the following information: `pSize` is the number of genes on the pathway; `NDE` is the number of DE genes per pathway; `tA` is the observed total preturbation accumulation in the pathway; `pNDE` is the probability to observe at least NDE genes on the pathway using a hypergeometric model; `pPERT` is the probability to observe a total accumulation more extreme than tA only by chance; `pG` is the p-value obtained by combining pNDE and pPERT; `pGFdr` and `pGFWER` are the False Discovery Rate and respectively Bonferroni adjusted global p-values; and the Status gives the direction in which the pathway is perturbed (activated or inhibited). KEGGLINK gives a web link to the KEGG website that displays the pathway image with the differentially expressed genes highlighted in red.
+SPIA outputs a table showing significantly dysregulated pathways based on over-representation and signaling perturbations accumulation. The table shows the following information: `pSize` is the number of genes on the pathway; `NDE` is the number of DE genes per pathway; `tA` is the observed total perturbation accumulation in the pathway; `pNDE` is the probability to observe at least NDE genes on the pathway using a hypergeometric model; `pPERT` is the probability to observe a total accumulation more extreme than tA only by chance; `pG` is the p-value obtained by combining pNDE and pPERT; `pGFdr` and `pGFWER` are the False Discovery Rate and respectively Bonferroni adjusted global p-values; and the Status gives the direction in which the pathway is perturbed (activated or inhibited). KEGGLINK gives a web link to the KEGG website that displays the pathway image with the differentially expressed genes highlighted in red.
 
 We can view the significantly dysregulated pathways by viewing the over-representation and perturbations for each pathway.
 
@@ -248,18 +248,6 @@ Co-expression clustering is often used to identify genes of novel pathways or ne
 You can visualize co-expression clustering using heatmaps, which should be viewed as suggestive only; serious classification of genes needs better methods.  
 
 The way the tools perform clustering is by taking the entire expression matrix and computing pair-wise co-expression values. A network is then generated from which we explore the topology to make inferences on gene co-regulation. The [WGCNA](http://www.genetics.ucla.edu/labs/horvath/CoexpressionNetwork ) package (in R) is one example of a more sophisticated method for co-expression clustering.
-
-## Resources for functional analysis
-
-* g:Profiler - http://biit.cs.ut.ee/gprofiler/index.cgi 
-* DAVID - http://david.abcc.ncifcrf.gov/tools.jsp 
-* GeneMANIA - http://www.genemania.org/
-* GenePattern -  http://www.broadinstitute.org/cancer/software/genepattern/ (need to register)
-* WebGestalt - http://bioinfo.vanderbilt.edu/webgestalt/ (need to register)
-* AmiGO - http://amigo.geneontology.org/amigo
-* ReviGO (visualizing GO analysis, input is GO terms) - http://revigo.irb.hr/ 
-* WGCNA - http://www.genetics.ucla.edu/labs/horvath/CoexpressionNetwork
-* GSEA - http://software.broadinstitute.org/gsea/index.jsp
 
 ***
 *This lesson has been developed by members of the teaching team at the [Harvard Chan Bioinformatics Core (HBC)](http://bioinformatics.sph.harvard.edu/). These are open access materials distributed under the terms of the [Creative Commons Attribution license](https://creativecommons.org/licenses/by/4.0/) (CC BY 4.0), which permits unrestricted use, distribution, and reproduction in any medium, provided the original author and source are credited.*
