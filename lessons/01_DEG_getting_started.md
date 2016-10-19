@@ -69,19 +69,18 @@ Arguably the most common use for transcriptome data is to search for differentia
 
 An in-depth explanation of these steps is outside the scope of today's class, but a couple of points:
 * Even though this flow diagram only shows 1 tool per step after the sequencing step, there are several tools available.
-* This is the more standard alignment containing workflow, but more recently people are moving to an alignment-free counting workflow using tools like Salmon and Kallisto. These will generate an abundance estimate for the genes, instead of "raw" counts, but the downstream steps will use similar statistical considerations and tools as the standard method. 
+* This is the more standard workflow with an alignment + a counting step, but more recently people are moving to an alignment-free counting workflow using tools like Salmon and Kallisto. These newer tools will generate an abundance estimate for the genes, instead of "raw" counts, but the downstream steps for statistical analysis are similar. 
 
 ## Differential expression analysis
 
-There are a number of software packages that have been developed for differential expression analysis of RNA-seq data, and new methods are continuously being presented. Many studies describing comparisons between these methods show that while there is some agreement, there is also much variability. **Additionally, there is no one method that performs optimally under all conditions [[Soneson and Dleorenzi, 2013](https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-14-91)].**
+There are a number of software packages that have been developed for differential expression analysis of RNA-seq data, and new methods are continuously being developed. Many studies describing comparisons between these methods show that while there is some agreement, there is also much variability. **Additionally, there is no one method that performs optimally under all conditions [[Soneson and Dleorenzi, 2013](https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-14-91)].**
 
 
 ![deg1](../img/deg_methods1.png) 
 
 ![deg1](../img/deg_methods2.png) 
 
-
-In the next few lessons, we will walk you through an **end-to-end gene-level RNA-seq differential expression workflow** using various R packages. We will start with a count matrix and perform exploratory data analysis for quality assessment and to explore the relationship between samples, perform differential expression analysis, and visually explore the results.
+In the next few lessons, we will walk you through an **end-to-end gene-level RNA-seq differential expression workflow** using various R packages. We will start with the count matrix, perform exploratory data analysis for quality assessment and to explore the relationship between samples, perform differential expression analysis, and visually explore the results.
 
 ## Setting up
 
@@ -104,14 +103,10 @@ Now save the file as `de_script.R`. When finished your working directory should 
 
 ![setup](../img/settingup.png)
 
-Finally, we need to grab the files that we will be working with for the analysis. 
-
-Right click on the links below, and choose the "Save link as ..." option to download:
+Finally, we need to grab the files that we will be working with for the analysis. Right click on the links below, and choose the "Save link as ..." option to download:
 
 * Save the [full counts matrix](https://raw.githubusercontent.com/hbc/NGS_Data_Analysis_Course/master/sessionIII/data/Mov10_full_counts.txt) file in the `data` directory.
 * Save the [full metadata table](https://raw.githubusercontent.com/hbc/NGS_Data_Analysis_Course/master/sessionIII/data/Mov10_full_meta.txt) file in the `meta` directory.
-
-
 
 ## Loading libraries
 
@@ -178,7 +173,7 @@ Let's start by creating the `DESeqDataSet` object and then we can talk a bit mor
 ![deseq1](../img/deseq_obj1.png)
 
 
-You can use DESeq-specific functions to access the different slots and retrieve information, if you wish. For example, suppose we wanted the original count matrix we would use `counts` (*Note: we nested it within the `View` function so that rather than getting printed in the console we can see it in the script editor*) :
+You can use DESeq-specific functions to access the different slots and retrieve information, if you wish. For example, suppose we wanted the original count matrix we would use `counts()` (*Note: we nested it within the `View()` function so that rather than getting printed in the console we can see it in the script editor*) :
 
 	View(counts(dds))
 
@@ -216,7 +211,7 @@ The DESeq2 solution to this is the **regularized log transform** [[Love, Huber, 
 	### Transform counts for data visualization
 	rld <- rlog(dds, blind=TRUE)
 
-The `rlog` function returns a `DESeqTransform`, another type of DESeq-specific object. The reason you don't just get a matrix of transformed values is because all of the parameters (i.e. size factors) that went in to computing the rlog transform are stored in that object. We can use this object to plot figures for quality assessment.
+The `rlog` function returns a `DESeqTransform`, another type of DESeq-specific object. The reason you don't just get a matrix of transformed values is because all of the parameters (i.e. size factors) that went in to computing the rlog transform are stored in that object. We will be using this object to plot figures for quality assessment.
 
 
 ---
