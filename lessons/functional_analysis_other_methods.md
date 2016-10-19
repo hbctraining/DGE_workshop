@@ -66,13 +66,10 @@ entrez <- getBM(filters= "external_gene_name",
                 attributes= c("external_gene_name", "entrezgene"),
                 values= row.names(DEG),
                 mart= mart)
-## Create a column in results dataset, DEG, to merge with the DEG dataset with entrez IDs
-
-DEG$external_gene_name <- row.names(DEG)
 
 ## Merge results dataset, DEG, with Entrez IDs dataset
 
-entrez_results <- merge(DEG, entrez, by="external_gene_name")
+entrez_results <- merge(entrez, DEG, by.x = "external_gene_name", by.y ="row.names")
 head(entrez_results, n=15)
 
 entrez_results <- subset(entrez_results, entrezgene != "NA")
