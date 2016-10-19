@@ -27,7 +27,7 @@ Generally for any differential expression analysis, it is useful to interpret th
 ![Pathway analysis tools](../img/pathway_analysis.png)
 
 ## Over-representation analysis
-There are a plethora of functional enrichment tools that perform some type of over-representation analysis by querying databases containing information about gene function and interactions. Querying these databases for gene function requires the use of a **consistent vocabulary** to describe gene function. One of the most widely-used vocabularies is the Gene Ontology (GO). This vocabulary was established by the Gene Ontology project, and the words in the vocabulary are referred to as GO terms. 
+There are a plethora of functional enrichment tools that perform some type of over-representation analysis by querying databases containing information about gene function and interactions. Querying these databases for gene function often requires the use of a **consistent vocabulary** to describe gene function. One of the most widely-used vocabularies is the Gene Ontology (GO). This vocabulary was established by the Gene Ontology project, and the words in the vocabulary are referred to as GO terms. 
 
 ### Gene Ontology project
 
