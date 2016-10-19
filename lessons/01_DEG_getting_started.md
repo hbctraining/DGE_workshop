@@ -16,11 +16,13 @@ Approximate time: 40 minutes
  
 ## Understanding the dataset
 
-The dataset we have been using is part of a larger study described in [Kenny PJ et al, Cell Rep 2014](http://www.ncbi.nlm.nih.gov/pubmed/25464849). The authors are investigating interactions between various genes involved in Fragile X syndrome, a disease in which there is aberrant production of the FMRP protein. **The authors sought to show that FMRP associates with the RNA helicase MOV10, that is also associated with the microRNA pathway.**
+We will be using a subset of a real RNA-Seq dataset for today's class. It is part of a larger study described in [Kenny PJ et al, Cell Rep 2014](http://www.ncbi.nlm.nih.gov/pubmed/25464849). The authors are investigating interactions between various genes involved in Fragile X syndrome, a disease in which there is aberrant production of the FMRP protein. **The authors sought to show that FMRP associates with the RNA helicase MOV10, that is also associated with the microRNA pathway.**
 
 > **FMRP** is “most commonly found in the brain, is essential for normal cognitive development and female reproductive function. Mutations of this gene can lead to fragile X syndrome, mental retardation, premature ovarian failure, autism, Parkinson's disease, developmental delays and other cognitive deficits.” - from [wikipedia](https://en.wikipedia.org/wiki/FMR1)
 
-We have been working with 8 files from the Mov10 dataset so far and they are replicates belonging to 3 conditions as shown below:
+From this study we are using the RNA-Seq data which is publicly available in the SRA. The RNA-Seq was performed on HEK293F cells that were either transfected with a MOV10 transgene, or siRNA to knock down Mov10 expression, or non-specific (irrelevant) siRNA. This resulted in 3 conditions **Mov10** oe (over expression), **Mov10 kd** (knock down) and Irrel, respectively. The number of replicates is as shown below. 
+
+Using these data, we will evaluate transcriptional patterns associated with perturbation of MOV10 expression. Please note that the irrelevant siRNA will be treated as our control condition.
 
 <img src="../img/dataset.png" width="400">
 
@@ -30,7 +32,6 @@ We have been working with 8 files from the Mov10 dataset so far and they are rep
 **MOV10**, is a putative RNA helicase that is also associated with **FMRP** in the context of the microRNA pathway. The hypothesis [the paper](http://www.ncbi.nlm.nih.gov/pubmed/25464849) is testing is that FMRP and MOV10 associate and regulate the translation of a subset of RNAs.
 
 <img src="../img/mov10-model.png" width="400">
-
 
 
 **Our questions:**
@@ -48,9 +49,7 @@ Here, we provide metadata for the data we are using today.
 * The RNA was extracted from **HEK293F cells** that were transfected with a MOV10 transgene and normal control cells.  
 * The libraries for this dataset are **stranded** and were generated using the **dUTP method**. 
 * Sequencing was carried out on the **Illumina HiSeq-2500 for 100bp single end** reads. 
-* The full dataset was sequenced to **~40 million reads** per sample, but for this workshop we will be looking at a small subset on chr1 (~300,000 reads/sample).
-* For each group we have three replicates as described in the figure below.
-
+* The full dataset was sequenced to **~40 million reads** per sample.
 
 ***
 
@@ -62,8 +61,17 @@ Here, we provide metadata for the data we are using today.
 
 ***
 
+## From Sequence data to Count Matrix
+
+Arguably the most common use for transcriptome data is to search for differentially expressed genes. Finding genes that are differentially expressed between conditions is an integral part of understanding the molecular basis of phenotypic variation. The following steps briefly describe the steps and give examples of tools that one might use to obtain gene counts to perform differential expression (DE analysis) on RNA-Seq data.
+
+<img src="../img/Overview_DGE_workshop.png" width="400">
+
+An in-depth explanation of these steps is outside the scope of today's class, but a couple of points:
+* Even though this flow diagram only shows 1 tool per step after the sequencing step, there are several tools available.
+* This is the more standard alignment containing workflow, but more recently people are moving to an alignment-free counting workflow using tools like Salmon and Kallisto. These will generate an abundance estimate for the genes, instead of "raw" counts, but the downstream steps will use similar statistical considerations and tools as the standard method. 
+
 ## Differential expression analysis
-Thus far, we have described different strategies for RNA-Seq data (i.e. de novo transcriptome assembly, transcript discovery) but arguably the most common use for transcriptome data is to search for differentially expressed genes. Finding genes that are differentially expressed between conditions is an integral part of understanding the molecular basis of phenotypic variation.
 
 There are a number of software packages that have been developed for differential expression analysis of RNA-seq data, and new methods are continuously being presented. Many studies describing comparisons between these methods show that while there is some agreement, there is also much variability. **Additionally, there is no one method that performs optimally under all conditions [[Soneson and Dleorenzi, 2013](https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-14-91)].**
 
@@ -83,7 +91,7 @@ Let's get started by opening up RStudio and setting up a new project for this an
 2. In the `New Project` window, choose `New Directory`. Then, choose `Empty Project`. Name your new directory `DEanalysis` and then "Create the project as subdirectory of:" the Desktop (or location of your choice).
 3. After your project is completed, it should automatically open in RStudio. 
 
-To check whether or not you are in the correct working directory, use `getwd()`. The path `Destktop/DEanalysis` should be returned to you in the console. Within your working directory use the `New folder` button in the bottom right panel to create three new directories: `data`, `meta` and `results`. Remember the key to a good analysis is keeping organized from the start!
+To check whether or not you are in the correct working directory, use `getwd()`. The path `Desktop/DEanalysis` should be returned to you in the console. Within your working directory use the `New folder` button in the bottom right panel to create three new directories: `data`, `meta` and `results`. Remember the key to a good analysis is keeping organized from the start!
 
 Go to the `File` menu and select `New File`, and select `R Script`. This should open up a script editor in the top left hand corner. This is where we will be typing and saving all commands required for this analysis. In the script editor type in a header line:
 
@@ -97,8 +105,6 @@ Now save the file as `de_script.R`. When finished your working directory should 
 ![setup](../img/settingup.png)
 
 Finally, we need to grab the files that we will be working with for the analysis. 
-
-***Note:*** *We are going to switch to using count data for the* ***full dataset*** *from this point onwards, to get more meaningful results from the differential expression analysis. We are also obtaining the metadata file afresh for the DEanalysis project.*
 
 Right click on the links below, and choose the "Save link as ..." option to download:
 
