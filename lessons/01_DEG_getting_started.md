@@ -55,8 +55,8 @@ Here, we provide metadata for the data we are using today.
 
 **Exercise**
 
-1. What types of metadata are used in your experimental design?
-2. What kinds of metadata might a sequencing project generate?
+1. What types of metadata are used in your experimental design (any experiment)?
+2. What other kinds of metadata might a sequencing project generate?
 3. Why is this type of information important?
 
 ***
