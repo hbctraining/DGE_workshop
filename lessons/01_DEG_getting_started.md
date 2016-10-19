@@ -25,18 +25,18 @@ Using these data, we will evaluate transcriptional patterns associated with pert
 <img src="../img/dataset.png" width="400">
 
 
+
 ***What is the purpose of these datasets? What does Mov10 do?***
 
 The authors are investigating interactions between various genes involved in Fragile X syndrome, a disease in which there is aberrant production of the FMRP protein. 
 
-**FMRP** is “most commonly found in the brain, is essential for normal cognitive development and female reproductive function. Mutations of this gene can lead to fragile X syndrome, mental retardation, premature ovarian failure, autism, Parkinson's disease, developmental delays and other cognitive deficits.” - from [wikipedia](https://en.wikipedia.org/wiki/FMR1)
+> **FMRP** is “most commonly found in the brain, is essential for normal cognitive development and female reproductive function. Mutations of this gene can lead to fragile X syndrome, mental retardation, premature ovarian failure, autism, Parkinson's disease, developmental delays and other cognitive deficits.” - from [wikipedia](https://en.wikipedia.org/wiki/FMR1)
 
-**MOV10**, is a putative RNA helicase that is also associated with **FMRP** in the context of the microRNA pathway. The hypothesis [the paper](http://www.ncbi.nlm.nih.gov/pubmed/25464849) is testing is that FMRP and MOV10 associate and regulate the translation of a subset of RNAs.
+> **MOV10**, is a putative RNA helicase that is also associated with **FMRP** in the context of the microRNA pathway. 
 
-**The authors sought to show that FMRP associates with the RNA helicase MOV10, that is also associated with the microRNA pathway.**
+**The hypothesis [the paper](http://www.ncbi.nlm.nih.gov/pubmed/25464849) is testing is that FMRP and MOV10 associate and regulate the translation of a subset of RNAs.**
 
 <img src="../img/mov10-model.png" width="400">
-
 
 **Our questions:**
 * What patterns of expression can we identify with the loss or gain of MOV10? 
