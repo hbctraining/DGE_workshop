@@ -46,10 +46,10 @@ Data sharing is important in the biological sciences to promote scientific integ
 
 Here, we provide metadata for the data we are using today.
 
-* The RNA was extracted from **HEK293F cells** that were transfected with a MOV10 transgene and normal control cells.  
-* The libraries for this dataset are **stranded** and were generated using the **dUTP method**. 
+* The RNA was extracted from treated **HEK293F cells**.  
+* The cDNA libraries for this dataset are **stranded** and were generated using the **TruSeq Stranded mRNA Library Prep Kit** from Illumian. 
 * Sequencing was carried out on the **Illumina HiSeq-2500 for 100bp single end** reads. 
-* The full dataset was sequenced to **~40 million reads** per sample.
+* **~40 million reads** per sample were generated.
 
 ***
 
