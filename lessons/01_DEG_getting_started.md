@@ -65,7 +65,7 @@ Here, we provide metadata for the data we are using today.
 
 ***
 
-## From Sequence data to Count Matrix
+## From Sequence Data to Count Matrix
 
 Arguably the most common use for transcriptome data is to search for differentially expressed genes. Finding genes that are differentially expressed between conditions is an integral part of understanding the molecular basis of phenotypic variation. The following steps briefly describe the steps and give examples of tools that one might use to obtain gene counts to perform differential expression (DE analysis) on RNA-Seq data.
 
