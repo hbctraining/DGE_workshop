@@ -73,7 +73,7 @@ Arguably the most common use for transcriptome data is to search for differentia
 
 An in-depth explanation of these steps is outside the scope of today's class, but a couple of points:
 * Even though this flow diagram only shows 1 tool per step after the sequencing step, there are several tools available.
-* This is the more standard workflow with an alignment + a counting step, but more recently people are moving to an alignment-free counting workflow using tools like Salmon and Kallisto. These newer tools will generate an abundance estimate for the genes, instead of "raw" counts, but the downstream steps for statistical analysis are similar. 
+* This is the more standard workflow with an alignment + a counting step, but more recently people are moving to an alignment-free counting workflow using tools like [Salmon](https://combine-lab.github.io/salmon/) and [Kallisto](https://pachterlab.github.io/kallisto/about.html). These newer tools will generate an abundance estimate for the genes, instead of "raw" counts, but the downstream steps for statistical analysis are similar. 
 
 ## Differential expression analysis
 
