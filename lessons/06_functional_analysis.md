@@ -178,3 +178,26 @@ Open `GOs_oe.txt` and copy and paste the GO ids into the REVIGO search box, and 
 J. Reimand, T. Arak, P. Adler, L. Kolberg, S. Reisberg, H. Peterson, J. Vilo. g:Profiler -- a web server for functional interpretation of gene lists (2016 update). Nucleic Acids Research 2016; doi: 10.1093/nar/gkw199
 
 Supek F, Bošnjak M, Škunca N, Šmuc T. REVIGO summarizes and visualizes long lists of Gene Ontology terms. PLoS ONE 2011. doi:10.1371/journal.pone.0021800
+
+## Other functional analysis methods
+
+Functional enrichment analyses are only a single type of functional analysis method that is available for teasing apart the biological processes important to your condition of interest. While we don't have time to cover the other main types of analyses in class, we have materials to lead you through the analyses [available]().
+
+![Pathway analysis tools](../img/pathway_analysis.png)
+
+
+
+## Resources for functional analysis
+
+* g:Profiler - http://biit.cs.ut.ee/gprofiler/index.cgi 
+* DAVID - http://david.abcc.ncifcrf.gov/tools.jsp 
+* GeneMANIA - http://www.genemania.org/
+* GenePattern -  http://www.broadinstitute.org/cancer/software/genepattern/ (need to register)
+* WebGestalt - http://bioinfo.vanderbilt.edu/webgestalt/ (need to register)
+* AmiGO - http://amigo.geneontology.org/amigo
+* ReviGO (visualizing GO analysis, input is GO terms) - http://revigo.irb.hr/ 
+* WGCNA - http://www.genetics.ucla.edu/labs/horvath/CoexpressionNetwork
+* GSEA - http://software.broadinstitute.org/gsea/index.jsp
+
+***
+*This lesson has been developed by members of the teaching team at the [Harvard Chan Bioinformatics Core (HBC)](http://bioinformatics.sph.harvard.edu/). These are open access materials distributed under the terms of the [Creative Commons Attribution license](https://creativecommons.org/licenses/by/4.0/) (CC BY 4.0), which permits unrestricted use, distribution, and reproduction in any medium, provided the original author and source are credited.*
