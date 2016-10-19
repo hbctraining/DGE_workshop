@@ -181,16 +181,16 @@ Supek F, Bošnjak M, Škunca N, Šmuc T. REVIGO summarizes and visualizes long l
 
 ## Other functional analysis methods
 
-Functional enrichment analyses are only a single type of functional analysis method that is available for teasing apart the biological processes important to your condition of interest. While we don't have time to cover the other main types of analyses in class, we have materials to lead you through the analyses [available]().
+Over-representation analyses are only a single type of functional analysis method that is available for teasing apart the biological processes important to your condition of interest. Other types of analyses can be equally important or informative. Functional class scoring methods most often take as input the foldchanges for all genes, then look to see whether gene sets for particular biological processes are enriched for high or low fold changes. This type of analysis can be particularly helpful if a small list of DE genes was returned as significant. Finally, pathway topology analysis often takes into account both fold changes and adjusted p-values to identify dysregulated pathways and outputs whether pathways are inhibited/activated. We have [materials](https://github.com/hbc/DGE_workshop/blob/master/lessons/07_functional_analysis_other_methods.md) to lead you through these other types of functional analyses, and we encourage you to take the time to work through them.
 
 ![Pathway analysis tools](../img/pathway_analysis.png)
-
 
 
 ## Resources for functional analysis
 
 * g:Profiler - http://biit.cs.ut.ee/gprofiler/index.cgi 
 * DAVID - http://david.abcc.ncifcrf.gov/tools.jsp 
+* clusterProfiler - http://bioconductor.org/packages/release/bioc/html/clusterProfiler.html
 * GeneMANIA - http://www.genemania.org/
 * GenePattern -  http://www.broadinstitute.org/cancer/software/genepattern/ (need to register)
 * WebGestalt - http://bioinfo.vanderbilt.edu/webgestalt/ (need to register)
@@ -198,6 +198,8 @@ Functional enrichment analyses are only a single type of functional analysis met
 * ReviGO (visualizing GO analysis, input is GO terms) - http://revigo.irb.hr/ 
 * WGCNA - http://www.genetics.ucla.edu/labs/horvath/CoexpressionNetwork
 * GSEA - http://software.broadinstitute.org/gsea/index.jsp
+* SPIA - https://www.bioconductor.org/packages/release/bioc/html/SPIA.html
+* Gage/Pathview - http://www.bioconductor.org/packages/release/bioc/html/gage.html
 
 ***
 *This lesson has been developed by members of the teaching team at the [Harvard Chan Bioinformatics Core (HBC)](http://bioinformatics.sph.harvard.edu/). These are open access materials distributed under the terms of the [Creative Commons Attribution license](https://creativecommons.org/licenses/by/4.0/) (CC BY 4.0), which permits unrestricted use, distribution, and reproduction in any medium, provided the original author and source are credited.*
