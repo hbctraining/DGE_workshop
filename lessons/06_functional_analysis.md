@@ -179,7 +179,7 @@ J. Reimand, T. Arak, P. Adler, L. Kolberg, S. Reisberg, H. Peterson, J. Vilo. g:
 
 Supek F, Bošnjak M, Škunca N, Šmuc T. REVIGO summarizes and visualizes long lists of Gene Ontology terms. PLoS ONE 2011. doi:10.1371/journal.pone.0021800
 
-## Other functional analysis methods
+## [Other functional analysis methods](https://github.com/hbc/DGE_workshop/blob/master/lessons/07_functional_analysis_other_methods.md)
 
 Over-representation analyses are only a single type of functional analysis method that is available for teasing apart the biological processes important to your condition of interest. Other types of analyses can be equally important or informative. Functional class scoring methods most often take as input the foldchanges for all genes, then look to see whether gene sets for particular biological processes are enriched for high or low fold changes. This type of analysis can be particularly helpful if a small list of DE genes was returned as significant. Finally, pathway topology analysis often takes into account both fold changes and adjusted p-values to identify dysregulated pathways and outputs whether pathways are inhibited/activated. We have [materials](https://github.com/hbc/DGE_workshop/blob/master/lessons/07_functional_analysis_other_methods.md) to lead you through these other types of functional analyses, and we encourage you to take the time to work through them.
 
