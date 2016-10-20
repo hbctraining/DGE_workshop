@@ -28,7 +28,7 @@ Since our model only has one factor (`sampletype`), the reduced model is just th
 Let's take a look at the results table:
 
 	# Extract results
-	res_LRT <- results(dds_lrt, test="LRT")
+	res_LRT <- results(dds_lrt)
 	
 You will find that similar columns are reported for the LRT test. One thing to note is, even though there are fold changes present they are not directly associated with the actual hypothesis test. Thus, when filtering significant genes from the LRT we use only the FDR as our threshold. *How many genes are significant at `padj < 0.05`?*
 
