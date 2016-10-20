@@ -124,7 +124,10 @@ This design matrix is now used to setup the contrasts to request the comparisons
 
 ### Hypothesis testing: Wald test
 
-To build a results table, we use the `results()` function on the `dds` object. Additionally we need to specify **which comparisons we are interested in** looking at. 
+<img src=../img/wald_test.png width=500>
+
+
+In our case the *'parameters'* described in the Wikipedia definition above, are the coefficients that have been estimated by DESeq2. We will use those as input to test the true values using the Wald test. The Wald test is performed by default when using the `results()` function on the `dds` object.  
 
 The comparisons are provided to DESeq2 in the form of **contrasts**, in one of three different ways. In this lesson we will demonstrate the method that is most intuitive. By providing contrasts we are telling DESeq2 **which coefficients to use for the hypothesis testing** procedure; this also corresponds to the headers in your design matrix. To find out how the coefficients are named we can use the `resultsNames()` function:
 
@@ -142,7 +145,7 @@ To specify the specific contrasts we are interested in, we need to provide the c
 	res_tableOE <- results(dds, contrast=contrast_oe)
 
 
-Let's take a look at what information is stored in the results:
+This will build a results table based on a Wald test of the two groups we specified. Let's take a look at what information is stored in the results:
 
 	head(res_tableOE)
 
@@ -183,6 +186,8 @@ Let's go through some of the columns in the results table to get a better idea o
 3. Create a contrasts vector for the Mov10_overexpression comparison to *all other samples*.
 
 *** 
+
+> *NOTE:* The Wald test can also be used with **continuous variables**. If the variable of interest provided in eth design formula is continuous-valued, then the reported log2 fold change is per unit of change of that variable.
 
 
 ### Summarizing results and identifying DEGs
