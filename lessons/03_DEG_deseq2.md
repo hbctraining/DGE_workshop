@@ -187,7 +187,7 @@ Let's go through some of the columns in the results table to get a better idea o
 
 *** 
 
-> *NOTE:* The Wald test can also be used with **continuous variables**. If the variable of interest provided in eth design formula is continuous-valued, then the reported log2 fold change is per unit of change of that variable.
+> *NOTE:* The Wald test can also be used with **continuous variables**. If the variable of interest provided in the design formula is continuous-valued, then the reported log2 fold change is per unit of change of that variable.
 
 
 ### Summarizing results and identifying DEGs
