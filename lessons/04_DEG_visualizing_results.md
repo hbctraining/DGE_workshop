@@ -88,6 +88,7 @@ Now let's draw the heatmap using `pheatmap`:
          
 ![sigOE_heatmap](../img/sigOE_heatmap.png)       
 
+> *NOTE:* There are several additional arguments we have added here for aesthetics. One important one is `scale="row"`, in which Z-scores are plotted, rather than the actual normalized count value. Z-values are computed on a gene-by-gene basis by subtracting the mean and then dividing by the standard deviation. The Z-scores are computed **after the clustering**, so that it only affects the graphical aesthetics and the color visualization is improved.
 
 ***
 
