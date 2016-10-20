@@ -89,7 +89,7 @@ Let's take a look at the dispersion estimates for our data:
 	plotDispEsts(dds)
 	
 
-<img src="../img/plotDispersion.png"">
+<img src="../img/plotDispersion.png">
  
 
 The black dots are the original estimates for each gene. The red smooth curve provides an accurate estimate for the expected dispersion value for genes of a given expression strength. The blue dots represent shrunken estimates. The circles indicate outliers, where we don't perform shrinkage. 
@@ -124,7 +124,7 @@ This design matrix is now used to setup the contrasts to request the comparisons
 
 ### Hypothesis testing: Wald test
 
-<img src=../img/wald_test.png width=500>
+<img src="../img/wald_test.png">
 
 
 In our case the *'parameters'* described in the Wikipedia definition above, are the coefficients that have been estimated by DESeq2. We will use those as input to test the true values using the Wald test. The Wald test is performed by default when using the `results()` function on the `dds` object.  
