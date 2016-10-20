@@ -19,6 +19,8 @@ Approximate time: 50 minutes
 
 One way to visualize sample-to-sample distances is a principal components analysis (PCA). DESeq2 has a built-in function for plotting PCA plots, that uses `ggplot2` under the hood. This is great because it saves us having to type out lines of code and having to fiddle with the different ggplot2 layers. In addition, it takes the `rlog` object as an input directly, hence saving us the trouble of extracting the relevant information from it.
 
+> A nice [video explaining PCA plots](https://www.youtube.com/watch?v=_UVHneBUBW0) in more detail is available from StatQuest.
+
 The function `plotPCA()` requires two arguments as input: an `rlog` object and the `intgroup` (the column in our metadata that we are interested in). 
 
 	### Plot PCA 
