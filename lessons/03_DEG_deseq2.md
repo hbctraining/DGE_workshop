@@ -74,6 +74,8 @@ Mov10_kd_2 Mov10_kd_3 Mov10_oe_1 Mov10_oe_2 Mov10_oe_3 Irrel_kd_1 Irrel_kd_2 Irr
  
 These numbers should be identical to those we generated initially when we had run the function `estimateSizeFactors(dds)`. Take a look at the total number of reads for each sample using `colSums(counts(dds))`. *How do the numbers correlate with the size factor?*
 
+Now take a look at the total depth after normalization using `colSums(counts(dds, normalized=T))`, how do the values across samples compare with the total counts taken for each sample?
+
 > *NOTE:* it can be advantageous to calculate gene-specific normalization factors (size factors) to account for further sources of technical biases such as differing dependence on GC content, gene length or the like, and these can be supplied to DESeq2 instead of using the median of ratios method.
 
 > *NOTE:* A very popular normalization metric that is cited in the literature and used quite frequently is **RPKM/FPKM** (Reads Per Kilobase Million). Recent studies have shown that these metrics **should not be used**. [This video by StatQuest](http://www.rna-seqblog.com/rpkm-fpkm-and-tpm-clearly-explained/) is a great resource for understanding why not. Briefly, RNA-seq differential expression is about comparing proportions of expression. Because of the order of operations when computing RPKM/FPKM (scale by sequencing depth, followed by gene length), each sample becomes a pie of different size. Therefore, when we try to compare proportions from those pies to one another it is no longer a fair comparison (i.e 1/3 of a 6" pie is much smaller than 1/3 of a 10" pie).
@@ -131,6 +133,8 @@ In our case the *'parameters'* described in the Wikipedia definition above, are 
 
 DESeq2 performs a hypothesis test for all possible pairwise comparisons. In order for us to **retrieve the results for a specific pair of sample classes** we need to provide this information to DESeq2 in the form of **contrasts**. Contrasts are created in in three different ways/R syntax. In this lesson we will demonstrate the syntax that is most intuitive. 
 
+> *NOTE:* The Wald test can also be used with **continuous variables**. If the variable of interest provided in the design formula is continuous-valued, then the reported log2 fold change is per unit of change of that variable.
+
 We need to use the coefficient names to specify our comparisons, these correspond to the headers in your design matrix. To find out how the coefficients are named we can use the `resultsNames()` function:
 
 	# Find names of coefficients
@@ -166,7 +170,6 @@ A2M           5.8600841    -0.27850841 0.18051805 -1.5428286 0.1228724 0.2148906
 ```
 > *NOTE:* The results table looks very much like a data frame and in many ways it can be treated like one (i.e when accessing/subsetting data). However, it is important to recognize that it is actually stored in a `DESeqResults` object. When we start visualizing our data, this information will be helpful. 
 
-
 Let's go through some of the columns in the results table to get a better idea of what we are looking at. To extract information regarding the meaning of each column we can use `mcols()`:
 
 	mcols(res_tableOE, use.names=T)
@@ -178,102 +181,32 @@ Let's go through some of the columns in the results table to get a better idea o
 * `pvalue`: Wald test p-value
 * `padj`: BH adjusted p-values
  
+Now that we have results for the overexpression results, let's do the same for the **Control vs. Knockdown samples**. The first thing, we need to do is create a contrasts vector called `contrast_kd` for the Mov10_knockdown comparison to control.
+
+	## Define contrasts
+	contrast_kd <- list( "sampletypeMOV10_knockdown", "sampletypecontrol")
+
+Use that contrasts vector to extract a results table and store that to a variable called `res_tableKD`.  
+
+	# Extract results table
+	res_tableKD <- results(dds, contrast=contrast_kd)
+
+Take a quick peek at the results table containing Wald test statistics for the Control-Knockdown comparison we are interested in and make sure that format is similar to what we observed with the OE.
 
 ***
 
-**Exercise**
+**Excercise**
 
-1. Create a contrasts vector called `contrast_kd` for the Mov10_knockdown comparison to control.
-2. Use that contrasts vector to extract a results table and store that to a variable called `res_tableKD`.  
-3. Create a contrasts vector for the Mov10_overexpression comparison to *all other samples*.
-
-*** 
-
-> *NOTE:* The Wald test can also be used with **continuous variables**. If the variable of interest provided in the design formula is continuous-valued, then the reported log2 fold change is per unit of change of that variable.
-
-
-### Summarizing results and identifying DEGs
-
-To summarize the results table, a handy function in DESeq2 is `summary()`. Confusingly it has the same name as the function used to inspect data frames. This function when called with a DESeq results table as input, will summarize the results at a an FDR < 0.1. 
-
-	## Summarize results
-	summary(res_tableOE)
-	
-
-```  
-out of 19748 with nonzero total read count
-adjusted p-value < 0.1
-LFC > 0 (up)     : 3657, 19% 
-LFC < 0 (down)   : 3897, 20% 
-outliers [1]     : 0, 0% 
-low counts [2]   : 3912, 20% 
-(mean count < 4)
-[1] see 'cooksCutoff' argument of ?results
-[2] see 'independentFiltering' argument of ?results
-```
-
-In addition to the number of genes up- and down-regulated at the default threshold, **the function also reports the number of genes that were tested (genes with non-zero total read count), and the number of genes not included in multiple test correction due to a low mean count** (which in our case is < 4).
-
-The default FDR threshold is set to `alpha = 0.1`, which is quite liberal. Let's try changing that to `0.05` -- *how many genes are we left with*?
-
-The FDR threshold on it's own doesn't appear to be reducing the number of significant genes. With large significant gene lists it can be hard to extract meaningful biological relevance. To help increase stringency, one can also add a fold change threshold. The `summary()` function doesn't have an argument for fold change threshold, but instead we can use the base R function `subset()`.
-
-Let's first create variables that contain our threshold criteria:
-
-	### Set thresholds
-	padj.cutoff <- 0.05
-	lfc.cutoff <- 1
-
-The `lfc.cutoff` is set to 1; remember that we are working with log2 fold changes so this translates to an actual fold change of 2 which is pretty reasonable. Now let's setup our **`subset()` function**. Start building from the inside out:
-
-	subset(res_tableOE)
-
-We need to add our selection criteria. The first is our FDR threshold:
-
-	subset(res_tableOE, padj < padj.cutoff)
-
-Now let's add in the log2 fold change criteria. Because we want both up- and down-regulated genes we will use the absolute value of the fold change using the `abs(log2FoldChange)` function:
-
-	subset(res_tableOE, padj < padj.cutoff & abs(log2FoldChange) > lfc.cutoff)
-
-Now, finally we will put all of that inside the `summary()` function. This is a fast way of getting overall statistics and deciding whether our threshold is still too liberal or perhaps overly stringent.
-
-	summary(subset(res_tableOE, padj < padj.cutoff & abs(log2FoldChange) > lfc.cutoff), alpha =0.05)
-
-
-**Does this reduce our results? How many genes are up-regulated and down-regulated at this new threshold?**
-
-We should have a total of 884 genes (682 up-regulated and 202 down-regulated) that are significantly differentially expressed. To denote these genes as significant we can add a column in our results table. The column will be a logical vector, where `TRUE` means the gene passes our threshold and `FALSE` means it fails.
-
-	# Add a threshold vector
-	threshold <- res_tableOE$padj < padj.cutoff & 
-                   abs(res_tableOE$log2FoldChange) > lfc.cutoff
-                   
-To add this vector to our results table we can use the `$` notation to create the column on the left hand side of the assignment operator, and the assign the vector to it:
-
-	res_tableOE$threshold <- threshold                
-
-Now we can easily check how many genes are significant by using the `which()` function:
-
-	length(which(res_tableOE$threshold))
+1. Create a contrasts vector for the Mov10_overexpression comparison to *all other samples*.
 
 ***
 
-**Exercise**
-
-1. Explore the results table summary for the **Mov10_knockdown comparison to control**. How many genes are differentially expressed using the default thresholds?
-2. Using the same thresholds as above (`padj.cutoff < 0.05` and `lfc.cutoff = 1`), report the number of genes that are up- and down-regulated in Mov10_knockdown compared to control.
-3. Add a new column called `threshold` to the `res_tableKD` which contains a logical vector denoting genes as being differentially expressed or not.
-
-*** 
 
 > **NOTE: on p-values set to NA**
 > > 
 > 1. If within a row, all samples have zero counts, the baseMean column will be zero, and the log2 fold change estimates, p-value and adjusted p-value will all be set to NA.
 > 2. If a row contains a sample with an extreme count outlier then the p-value and adjusted p-value will be set to NA. These outlier counts are detected by Cook’s distance. 
 > 3. If a row is filtered by automatic independent filtering, for having a low mean normalized count, then only the adjusted p-value will be set to NA. 
-
-
 
 
 ---
