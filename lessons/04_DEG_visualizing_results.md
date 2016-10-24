@@ -60,7 +60,7 @@ The `lfc.cutoff` is set to 0.58; remember that we are working with log2 fold cha
 
 	threshold <- res_tableOE$padj < padj.cutoff & abs(res_tableOE$log2FoldChange) > lfc.cutoff
 
-We now have a logical vector of values that has a length which is equal to the total number of genes in the dataset. The elements that have a `TRUE` value correspond to genes that meet the criteria (and `FALSE` means it fails). **How many genes are differntially expressed given our criteria specified above?** Does this reduce our results? 
+We now have a logical vector of values that has a length which is equal to the total number of genes in the dataset. The elements that have a `TRUE` value correspond to genes that meet the criteria (and `FALSE` means it fails). **How many genes are differentially expressed in the Overexpression compared to Control, given our criteria specified above?** Does this reduce our results? 
 
 	length(which(threshold == TRUE))
 	
@@ -76,7 +76,7 @@ Using the same thresholds as above (`padj.cutoff < 0.05` and `lfc.cutoff = 0.58`
 
 	threshold <- res_tableOKD$padj < padj.cutoff & abs(res_tableKD$log2FoldChange) > lfc.cutoff
 
-Take this new threshold vector and add it as a new column called `threshold` to the `res_tableKD` which contains a logical vector denoting genes as being differentially expressed or not. **How many genes are differntially expressed in the Knockdwn compared to Control?**
+Take this new threshold vector and add it as a new column called `threshold` to the `res_tableKD` which contains a logical vector denoting genes as being differentially expressed or not. **How many genes are differentially expressed in the Knockdwn compared to Control?**
 
 	res_tableKD$threshold <- threshold  
  
