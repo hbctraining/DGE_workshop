@@ -8,10 +8,78 @@ Approximate time: 75 minutes
 
 ## Learning Objectives 
 
+* Summarizing significant differentially expressed genes for each comparison
 * Exploring our significant genes using data visualization
 * Using volcano plots to evaluate relationships between DEG statistics
 * Plotting expression of significant genes using heatmaps
 
+## Summarizing results and identifying DEGs
+
+To summarize the results table, a handy function in DESeq2 is `summary()`. Confusingly it has the same name as the function used to inspect data frames. This function when called with a DESeq results table as input, will summarize the results at a an FDR < 0.1. 
+
+	## Summarize results
+	summary(res_tableOE)
+	
+
+```  
+out of 19748 with nonzero total read count
+adjusted p-value < 0.1
+LFC > 0 (up)     : 3657, 19% 
+LFC < 0 (down)   : 3897, 20% 
+outliers [1]     : 0, 0% 
+low counts [2]   : 3912, 20% 
+(mean count < 4)
+[1] see 'cooksCutoff' argument of ?results
+[2] see 'independentFiltering' argument of ?results
+```
+
+In addition to the number of genes up- and down-regulated at the default threshold, **the function also reports the number of genes that were tested (genes with non-zero total read count), and the number of genes not included in multiple test correction due to a low mean count** (which in our case is < 4).
+
+The default FDR threshold is set to `alpha = 0.1`, which is quite liberal. Let's try changing that to `0.05` -- *how many genes are we left with*?
+
+
+***
+
+**Exercise**
+
+1. Explore the results table summary for the **Mov10_knockdown comparison to control**. How many genes are differentially expressed at FDR < 0.1? How many fewer genes do we find at FDR < 0.05?
+
+***
+
+The FDR threshold on it's own doesn't appear to be reducing the number of significant genes. With large significant gene lists it can be hard to extract meaningful biological relevance. To help increase stringency, one can also **add a fold change threshold**. The `summary()` function doesn't have an argument for fold change threshold,
+
+> *NOTE:* the `results()` function does have an option to add a fold change threshold and subset the data this way. Take a look at the help manual using `?results` and see what argument would be required. Rather than subsetting the results, we want to reatin the whole dataset and simply identify which genes meet our criteria. 
+
+Let's first create variables that contain our threshold criteria:
+
+	### Set thresholds
+	padj.cutoff <- 0.05
+	lfc.cutoff <- 0.58
+
+The `lfc.cutoff` is set to 0.58; remember that we are working with log2 fold changes so this translates to an actual fold change of 1.5 which is pretty reasonable. Let's create vector that helps us identify the genes that meet our criteria:
+
+	threshold <- res_tableOE$padj < padj.cutoff & abs(res_tableOE$log2FoldChange) > lfc.cutoff
+
+We now have a logical vector of values that has a length which is equal to the total number of genes in the dataset. The elements that have a `TRUE` value correspond to genes that meet the criteria (and `FALSE` means it fails). **How many genes are differntially expressed given our criteria specified above?** Does this reduce our results? 
+
+	length(which(threshold == TRUE))
+	
+To add this vector to our results table we can use the `$` notation to create the column on the left hand side of the assignment operator, and the assign the vector to it:
+
+	res_tableOE$threshold <- threshold                
+
+Now we can easily subset the results table to only include those that are significant using either the `subset()` function:
+
+	subset(res_tableOE, threshold == TRUE)
+
+Using the same thresholds as above (`padj.cutoff < 0.05` and `lfc.cutoff = 0.58`), create a threshold vector to report the number of genes that are up- and down-regulated in Mov10_knockdown compared to control.
+
+	threshold <- res_tableOKD$padj < padj.cutoff & abs(res_tableKD$log2FoldChange) > lfc.cutoff
+
+Take this new threshold vector and add it as a new column called `threshold` to the `res_tableKD` which contains a logical vector denoting genes as being differentially expressed or not. **How many genes are differntially expressed in the Knockdwn compared to Control?**
+
+	res_tableKD$threshold <- threshold  
+ 
 
 ## Visualizing the results
 
