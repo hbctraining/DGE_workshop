@@ -74,7 +74,9 @@ Overall, we observe pretty high correlations across the board ( > 0.999) suggest
 > heat.colors <- brewer.pal(6, "Blues")
 > pheatmap(rld_cor, color = heat.colors, border_color=NA, fontsize = 10, 
 >			fontsize_row = 10, height=20)
-> ```              
+> ```       
+> Curious on all of the available color palettes offered by the RColorBrewer package? Try typing in your console `display.brewer.all()` and see what happens!
+>
 
 
 ## Saving the Project
