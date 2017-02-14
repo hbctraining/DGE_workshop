@@ -1,15 +1,15 @@
 ---
 title: "Functional Analysis for RNA-Seq"
 author: "Mary Piper"
-date: "October 17, 2016"
+date: "Thursday, December 1, 2016"
 ---
 
-Approximate time: 60 minutes
+Approximate time: 105 minutes
 
 Learning Objectives:
 -------------------
 
-*  Determine how biological functions are attributed to genes using Gene Ontology terms
+*  Determine how functions are attributed to genes using Gene Ontology terms
 *  Understand the theory of how functional enrichment tools yield statistically enriched functions or interactions
 *  Discuss functional analysis using over-representation analysis, functional class scoring, and pathway topology methods
 *  Explore functional analysis tools
@@ -27,7 +27,7 @@ Generally for any differential expression analysis, it is useful to interpret th
 ![Pathway analysis tools](../img/pathway_analysis.png)
 
 ## Over-representation analysis
-There are a plethora of functional enrichment tools that perform some type of over-representation analysis by querying databases containing information about gene function and interactions. Querying these databases for gene function often requires the use of a **consistent vocabulary** to describe gene function. One of the most widely-used vocabularies is the Gene Ontology (GO). This vocabulary was established by the Gene Ontology project, and the words in the vocabulary are referred to as GO terms. 
+There are a plethora of functional enrichment tools that perform some type of over-representation analysis by querying databases containing information about gene function and interactions. **Querying these databases for gene function requires the use of a _consistent vocabulary_ to describe gene function.** One of the most widely-used vocabularies is the **Gene Ontology (GO)**. This vocabulary was established by the Gene Ontology project, and the words in the vocabulary are referred to as GO terms. 
 
 ### Gene Ontology project
 
@@ -41,11 +41,11 @@ Tools that investigate **enrichment of biological functions or interactions** ca
 
 To describe the roles of genes and gene products, GO terms are organized into three independent controlled vocabularies (ontologies) in a species-independent manner: 
 
-- **Biological process:** refers to the biological process the gene or gene product is involved in (e.g. "transcription", "signal transduction", "apoptosis", etc.). 
+- **Biological process:** refers to the biological role involving the gene or gene product, and could include "transcription", "signal transduction", and "apoptosis". A biological process generally involves a chemical or physical change of the starting material or input.
 - **Molecular function:** represents the biochemical activity of the gene product, such activities could include "ligand", "GTPase", and "transporter". 
 - **Cellular component:** refers to the location in the cell of the gene product. Cellular components could include "nucleus", "lysosome", and "plasma membrane".
 
-"The relationships between a gene product to biological process, molecular function and cellular component are one-to-many, reflecting the biological reality that a particular protein may function in several processes, contain domains that carry out diverse molecular functions, and participate in multiple alternative interactions with other proteins, organelles or locations in the cell" [[3](go.pdf)]. Therefore, a single gene product can be associated with many GO terms. Each GO term has a term name (e.g. DNA repair) and a unique term accession number (GO:0005125).
+Each GO term has a term name (e.g. DNA repair) and a unique term accession number (GO:0005125), and a single gene product can be associated with many GO terms, since a single gene product "may function in several processes, contain domains that carry out diverse molecular functions, and participate in multiple alternative interactions with other proteins, organelles or locations in the cell" [[3](go.pdf)]. 
 
 #### GO term hierarchy
 
@@ -55,7 +55,7 @@ For example, the protein, "p53", would contain a wealth of information on it's r
 
 The GO ontologies were developed to describe and query biological knowledge with differing levels of information available. To do this, GO ontologies are loosely hierarchical, ranging from general, 'parent', terms to more specific, 'child' terms. The GO ontologies are "loosely" hierarchical since 'child' terms can have multiple 'parent' terms.
 
-Some genes with less information may only be associated with general 'parent' terms or no terms at all, while other genes with a lot of information have many terms.
+Some genes with less information may only be associated with general 'parent' terms or no terms at all, while other genes with a lot of information be associated with many terms.
 
 ![Nature Reviews Cancer 7, 23-34 (January 2007)](../img/go_heirarchy.jpg)
 
@@ -63,24 +63,21 @@ Some genes with less information may only be associated with general 'parent' te
 
 ### Hypergeometric testing
 
-In a set of genes, the frequency of GO terms can be determined, and the comparison of frequencies between a gene list & a “background” set will inform us about the over- or under- representation of the GO terms. This type of testing can inform us about over- or under-representation of other entities such as particular motifs or pathways too.
+In a set of genes, the frequency of GO terms can be determined, and the comparison of frequencies between a gene list & a “background” set will inform us about the over- or under-representation of the GO terms. This type of testing can inform us about over- or under-representation of other entities such as *particular motifs or pathways* too.
 
 ![go_frequencies](../img/go_freq.png)
 
-To determine whether GO terms (or motifs and pathways) are over- or under-represented, you can determine the probability of having a certain number of genes associated with specific GO terms for the size of the gene list based on the background set. The background dataset can be all genes in genome for your organism or you can select your own background to use.
+To determine whether GO terms (or motifs and pathways) are over- or under-represented, you can determine the **probability of having the observed proportion of genes associated with a specific GO term in your gene list based on the proportion of genes associated with the same GO term in the background set**. The background dataset can be all genes in genome for your organism or you can select your own background to use.
 
 For example, let's suppose there are 13,000 total genes in the honeybee genome and 85 genes are associated with the GO term "DNA repair". In your gene list, there are 50 genes associated with "DNA repair" out of 1,000 genes in gene list. 
 
 By comparing the ratios, 85/13,000 in "background" dataset and 50/1,000 in your gene list, it's evident that the GO term "DNA repair" is over-represented in your dataset.
 
-To determine whether a GO term or pathway is *significantly* over- or under-represented, tools often perform **hypergeometric testing**. "The hypergeometric distribution is a discrete probability distribution that describes the probability of _k_ successes in _n_ draws, without replacement, from a finite population of size _N_ that contains exactly _K_ successes, wherein each draw is either a success or a failure" [[4](https://en.wikipedia.org/wiki/Hypergeometric_distribution)]. 
-
-Therefore, using our example, the hypergeometric distribution describes the probability of 50 genes (k) being associated with "DNA repair", for all genes in our gene list (n=1,000), from a population of all of the genes in entire genome (N=13,000) which contains 85 genes (K) associated with "DNA repair".
+To determine whether a GO term or pathway is *significantly* over- or under-represented, tools often perform **hypergeometric testing**. Using our honeybee example, the hypergeometric distribution is a probability distribution that describes the probability of 50 genes (k) being associated with "DNA repair", for all genes in our gene list (n=1,000), from a population of all of the genes in entire genome (N=13,000) which contains 85 genes (K) associated with "DNA repair" [[4](https://en.wikipedia.org/wiki/Hypergeometric_distribution)].
 
 The calculation of probability of k successes follows the formula:
 
 ![hypergeo](../img/hypergeo.png) 
-
 
 ### gProfiler
 
@@ -98,13 +95,21 @@ Also, due to the hierarchical structure of GO terms, you may return many terms t
 
 #### Running gProfiler
 
-For our gProfiler analysis, we are going to use the Mov10_oe results table subsetted using the thresholds of logFC = 1 (2x) and padj = 0.05, which is saved as `SigOE`. 
-```
+For our gProfiler analysis, we are going to subset our `res_tableOE` only using a padjusted-value threshold of 0.05 (padj = 0.05). 
+
+```r
 ### Functional analysis of MOV10 Overexpression using gProfileR (some of these are defaults; check help pages) 
 
 library(gProfileR)
 
-gprofiler_results_oe <- gprofiler(query = sigOE, 
+# Subsetting dataset to only include significant genes with padj < 0.05
+
+sig_genes_table <- subset(res_tableOE, padj < 0.05) 
+sig_genes_table <- data.frame(sig_genes_table)
+
+# Running gprofiler to identify enriched processes among significant genes
+
+gprofiler_results_oe <- gprofiler(query = rownames(sig_genes_table), 
                                   organism = "hsapiens",
                                   ordered_query = F, 
                                   exclude_iea = F, 
@@ -119,7 +124,7 @@ gprofiler_results_oe <- gprofiler(query = sigOE,
 
 Let's save the gProfiler results to file:
 
-```
+```r
 ## Write results to file
 
 write.table(gprofiler_results_oe, 
@@ -129,7 +134,7 @@ write.table(gprofiler_results_oe,
 
 Now, extract only the lines in the gProfiler results with GO term accession numbers for downstream analyses:
 
-```
+```r
 ## Extract GO IDs for downstream analysis
 
 allterms_oe <- gprofiler_results_oe$term.id
@@ -155,9 +160,86 @@ J. Reimand, T. Arak, P. Adler, L. Kolberg, S. Reisberg, H. Peterson, J. Vilo. g:
 
 Supek F, Bošnjak M, Škunca N, Šmuc T. REVIGO summarizes and visualizes long lists of Gene Ontology terms. PLoS ONE 2011. doi:10.1371/journal.pone.0021800
 
-## [Other functional analysis methods](https://github.com/hbc/DGE_workshop/blob/master/lessons/functional_analysis_other_methods.md)
+## clusterProfiler
+Similar to gprofileR, the tool [clusterProfiler](http://bioconductor.org/packages/release/bioc/html/clusterProfiler.html) performs over-representation analysis on GO terms associated with a list of genes. The GO terms output by clusterProfiler are generally quite similar to those output by gprofileR, but there are small differences due to the different algorithms used by the programs.
 
-Over-representation analyses are only a single type of functional analysis method that is available for teasing apart the biological processes important to your condition of interest. Other types of analyses can be equally important or informative, including functional class scoring and pathway topology methods. Functional class scoring methods most often take as input the foldchanges for all genes, then look to see whether gene sets for particular biological processes are enriched among the high or low fold changes. This type of analysis can be particularly helpful if differential expression analysis only output a small list of significant DE genes. Finally, pathway topology analysis often takes into account both fold changes and adjusted p-values to identify dysregulated pathways and outputs whether pathways are inhibited/activated. We have [materials](https://github.com/hbc/DGE_workshop/blob/master/lessons/functional_analysis_other_methods.md) to lead you through these other types of functional analyses, and we encourage you to take the time to work through them.
+```r
+# Load libraries
+library(clusterProfiler)
+library(DOSE)
+library(org.Hs.eg.db)
+library(biomaRt)
+
+# clusterProfiler does not work as easily using gene names, so turning gene names into Ensembl IDs using biomaRt package for the significant genes and the background genes
+
+mart <- useDataset("hsapiens_gene_ensembl",
+                   useMart('ENSEMBL_MART_ENSEMBL',
+                           host =  'grch37.ensembl.org'))
+                           
+sig_genes_ensembl <- getBM(filters = "external_gene_name", 
+                values = rownames(sig_genes_table),
+                attributes = c("ensembl_gene_id", "external_gene_name"),
+                mart = mart)
+                
+sig_genes <- as.character(sig_genes_ensembl$ensembl_gene_id)
+
+# Create background dataset for hypergeometric testing using all genes tested for significance in the raw counts dataset
+
+all_genes <- getBM(filters = "external_gene_name", 
+                   values = rownames(data),
+                   attributes = "ensembl_gene_id",
+                   mart = mart)
+                   
+all_genes <- as.character(all_genes$ensembl_gene_id)
+
+# Run GO enrichment analysis 
+ego <- enrichGO(gene=sig_genes, universe=all_genes, keytype ="ENSEMBL", OrgDb=org.Hs.eg.db, ont="BP", pAdjustMethod = "BH", qvalueCutoff =0.05, readable=TRUE)
+
+# Output results from GO analysis to a table
+cluster_summary <- summary(ego)
+```
+![cluster_summary](../img/cluster_summary.png)
+
+### Visualizing clusterProfiler results
+ClusterProfiler has a variety of options for viewing the over-represented GO terms. We will explore the dotplot, enrichment plot, and the category netplot.
+
+The dotplot shows the number of genes associated with the first 25 terms (size) and the p-adjusted values for these terms (color). 
+
+```r
+dotplot(ego, showCategory=25)
+```
+
+![dotplot](../img/dotplot.png)
+
+The enrichment plot shows the relationship between the top 25 most significantly enriched GO terms, by grouping similar terms together.
+
+```r
+enrichMap(ego, n=25, vertex.label.font=10)
+```
+
+![enrichplot](../img/enrich.png)
+
+Finally, the category netplot shows the relationships between the genes associated with the top five most significant GO terms and the fold changes of the significant genes associated with these terms (color). This plot is particularly useful for hypothesis generation in identifying genes that may be important to several of the most affected processes. 
+
+```r
+cnetplot(ego, categorySize="pvalue", showCategory = 5, vertex.label.font=6)
+```
+
+![cnetplot](../img/cnet.png)
+
+**NOTE:** You can color genes by foldchanges by adding an argument called `foldChange` with a vector of foldchanges corresponding to the `sig_genes` vector. Also, if you are interested in significant processes that are **not** among the top five, you can subset your `ego` dataset to only display these processes:
+
+```r
+ego2 <- ego
+ego2@result <- ego@result[c(3,16,17,18,25),]
+cnetplot(ego2, categorySize="pvalue", showCategory = 5)
+```
+
+![cnet_example](../img/ego2_example.png)
+
+## [Other functional analysis methods](https://github.com/hbc/NGS-Data-Analysis-long-course/blob/Fall_2016/sessionIII/lessons/functional_analysis_other_methods.md)
+
+Over-representation analyses are only a single type of functional analysis method that is available for teasing apart the biological processes important to your condition of interest. Other types of analyses can be equally important or informative, including functional class scoring and pathway topology methods. Functional class scoring methods most often take as input the foldchanges for all genes, then look to see whether gene sets for particular biological processes are enriched among the high or low fold changes. This type of analysis can be particularly helpful if differential expression analysis only output a small list of significant DE genes. Finally, pathway topology analysis often takes into account both fold changes and adjusted p-values to identify dysregulated pathways and outputs whether pathways are inhibited/activated. We have [materials](https://github.com/hbc/NGS-Data-Analysis-long-course/blob/Fall_2016/sessionIII/lessons/functional_analysis_other_methods.md) to lead you through these other types of functional analyses, and we encourage you to take the time to work through them.
 
 ![Pathway analysis tools](../img/pathway_analysis.png)
 
