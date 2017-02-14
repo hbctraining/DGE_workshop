@@ -55,6 +55,8 @@ Below is some of the metadata associated with the dataset we are using today.
 * Sequencing was carried out on the **Illumina HiSeq-2500 for 100bp single end** reads. 
 * **~40 million reads** per sample were generated.
 
+> [Metadata generation/maintenance](http://datamanagement.hms.harvard.edu/metadata-overview) is part of ["Data Management"](http://datamanagement.hms.harvard.edu/biomedical-data-management-planning), which is an important aspect of working with large datasets.
+
 ***
 
 **Exercise**
@@ -92,18 +94,18 @@ Let's get started by opening up RStudio and setting up a new project for this an
 
 1. Go to the `File` menu and select `New Project`.
 2. In the `New Project` window, choose `New Directory`. Then, choose `Empty Project`. Name your new directory `DEanalysis` and then "Create the project as subdirectory of:" the Desktop (or location of your choice).
-3. After your project is completed, it should automatically open in RStudio. 
+3. The new project should automatically open in RStudio. 
 
-To check whether or not you are in the correct working directory, use `getwd()`. The path `Desktop/DEanalysis` should be returned to you in the console. Within your working directory use the `New folder` button in the bottom right panel to create three new directories: `data`, `meta` and `results`. Remember the key to a good analysis is keeping organized from the start!
+To check whether or not you are in the correct working directory, use `getwd()`. It shoud return a path similar to `/../../DEanalysis` in the console. Create 3 new folders/directories called `data`, `meta` and `results` using the `New folder` button in the `Files` tab (panel on the right side under the Environment panel). Remember the key to a good analysis is keeping organized from the start!
 
-Go to the `File` menu and select `New File`, and select `R Script`. This should open up a script editor in the top left hand corner. This is where we will be typing and saving all commands required for this analysis. In the script editor type in a header line:
+Go to the `File` menu at the top left, and select `New File` followed by `R Script`. This should open up a script editor in the top left hand corner. This is where we will be typing and saving all commands required for this analysis, just as we did the R course. Let's get started by typing in the following (commented) header lines:
 
 ```
 ## Gene-level differential expression analysis using DESeq2
-## NGS Data Analysis 2016
+## Feb 15th 2017
 ```
 
-Now save the file as `de_script.R`. When finished your working directory should now look something like this:
+Now save the file as `de_script.R`. When finished your working directory should now look similar to this:
 
 ![setup](../img/settingup.png)
 
