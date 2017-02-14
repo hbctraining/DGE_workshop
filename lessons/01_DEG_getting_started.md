@@ -48,7 +48,7 @@ In addition to the raw sequence data that is available in SRA we also need to co
 
 Data sharing is important in the biological sciences to promote scientific integrity, and disseminate scientific discovery; but it can be difficult if all of the required information is not provided. From the SRA we can retrieve the sequence data (FASTQ files), but how useful is it if we know nothing about the samples that this sequence data originated from? **Metadata is a broadly used term which encompasses any kind of information that relates to our data, whether it is about the experimental design (i.e genotype) or metrics related to the sequence data (i.e sequencing depth).**
 
-Here, we provide metadata for the data we are using today.
+Below is some of the metadata associated with the dataset we are using today.
 
 * The RNA was extracted from treated **HEK293F cells**.  
 * The cDNA libraries for this dataset are **stranded** and were generated using the **TruSeq Stranded mRNA Library Prep Kit** from Illumian. 
