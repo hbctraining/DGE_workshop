@@ -203,7 +203,7 @@ cluster_summary <- summary(ego)
 ![cluster_summary](../img/cluster_summary.png)
 
 ### Visualizing clusterProfiler results
-ClusterProfiler has a variety of options for viewing the over-represented GO terms. We will explore the dotplot, enrichment plot, and the category netplot.
+clusterProfiler has a variety of options for viewing the over-represented GO terms. We will explore the dotplot, enrichment plot, and the category netplot.
 
 The dotplot shows the number of genes associated with the first 25 terms (size) and the p-adjusted values for these terms (color). 
 
@@ -229,7 +229,7 @@ cnetplot(ego, categorySize="pvalue", showCategory = 5, vertex.label.font=6)
 
 ![cnetplot](../img/cnet.png)
 
-**NOTE:** You can color genes by foldchanges by adding an argument called `foldChange` with a vector of foldchanges corresponding to the `sig_genes` vector. Also, if you are interested in significant processes that are **not** among the top five, you can subset your `ego` dataset to only display these processes:
+**NOTE:** You can color genes by fold changes by adding an argument called `foldChange` with a vector of foldchanges corresponding to the `sig_genes` vector. Also, if you are interested in significant processes that are **not** among the top five, you can subset your `ego` dataset to only display these processes:
 
 ```r
 ego2 <- ego
