@@ -1,7 +1,7 @@
 ---
 title: "Gene-level differential expression analysis using DESeq2"
 author: "Meeta Mistry"
-date: "October 17, 2016"
+date: "February 14, 2017"
 ---
 
 Approximate time: 45 minutes
@@ -24,7 +24,7 @@ Let's get started by opening RStudio and opening up the project that we created 
 
 You should see your environment become populated with all of the variables created last lesson. The only thing that we will need to do is reload the required libraries:
 
-```
+```r
 library(ggplot2)
 library(RColorBrewer)
 library(DESeq2)
@@ -36,9 +36,11 @@ library(pheatmap)
 
 To run the differential expression pipeline on the raw counts in DESeq2, we use a **single call to the function `DESeq()`**. The required input is the `DESeqDataSet` object that we created in the last lesson. By re-assigning the results of the function back to the same variable name, we can continue to fill in the `slots` of our `DESeqDataSet` object.
 
-	##Run analysis
-	dds <- DESeq(dds)
- 
+```r
+##Run analysis
+dds <- DESeq(dds)
+```
+
 This function will print out a message for the various steps it performs: 
 
 ```
@@ -65,11 +67,11 @@ fitting model and testing
 
 To normalize the count data DESeq2 calculates size factors for each sample, using the *median of ratios method*. Let's take a quick look at size factor values we have for each sample:
 
-```
-> sizeFactors(dds)
+```r
+sizeFactors(dds)
+
 Mov10_kd_2 Mov10_kd_3 Mov10_oe_1 Mov10_oe_2 Mov10_oe_3 Irrel_kd_1 Irrel_kd_2 Irrel_kd_3 
- 1.5646728  0.9351760  1.2016082  1.1205912  0.6534987  1.1224020  0.9625632  0.7477715 
- 
+ 1.5646728  0.9351760  1.2016082  1.1205912  0.6534987  1.1224020  0.9625632  0.7477715  
 ```
  
 These numbers should be identical to those we generated initially when we had run the function `estimateSizeFactors(dds)`. Take a look at the total number of reads for each sample using `colSums(counts(dds))`. *How do the numbers correlate with the size factor?*
@@ -87,9 +89,10 @@ In our model, the **within group variability** is accounted for using the disper
 
 Let's take a look at the dispersion estimates for our data:
 
-	# Plot dispersion estimates
-	plotDispEsts(dds)
-	
+```r
+# Plot dispersion estimates
+plotDispEsts(dds)
+```
 
 <img src="../img/plotDispersion.png">
  
@@ -137,19 +140,24 @@ DESeq2 performs a hypothesis test for all possible pairwise comparisons. In orde
 
 We need to use the coefficient names to specify our comparisons, these correspond to the headers in your design matrix. To find out how the coefficients are named we can use the `resultsNames()` function:
 
-	# Find names of coefficients
-	resultsNames(dds)
+```r
+# Find names of coefficients
+resultsNames(dds)
+```
 
 To specify the specific contrasts, we need to provide the column names from the coefficients table as a list of 2 character vectors:
 
-	## Define contrasts
-	contrast_oe <- list( "sampletypeMOV10_overexpression", "sampletypecontrol")
+```r
+## Define contrasts
+contrast_oe <- list( "sampletypeMOV10_overexpression", "sampletypecontrol")
+```
 
 **The order of the names, determines the direction of fold change that is reported.** The name provided in the second element is the level that is used to baseline. So for example, if we observe a log2 fold change of -2 this would mean the gene expression is lower in Mov10_oe relative to the control. Pass the contrast vector as an argument to the `results()` function:
 
-	# Extract results table
-	res_tableOE <- results(dds, contrast=contrast_oe)
-
+```r
+# Extract results table
+res_tableOE <- results(dds, contrast=contrast_oe)
+```
 
 This will build a results table containing Wald test statistics for the comparison we are interested in. Let's take a look at what information is stored in the results:
 
@@ -172,7 +180,9 @@ A2M           5.8600841    -0.27850841 0.18051805 -1.5428286 0.1228724 0.2148906
 
 Let's go through some of the columns in the results table to get a better idea of what we are looking at. To extract information regarding the meaning of each column we can use `mcols()`:
 
-	mcols(res_tableOE, use.names=T)
+```r
+mcols(res_tableOE, use.names=T)
+```
 
 * `baseMean`: mean of normalized counts for all samples
 * `log2FoldChange`: log2 fold change
@@ -183,13 +193,17 @@ Let's go through some of the columns in the results table to get a better idea o
  
 Now that we have results for the overexpression results, let's do the same for the **Control vs. Knockdown samples**. The first thing, we need to do is create a contrasts vector called `contrast_kd` for the Mov10_knockdown comparison to control.
 
-	## Define contrasts
-	contrast_kd <- list( "sampletypeMOV10_knockdown", "sampletypecontrol")
+```r
+## Define contrasts
+contrast_kd <- list( "sampletypeMOV10_knockdown", "sampletypecontrol")
+```
 
 Use that contrasts vector to extract a results table and store that to a variable called `res_tableKD`.  
 
-	# Extract results table
-	res_tableKD <- results(dds, contrast=contrast_kd)
+```r
+# Extract results table
+res_tableKD <- results(dds, contrast=contrast_kd)
+```
 
 Take a quick peek at the results table containing Wald test statistics for the Control-Knockdown comparison we are interested in and make sure that format is similar to what we observed with the OE.
 
