@@ -27,7 +27,7 @@ The DESeq2 solution to this is the **regularized log transform** [[Love, Huber, 
 rld <- rlog(dds, blind=TRUE)
 ```
 
-The `rlog` function returns a `DESeqTransform`, another type of DESeq-specific object. The reason you don't just get a matrix of transformed values is because all of the parameters (i.e. size factors) that went in to computing the rlog transform are stored in that object. We will be using this object to plot figures for quality assessment.
+The `rlog` function returns a `DESeqTransform` object, another type of DESeq-specific object. The reason you don't just get a matrix of transformed values is because all of the parameters (i.e. size factors) that went in to computing the rlog transform are stored in that object. We will be using this object to plot figures for quality assessment.
 
 ## Quality assessment and exploratory analysis	
 <img src="../img/slide12_DGE.png" width="400">
@@ -47,7 +47,7 @@ plotPCA(rld, intgroup="sampletype")
 
 ![pca](../img/pca_500.png)
 
-**What does this plot tell you about the similarity of samples? Does it fit the expectation from the experimental design?** By default the function uses the *top 500 most variable genes*. You can change this by adding the `ntop` argument and specifying how many genes you want to use.
+**What does this plot tell you about the similarity of samples? Does it fit the expectation from the experimental design?** By default the function uses the *top 500 most variable genes*. You can change this by adding the `ntop` argument and specifying how many genes you want to use to draw the plot.
 
 ***
 
@@ -61,23 +61,22 @@ Plot the PCA using *all of the genes* in your original count matrix. *Hint: you 
 
 Another method for quality assessment of data is to cluster samples based on how dis/similar they are to one another. In this lesson, we will be using the Pearson correlation to measure similarity between samples. Alternatively, it is also common to compute distance-based measures (i.e Poisson distance) as input to clustering. 
 
-
 Using correlation values is referred to as an inter-correlation analysis (ICA). This involves taking each sample as a vector of ~22k values and then making pair-wise comparisons between all samples by computing a Pearson correlation. Generally, we expect to see a fairly high correlation (> 0.95) between all samples for a good dataset. Additionally, we expect to see samples clustered similar to the groupings observed in a PCA plot.
 
-Samples that show particularly low correlation values with all other samples (< 0.80) represent outliers. These samples are usually removed. Additionally, the heatmap is useful in identifying batch effects based on block structures that correspond to when the samples were run.
+Samples that show particularly low correlation values with all other samples (< 0.80) represent outliers. These samples are usually removed. Additionally, the heatmap is useful in identifying any underlying batch effects (known or unknown).
 
-Since there is no built-in function for heatmaps in DESeq2 we will be using `pheatmap()`. This function requires a matrix/dataframe of numeric values as input, and so the first thing we need to is retrieve that information from the `rld` object:
+Since there is no built-in function for heatmaps in DESeq2 we will be using the `pheatmap()` function from the `pheatmap` package. This function requires a matrix/dataframe of numeric values as input, and so the first thing we need to is retrieve that information from the `rld` object:
 
 ```r
 ### Extract the rlog matrix from the object
-rld_mat <- assay(rld) 
+rld_mat <- assay(rld)    ## assay() is function from the "SummarizedExperiment" package that was loaded when you loaded DESeq2
 ```
 
 Then we need to compute the pairwise correlation values for samples. We can do this using the `cor()` function:
 
 ```r
 ### Compute pairwise corrrelation values
-rld_cor <- cor(rld_mat)
+rld_cor <- cor(rld_mat)    ## cor() is a base R function
 ```
 
 And now to plot the correlation values as a heatmap:
@@ -105,7 +104,7 @@ Overall, we observe pretty high correlations across the board ( > 0.999) suggest
 
 ## Saving the Project
 
-Now we are set up to run the comparisons between the 3 groups and get lists of differentially expressed genes. **Make sure you save your R session as you quit RStudio to your DEanalysis project, so you don't lose all your work from this setting up module!**
+Now we are set up to run the comparisons between the 3 groups and get lists of differentially expressed genes. **Make sure you save your R session as you quit RStudio to your DEanalysis project, so you don't lose your work from this morning's modules!**
 
 
 ---
