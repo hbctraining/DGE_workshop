@@ -17,11 +17,12 @@ Approximate time: 75 minutes
 
 To summarize the results table, a handy function in DESeq2 is `summary()`. Confusingly it has the same name as the function used to inspect data frames. This function when called with a DESeq results table as input, will summarize the results at a an FDR < 0.1. 
 
-	## Summarize results
-	summary(res_tableOE)
-	
+```r
+## Summarize results
+summary(res_tableOE)
+```
 
-```  
+```r  
 out of 19748 with nonzero total read count
 adjusted p-value < 0.1
 LFC > 0 (up)     : 3657, 19% 
@@ -52,34 +53,47 @@ The FDR threshold on it's own doesn't appear to be reducing the number of signif
 
 Let's first create variables that contain our threshold criteria:
 
-	### Set thresholds
-	padj.cutoff <- 0.05
-	lfc.cutoff <- 0.58
+```r
+### Set thresholds
+padj.cutoff <- 0.05
+lfc.cutoff <- 0.58
+```
 
 The `lfc.cutoff` is set to 0.58; remember that we are working with log2 fold changes so this translates to an actual fold change of 1.5 which is pretty reasonable. Let's create vector that helps us identify the genes that meet our criteria:
 
-	threshold <- res_tableOE$padj < padj.cutoff & abs(res_tableOE$log2FoldChange) > lfc.cutoff
+```r
+threshold <- res_tableOE$padj < padj.cutoff & abs(res_tableOE$log2FoldChange) > lfc.cutoff
+```
 
 We now have a logical vector of values that has a length which is equal to the total number of genes in the dataset. The elements that have a `TRUE` value correspond to genes that meet the criteria (and `FALSE` means it fails). **How many genes are differentially expressed in the Overexpression compared to Control, given our criteria specified above?** Does this reduce our results? 
 
-	length(which(threshold == TRUE))
+```r
+length(which(threshold == TRUE))
+```
 	
 To add this vector to our results table we can use the `$` notation to create the column on the left hand side of the assignment operator, and the assign the vector to it:
 
-	res_tableOE$threshold <- threshold                
+```r
+res_tableOE$threshold <- threshold                
+```
 
 Now we can easily subset the results table to only include those that are significant using either the `subset()` function:
 
-	subset(res_tableOE, threshold == TRUE)
+```r
+subset(res_tableOE, threshold == TRUE)
+```
 
 Using the same thresholds as above (`padj.cutoff < 0.05` and `lfc.cutoff = 0.58`), create a threshold vector to report the number of genes that are up- and down-regulated in Mov10_knockdown compared to control.
 
-	threshold <- res_tableOKD$padj < padj.cutoff & abs(res_tableKD$log2FoldChange) > lfc.cutoff
+```r
+threshold <- res_tableOKD$padj < padj.cutoff & abs(res_tableKD$log2FoldChange) > lfc.cutoff
+```
 
 Take this new threshold vector and add it as a new column called `threshold` to the `res_tableKD` which contains a logical vector denoting genes as being differentially expressed or not. **How many genes are differentially expressed in the Knockdwn compared to Control?**
 
-	res_tableKD$threshold <- threshold  
- 
+```r
+res_tableKD$threshold <- threshold  
+``` 
 
 ## Visualizing the results
 
@@ -87,8 +101,10 @@ When we are working with large amounts of data it can be useful to display that 
 
 One way to visualize results would be to simply plot the expression data for a handful of our top genes. We could do that by picking out specific genes of interest, for example Mov10:
 
-	# Plot expression for single gene
-	plotCounts(dds, gene="MOV10", intgroup="sampletype")
+```r
+# Plot expression for single gene
+plotCounts(dds, gene="MOV10", intgroup="sampletype")
+```
 	
 ![topgene](../img/topgen_plot.png)
 
@@ -96,23 +112,25 @@ One way to visualize results would be to simply plot the expression data for a h
 
 This would be great to validate a few genes, but for more of a global view there are other plots we can draw. A commonly used one is a volcano plot; in which you have the log transformed adjusted p-values plotted on the y-axis and log2 fold change values on the x-axis. There is no built-in function for the volcano plot in DESeq2, but we can easily draw it using `ggplot2`. First, we will need to create a `data.frame` object from the results, which is currently stored in a `DESeqResults`  object:
 
-	# Create dataframe for plotting
-	df <- data.frame(res_tableOE)
+```r
+# Create dataframe for plotting
+df <- data.frame(res_tableOE)
+```
 
 Now we can start plotting. The `geom_point` object is most applicable, as this is essentially a scatter plot:
 
 ```
-	# Volcano plot
-	ggplot(df) +
-  		geom_point(aes(x=log2FoldChange, y=-log10(padj), colour=threshold)) +
-  		xlim(c(-2,2)) +
-  		ggtitle('Mov10 overexpression') +
-  		xlab("log2 fold change") + 
- 		ylab("-log10 adjusted p-value") +
-  		theme(legend.position = "none",
-        	plot.title = element_text(size = rel(1.5)),
-        	axis.title = element_text(size = rel(1.5)),
-        	axis.text = element_text(size = rel(1.25)))  
+# Volcano plot
+ggplot(df) +
+	geom_point(aes(x=log2FoldChange, y=-log10(padj), colour=threshold)) +
+	xlim(c(-2,2)) +
+	ggtitle('Mov10 overexpression') +
+	xlab("log2 fold change") + 
+	ylab("-log10 adjusted p-value") +
+	theme(legend.position = "none",
+    	plot.title = element_text(size = rel(1.5)),
+    	axis.title = element_text(size = rel(1.5)),
+    	axis.text = element_text(size = rel(1.25)))  
 ```
 
 ![volcano](../img/volcanoplot-1.png)
@@ -125,34 +143,41 @@ Alternatively, we could extract only the genes that are identifed as significant
 
 First, let's sort the results file by adjusted p-value:
 	
-	### Sort the results tables
-	res_tableOE_sorted <- res_tableOE[order(res_tableOE$padj), ]
-	res_tableKD_sorted <- res_tableKD[order(res_tableKD$padj), ]
-	
+```r
+### Sort the results tables
+res_tableOE_sorted <- res_tableOE[order(res_tableOE$padj), ]
+res_tableKD_sorted <- res_tableKD[order(res_tableKD$padj), ]
+```	
 Now let's get the gene names for those significant genes:
 
-	### Get significant genes
-	sigOE <- row.names(res_tableOE_sorted)[which(res_tableOE_sorted$threshold)]
-	sigKD <- row.names(res_tableKD_sorted)[which(res_tableKD_sorted$threshold)]
+```r
+### Get significant genes
+sigOE <- row.names(res_tableOE_sorted)[which(res_tableOE_sorted$threshold)]
+sigKD <- row.names(res_tableKD_sorted)[which(res_tableKD_sorted$threshold)]
+```
 	
 We can then use those genes to select the corresponding rows from the normalized data matrix:
 
-	### Extract normalized expression for significant genes
-	norm_OEsig <- normalized_counts[sigOE,]
+```r
+### Extract normalized expression for significant genes
+norm_OEsig <- normalized_counts[sigOE,]
+```
 
 Now let's draw the heatmap using `pheatmap`:
 
-	### Annotate our heatmap (optional)
-	annotation <- data.frame(sampletype=meta[,'sampletype'], 
-                         row.names=row.names(meta))
+```r
+### Annotate our heatmap (optional)
+annotation <- data.frame(sampletype=meta[,'sampletype'], 
+                     row.names=row.names(meta))
 
-	### Set a color palette
-	heat.colors <- brewer.pal(6, "YlOrRd")
-	
-	### Run pheatmap
-	pheatmap(norm_OEsig, color = heat.colors, cluster_rows = T, show_rownames=F,
-	annotation= annotation, border_color=NA, fontsize = 10, scale="row",
-         fontsize_row = 10, height=20)
+### Set a color palette
+heat.colors <- brewer.pal(6, "YlOrRd")
+
+### Run pheatmap
+pheatmap(norm_OEsig, color = heat.colors, cluster_rows = T, show_rownames=F,
+annotation= annotation, border_color=NA, fontsize = 10, scale="row",
+     fontsize_row = 10, height=20)
+```
          
 ![sigOE_heatmap](../img/sigOE_heatmap.png)       
 
