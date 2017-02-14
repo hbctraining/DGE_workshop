@@ -15,7 +15,7 @@ Approximate time: 75 minutes
 
 ## Summarizing results and identifying DEGs
 
-To summarize the results table, a handy function in DESeq2 is `summary()`. Confusingly it has the same name as the function used to inspect data frames. This function when called with a DESeq results table as input, will summarize the results at a an FDR < 0.1. 
+To summarize the results table, a handy function in DESeq2 is `summary()`. Confusingly it has the same name as the function used to inspect data frames. This function when called with a DESeq results table as input, will summarize the results using the default threshold: FDR < 0.1 (padj/FDR is used even though the output says `p-value < 0.1`). Let's start with the OE vs control results:
 
 ```r
 ## Summarize results
@@ -34,10 +34,9 @@ low counts [2]   : 3912, 20%
 [2] see 'independentFiltering' argument of ?results
 ```
 
-In addition to the number of genes up- and down-regulated at the default threshold, **the function also reports the number of genes that were tested (genes with non-zero total read count), and the number of genes not included in multiple test correction due to a low mean count** (which in our case is < 4).
+In addition to the number of genes up- and down-regulated at the default threshold, **the function also reports the number of genes that were tested (genes with non-zero total read count), and the number of genes not included in multiple test correction due to a low mean count** (which in our case is < 4 and was determined automatically by DESeq2 based on overall counts).
 
-The default FDR threshold is set to `alpha = 0.1`, which is quite liberal. Let's try changing that to `0.05` -- *how many genes are we left with*?
-
+The default FDR threshold is set using the option `alpha` within `summary()`; 0.1 is quite liberal so let's try changing that to `0.05` -- *how many genes are we left with*?
 
 ***
 
@@ -49,7 +48,7 @@ The default FDR threshold is set to `alpha = 0.1`, which is quite liberal. Let's
 
 The FDR threshold on it's own doesn't appear to be reducing the number of significant genes. With large significant gene lists it can be hard to extract meaningful biological relevance. To help increase stringency, one can also **add a fold change threshold**. The `summary()` function doesn't have an argument for fold change threshold,
 
-> *NOTE:* the `results()` function does have an option to add a fold change threshold and subset the data this way. Take a look at the help manual using `?results` and see what argument would be required. Rather than subsetting the results, we want to reatin the whole dataset and simply identify which genes meet our criteria. 
+> *NOTE:* the `results()` function does have an option to add a fold change threshold and subset the data this way. Take a look at the help manual using `?results` and see what argument would be required. However, rather than subsetting the results, we want to return the whole dataset and simply identify which genes meet our criteria. 
 
 Let's first create variables that contain our threshold criteria:
 
@@ -68,16 +67,16 @@ threshold <- res_tableOE$padj < padj.cutoff & abs(res_tableOE$log2FoldChange) > 
 We now have a logical vector of values that has a length which is equal to the total number of genes in the dataset. The elements that have a `TRUE` value correspond to genes that meet the criteria (and `FALSE` means it fails). **How many genes are differentially expressed in the Overexpression compared to Control, given our criteria specified above?** Does this reduce our results? 
 
 ```r
-length(which(threshold == TRUE))
+length(which(threshold))
 ```
 	
-To add this vector to our results table we can use the `$` notation to create the column on the left hand side of the assignment operator, and the assign the vector to it:
+To add this vector to our results table we can use the `$` notation to create the column on the left hand side of the assignment operator, and the assign the vector to it instead of using `cbind()`:
 
 ```r
 res_tableOE$threshold <- threshold                
 ```
 
-Now we can easily subset the results table to only include those that are significant using either the `subset()` function:
+Now we can easily subset the results table to only include those that are significant using the `subset()` function:
 
 ```r
 subset(res_tableOE, threshold == TRUE)
@@ -86,18 +85,18 @@ subset(res_tableOE, threshold == TRUE)
 Using the same thresholds as above (`padj.cutoff < 0.05` and `lfc.cutoff = 0.58`), create a threshold vector to report the number of genes that are up- and down-regulated in Mov10_knockdown compared to control.
 
 ```r
-threshold <- res_tableOKD$padj < padj.cutoff & abs(res_tableKD$log2FoldChange) > lfc.cutoff
+threshold_KD <- res_tableOKD$padj < padj.cutoff & abs(res_tableKD$log2FoldChange) > lfc.cutoff
 ```
 
-Take this new threshold vector and add it as a new column called `threshold` to the `res_tableKD` which contains a logical vector denoting genes as being differentially expressed or not. **How many genes are differentially expressed in the Knockdwn compared to Control?**
+Take this new threshold vector and add it as a new column called `threshold` to the `res_tableKD` which contains a logical vector denoting genes as being differentially expressed or not. **How many genes are differentially expressed in the Knockdown compared to Control?**
 
 ```r
-res_tableKD$threshold <- threshold  
+res_tableKD$threshold <- threshold_KD
 ``` 
 
 ## Visualizing the results
 
-When we are working with large amounts of data it can be useful to display that information graphically to gain more insight. Visualization deserves an entire course of its own (there is that much to know!). During this lesson we will get you started with some basic plots commonly used when exploring differntial gene expression data.
+When we are working with large amounts of data it can be useful to display that information graphically to gain more insight. Visualization deserves an entire course of its own, but during this lesson we will get you started with some basic plots commonly used when exploring differential gene expression data.
 
 One way to visualize results would be to simply plot the expression data for a handful of our top genes. We could do that by picking out specific genes of interest, for example Mov10:
 
@@ -110,7 +109,7 @@ plotCounts(dds, gene="MOV10", intgroup="sampletype")
 
 ### Volcano plot
 
-This would be great to validate a few genes, but for more of a global view there are other plots we can draw. A commonly used one is a volcano plot; in which you have the log transformed adjusted p-values plotted on the y-axis and log2 fold change values on the x-axis. There is no built-in function for the volcano plot in DESeq2, but we can easily draw it using `ggplot2`. First, we will need to create a `data.frame` object from the results, which is currently stored in a `DESeqResults`  object:
+The above plot would be great to validate a select few genes, but for more of a global view there are other plots we can draw. A commonly used one is a volcano plot; in which you have the log transformed adjusted p-values plotted on the y-axis and log2 fold change values on the x-axis. There is no built-in function for the volcano plot in DESeq2, but we can easily draw it using `ggplot2`. First, we will need to create a `data.frame` object from the results, which is currently stored in a `DESeqResults`  object:
 
 ```r
 # Create dataframe for plotting
@@ -138,17 +137,17 @@ ggplot(df) +
 
 ### Heatmap
 
-Alternatively, we could extract only the genes that are identifed as significant and the plot the expression of those genes using a heatmap.
+Alternatively, we could extract only the genes that are identified as significant and the plot the expression of those genes using a heatmap.
 
 
-First, let's sort the results file by adjusted p-value:
+To do this, let's start by sorting the results file by adjusted p-value:
 	
 ```r
 ### Sort the results tables
 res_tableOE_sorted <- res_tableOE[order(res_tableOE$padj), ]
 res_tableKD_sorted <- res_tableKD[order(res_tableKD$padj), ]
 ```	
-Now let's get the gene names for those significant genes:
+Now, let's get the gene names for those significant genes:
 
 ```r
 ### Get significant genes
@@ -191,8 +190,6 @@ annotation= annotation, border_color=NA, fontsize = 10, scale="row",
 2. Save both images to file.
 
 ***
-
-
 
 ---
 *This lesson has been developed by members of the teaching team at the [Harvard Chan Bioinformatics Core (HBC)](http://bioinformatics.sph.harvard.edu/). These are open access materials distributed under the terms of the [Creative Commons Attribution license](https://creativecommons.org/licenses/by/4.0/) (CC BY 4.0), which permits unrestricted use, distribution, and reproduction in any medium, provided the original author and source are credited.*
