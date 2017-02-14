@@ -116,7 +116,7 @@ Finally, we need to grab the files that we will be working with for the analysis
 
 For this analysis we will be using several R packages, some which have been installed from CRAN and others from Bioconductor. To use these packages (and the functions contained within them), we need to **load the libraries.** Add the following to your script and don't forget to comment liberally!
 
-```
+```r
 ## Setup
 ### Bioconductor and CRAN libraries used
 library(ggplot2)
@@ -129,7 +129,7 @@ library(pheatmap)
 
 To load the data into our current environment, we will be using the `read.table` function. We need to provide the path to each file and also specify arguments to let R know that we have a header (`header = T`) and the first column is our row names (`row.names =1`). By default the function expects tab-delimited files, which is what we have.
 
-```
+```r
 ## Load in data
 data <- read.table("data/Mov10_full_counts.txt", header=T, row.names=1) 
 
@@ -138,18 +138,20 @@ meta <- read.table("meta/Mov10_full_meta.txt", header=T, row.names=1)
 
 Use `class()` to inspect our data and make sure we are working with data frames:
 
-
-	### Check classes of the data we just brought in
-	class(data)
-	class(meta)
-
+```r
+### Check classes of the data we just brought in
+class(data)
+class(meta)
+```
 
 As a sanity check we should also make sure that we have sample names that match between the two files, and that the samples are in the right order.
 
-	### Check that sample names match in both files
-	all(names(data) %in% rownames(meta))
-	all(names(data) == rownames(meta))
-	
+```r
+### Check that sample names match in both files
+all(names(data) %in% rownames(meta))
+all(names(data) == rownames(meta))
+```
+
 ***
 
 **Exercise**	
@@ -169,17 +171,19 @@ The first thing we need to do is create `DESeqDataSet` object. Bioconductor soft
 
 Let's start by creating the `DESeqDataSet` object and then we can talk a bit more about what is stored inside it. To create the object we will need the **count matrix** and the **metadata** table as input. We will also need to specify a **design formula**. The design formula specifies the column(s) in the metadata table and how they should be used in the analysis. For our dataset we only have one column we are interested in, that is `~sampletype`. This column has three factor levels, which tells DESeq2 that for each gene we want to evaluate gene expression change with respect to these different levels.
 
-
-	## Create DESeq2Dataset object
-	dds <- DESeqDataSetFromMatrix(countData = data, colData = meta, design = ~ sampletype)
-
+```r
+## Create DESeq2Dataset object
+dds <- DESeqDataSetFromMatrix(countData = data, colData = meta, design = ~ sampletype)
+```
 
 ![deseq1](../img/deseq_obj1.png)
 
 
 You can use DESeq-specific functions to access the different slots and retrieve information, if you wish. For example, suppose we wanted the original count matrix we would use `counts()` (*Note: we nested it within the `View()` function so that rather than getting printed in the console we can see it in the script editor*) :
 
-	View(counts(dds))
+```r
+View(counts(dds))
+```
 
 As we go through the workflow we will use the relevant functions to check what information gets stored inside our object.
 
@@ -193,29 +197,27 @@ The next step is to normalize the count data in order to be able to make fair ge
 
 Remember, that there are other factors that are proportional to the read counts in addition to the gene expression that we are interested in. In DESeq2, `sizeFactors` are computed based on the median of ratios method. This method accounts for gene length and sequencing depth. To generate these size factors we can use the `estimateSizeFactors()` function:
 
-	dds <- estimateSizeFactors(dds)
+```r
+dds <- estimateSizeFactors(dds)
+```
 
-By assiging the results back to the `dds` object we are filling in the slots of the `DESeqDataSet` object with the appropriate information. Now, to retrieve the normalized counts matrix from `dds`, we use the `counts()` function and add the argument `normalized=TRUE`.
+By assigning the results back to the `dds` object we are filling in the slots of the `DESeqDataSet` object with the appropriate information. We can take a look at the normalization factor applied to each sample using:
 
-	normalized_counts <- counts(dds, normalized=TRUE)
-  
+```r
+sizeFactors(dds)
+```
+
+Now, to retrieve the normalized counts matrix from `dds`, we use the `counts()` function and add the argument `normalized=TRUE`.
+
+```r
+normalized_counts <- counts(dds, normalized=TRUE)
+```
+
 We can save this normalized data matrix to file for later use:
 
-	write.table(normalized_counts, file="data/normalized_counts.txt", sep="\t", quote=F, col.names=NA)
-
-## Transformation of counts
-
-Many common statistical methods for exploratory analysis of multidimensional data, e.g. clustering and principal components analysis (PCA), work best for data that generally have the **same range of variance at different ranges of the mean values**. For RNA-seq raw counts, however, the variance grows with the mean. So the results of a PCA will be largely driven by genes with many counts.
-
-A simple and commonly used strategy to avoid this is to take the logarithm of the normalized count values plus a small pseudocount (for 0 counts); however, now the genes with the very lowest counts will tend to dominate the results.
-
-The DESeq2 solution to this is the **regularized log transform** [[Love, Huber, and Anders 2014](http://www.ncbi.nlm.nih.gov/pmc/articles/PMC4302049/pdf/13059_2014_Article_550.pdf)]. For genes with high counts, the `rlog` transformation will give similar result to the ordinary log2 transformation of normalized counts. For genes with lower counts, however, the values are shrunken towards the genes’ means across all samples.
-
-
-	### Transform counts for data visualization
-	rld <- rlog(dds, blind=TRUE)
-
-The `rlog` function returns a `DESeqTransform`, another type of DESeq-specific object. The reason you don't just get a matrix of transformed values is because all of the parameters (i.e. size factors) that went in to computing the rlog transform are stored in that object. We will be using this object to plot figures for quality assessment.
+```r
+write.table(normalized_counts, file="data/normalized_counts.txt", sep="\t", quote=F, col.names=NA)
+```
 
 
 ---
