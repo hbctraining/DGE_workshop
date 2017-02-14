@@ -12,6 +12,8 @@ Approximate time: 50 minutes
 * Evaluating quality of samples using Principal Components Analysis
 * Hierarchical clustering of samples in the dataset
 
+We now have the DESeq2DataSet object set up, and several of the object slots filled with data; this includes data we brought in as well as data computed by DESeq2. Before we use this object to perform the analysis that will generate the list of DE genes, we are going to take a small detour and perform QC checks on the count data to help us ensure that the samples/replicates look good.
+
 ## Transformation of counts
 
 Many common statistical methods for exploratory analysis of multidimensional data, e.g. clustering and principal components analysis (PCA), work best for data that generally have the **same range of variance at different ranges of the mean values**. For RNA-seq raw counts, however, the variance grows with the mean. So the results of a PCA will be largely driven by genes with many counts.
