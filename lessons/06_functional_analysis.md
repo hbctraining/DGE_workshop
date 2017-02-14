@@ -93,6 +93,8 @@ The color codes in the gProfiler output represent the quality of the evidence fo
 
 Also, due to the hierarchical structure of GO terms, you may return many terms that seem redundant since they are child and parent terms. gProfiler allows for 'hierarchical filtering', returning only the best term per parent term.
 
+We encourage you to explore gProfiler online, for today's class we will be demonstrating how to run it using the R package.
+
 #### Running gProfiler
 
 For our gProfiler analysis, we are going to subset our `res_tableOE` only using a padjusted-value threshold of 0.05 (padj = 0.05). 
@@ -132,7 +134,7 @@ write.table(gprofiler_results_oe,
             sep="\t", quote=F, row.names=F)
 ```
 
-Now, extract only the lines in the gProfiler results with GO term accession numbers for downstream analyses:
+Now, extract only those lines in the gProfiler results with GO term accession numbers for downstream analyses:
 
 ```r
 ## Extract GO IDs for downstream analysis
