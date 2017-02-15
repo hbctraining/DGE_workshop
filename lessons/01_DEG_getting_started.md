@@ -150,8 +150,8 @@ As a sanity check we should also make sure that we have sample names that match 
 
 ```r
 ### Check that sample names match in both files
-all(names(data) %in% rownames(meta))
-all(names(data) == rownames(meta))
+all(colnames(data) %in% rownames(meta))
+all(colnames(data) == rownames(meta))
 ```
 
 ***
