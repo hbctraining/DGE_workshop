@@ -209,7 +209,7 @@ Take a quick peek at the results table containing Wald test statistics for the C
 
 ***
 
-**Excercise**
+**Exercise**
 
 1. Create a contrasts vector for the Mov10_overexpression comparison to *all other samples*.
 
