@@ -197,7 +197,7 @@ The next step is to normalize the count data in order to be able to make fair ge
 
 <img src="../img/slide5_DGE.png" width="400">
 
-Remember, that there are other factors that are proportional to the read counts in addition to the gene expression that we are interested in. In DESeq2, `sizeFactors` are computed based on the median of ratios method. This method accounts for gene length and sequencing depth. To generate these size factors we can use the `estimateSizeFactors()` function:
+Remember, that there are other factors that are proportional to the read counts in addition to the gene expression that we are interested in. In DESeq2, `sizeFactors` are computed based on the median of ratios method. This method only accounts for sequencing depth. To generate these size factors we can use the `estimateSizeFactors()` function:
 
 ```r
 dds <- estimateSizeFactors(dds)
