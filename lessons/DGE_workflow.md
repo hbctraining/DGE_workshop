@@ -33,9 +33,9 @@ The DESeq2 workflow is shown below in green. After obtaining the counts associat
 
 ## Normalization
 
-To make accurate comparisons of abundance between samples, the raw counts, or number of reads aligning to each gene, need to be normalized to account for differences in library depth between samples. If making comparisons between genes within samples, gene length should also be taken into account. 
+The first step in the workflow is normalization, which is necessary to make accurate comparisons of gene expression between samples. The raw counts, or number of reads aligning to each gene, need to be normalized to account for differences in library depth between samples, such as when performing differential expression analyses. If making comparisons between genes within samples, gene length should also be taken into account. 
 
-Different types of normalization methods exist, and two of the most common methods include:
+Different types of normalization methods exist, and a few of the most common methods include:
  
  - **normalization for library size:** comparison between samples
  
@@ -50,7 +50,7 @@ Different types of normalization methods exist, and two of the most common metho
  	>"A few highly and differentially expressed genes may have strong influence on the total read count, causing the ratio of total read counts not to be a good estimate for the ratio of expected counts (for all genes)"[[1](http://genomebiology.biomedcentral.com/articles/10.1186/gb-2010-11-10-r106)]
  
  
-### Common normalization methods
+### Common normalization measures
 
 Several common normalization measures exist to account for these differences:
 
