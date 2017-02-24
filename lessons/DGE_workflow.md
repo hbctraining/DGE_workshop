@@ -27,7 +27,7 @@ NB - non-normal distribution, low number of biological reps. No max for dynamic 
 
 # DESeq2 workflow
 
-The DESeq2 workflow is shown below in green. After obtaining the counts associated with each gene, DESeq2 normalizes the count values to account for differences in library sizes and RNA composition differences between samples. Then, QC is performed at the gene and sample level prior to performing the differential expression analysis.
+The DESeq2 workflow is shown below in green. After obtaining the counts associated with each gene, DESeq2 normalizes the count values to account for differences in library sizes and RNA composition between samples. Then, QC is performed at the gene and sample level prior to performing the differential expression analysis.
 
 <img src="../img/deseq_workflow_full.png" width="200">
 
