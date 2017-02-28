@@ -126,7 +126,7 @@ Principal Component Analysis (PCA) is a technique used to emphasize variation an
 
 <img src="../img/PCA_2sample_genes.png" width="600">
 
-The genes are roughly distributed along a line, and the maximum variation in the data is between the two endpoints of this line.  We also see the genes vary somewhat above or below the line. We could draw another line through the data representing the second most amount of variation in the data. 
+You could draw a line through the data representing the most variation in the data, which is on the diagonal in this dataset. The maximum variation in the data is between the two endpoints of this line.  We also see the genes vary somewhat above or below the line. We could draw another line through the data representing the second most amount of variation in the data. 
 
 
 <img src="../img/PCA_2sample_variation1.png" width="600">
