@@ -27,11 +27,9 @@ NB - non-normal distribution, low number of biological reps. No max for dynamic 
 
 # DESeq2 workflow
 
-The DESeq2 workflow is shown below in green. 
+The DESeq2 workflow is shown below in green. After obtaining the counts associated with each gene, DESeq2 normalizes the count values to account for differences in library sizes and RNA composition between samples. Then, QC is performed at the gene and sample level prior to performing the differential expression analysis.
 
 <img src="../img/deseq_workflow_full.png" width="200">
-
-After obtaining the counts associated with each gene, DESeq2 normalizes the count values to account for differences in library sizes and RNA composition between samples. Then, QC is performed at the gene and sample level prior to performing the differential expression analysis.
 
 ## Normalization
 
@@ -151,7 +149,9 @@ Sample2 median ratio = 0.78
 ***
 **Exercise**
 
-Determine the normalized counts for your gene of interest, PD1, given the raw counts and size factors calculated by DESeq2:
+Determine the normalized counts for your gene of interest, PD1, given the raw counts and size factors below. 
+
+NOTE: You will need to run the code below to generate the raw counts dataframe (PD1) and the size factor vector (size_factors), then use these objects to determine the normalized counts values:
 
 ```r
 
@@ -170,7 +170,7 @@ size_factors <- c(1.32, 0.70, 1.04, 1.27, 1.11, 0.85)
 
 ## Quality Control
 
-The next step in the DESeq2 workflow is QC, which includes sample-level and gene-level analyses.
+The next step in the DESeq2 workflow is QC, which includes sample-level and gene-level steps.
 
 <img src="../img/deseq_workflow_qc.png" width="200">
 
@@ -242,7 +242,7 @@ The hierarchical tree can indicate which samples are more similar to each other 
 
 ### Gene-level QC
 
-Prior to differential expression analysis it is beneficial to omit genes that have little or no chance of being detected as differentially expressed. This will increase the power to detect differentially expressed genes. The genes removed fall into three categories:
+Prior to differential expression analysis it is beneficial to omit genes that have little or no chance of being detected as differentially expressed. This will increase the power to detect differentially expressed genes. The genes omitted fall into three categories:
 
 - Genes with zero counts in all samples
 - Genes with an extreme count outlier
@@ -252,7 +252,24 @@ Prior to differential expression analysis it is beneficial to omit genes that ha
 
 **DESq2 will perform this filtering by default; however other DE tools, such as EdgeR will not.** It is important to understand what filtering is performed by your tool of choice to know if you need to perform any additional filtering prior to the differential expression analysis.
 
-## Variation / Dispersion
+## Differential expression analysis with DESeq2
+
+The final step in the differential expression analysis is the actual fitting of the raw counts to the statistical model and testing for differentially expressed genes. Essentially we want to determine whether the mean expression levels of two different samplegroups are significantly different.
+
+<img src="../img/de_theory.png" width="600">
+
+
+To determine differentially expressed genes, we are going to use the DESeq2 tool.   This tool builds on good ideas for dispersion estimation and use of Generalized Linear Models from the DSS and edgeR methods. The [DESeq2 paper](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-014-0550-8) was published in 2014, but the package is continually updated and available for use in R through Bioconductor.
+
+Differential expression analysis with DESeq2 requires multiple steps, as displayed below.
+
+<img src="../img/DESeq2_workflow.png" width="500">
+
+### Estimate size factors
+
+As you have probably noticed, this is exactly what we did to normalize our counts. DESeq2 will automatically estimate the size factors when performing the differential expression analysis if you haven't already done so. If you have already generated the size factors, then DESeq2 will use these values.
+
+### Estimate variation / dispersion
 
 To accurately model our sequencing counts, we need to generate accurate estimates of within-group variation (variation between replicates of the same samplegroup) for each gene. With only a few (3-6) replicates per group, the estimates of variation for each gene are often unreliable. Therefore, DESeq2 shares information across genes to generate more accurate estimates of variation based on the expression level of the gene using a method called 'shrinkage'. DESeq2 assumes that genes with similar expression levels have similar dispersion or variation of expression. DESeq2 generates more accurate measures of dispersion using the following steps:
 
@@ -280,4 +297,41 @@ Genes with extremely high dispersion values are not shrunken toward the curve du
 
 <img src="../img/deseq_dispersion.png" width="500">
 
-> **NOTE:** This is a good plot to ensure your data is a good fit for the DESeq2 model. You expect your data to generally scatter around the curve, with the dispersion decreasing with increasing expression levels. If you see a cloud of data or different shapes, then you might want to explore your data more to see if you have contamination (mitochondrial, etc.) or outlier samples.
+> **NOTE:** This is a good plot to ensure your data is a good fit for the DESeq2 model. You expect your data to generally scatter around the curve, with the dispersion decreasing with increasing expression levels. If you see a cloud or different shapes, then you might want to explore your data more to see if you have contamination (mitochondrial, etc.) or outlier samples.
+
+### Generalized Linear Model fit for each gene
+
+As discussed earlier, the count data generated by RNA-Seq exhibits overdispersion and the statistical distribution used to model the counts needs to account for this over dispersion. DESeq2 uses a negative binomial distribution to model the RNA-Seq counts using the equation below:
+
+ <img src="../img/NB_model_formula.png" width="500">
+ 
+DESq2 will use this formula to create the model for each gene, but what we really want to know is the log2 foldchanges between conditions. The log2 foldchanges can be estimated by replacing the normalized counts in the model using the formula:
+
+ <img src="../img/NB_model_formula_betas.png" width="600">
+
+By fitting the model, DESeq2 will determine the estimates for the log2 foldchanges between conditions. 
+
+For example, if we had our samples divided into three conditions, control (ctrl), overexpression (oe) and knockdown (kd), our model would be:
+
+ <img src="../img/NB_model_formula_betas_example.png" width="570">
+
+In DESeq2 and most other DE tools, you will assign your samples to specific conditions using a 'model matrix' or 'design matrix'. For example, we can assign our samples to conditions in the model matrix using binary (0,1) notation:
+
+|  | ctrl | oe | kd |
+| ----- |:-----:|:-----:|:-----:|
+| sample1 | 1 | 0 | 0 |
+| sample2 | 1 | 0 | 0 |
+| sample3 | 0 | 1 | 0 |
+| sample4 | 0 | 1 | 0 |
+| sample5 | 0 | 0 | 1 |
+| sample6 | 0 | 0 | 1 |
+
+Samples 1 and 2 are controls, samples 3 and 4 are overexpression, and samples 5 and 6 are knockdown. This information is utilized to inform the model about which replicates should be used to estimate each of the log2 foldchanges. For example, sample1 and sample2 should be used to estimate the log2 foldchanges for the control group (relative to mean expression of all groups), and the model formula for these samples would be:
+
+<img src="../img/NB_model_formula_betas_example3.png" width="400">
+
+We will discuss later how to obtain log2 foldchanges relative to other sample groups instead of to the mean expression of all groups.
+
+##Fold change shrinkage (Fisher info: degrees of freedom (number of samples, number of betas), estimated mean counts, dispersion estimate); beta prior (briefly - if very few reps and high variation within gene); Wald testing; LRT testing; exercises
+ 
+
