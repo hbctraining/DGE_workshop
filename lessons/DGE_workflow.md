@@ -27,27 +27,33 @@ NB - non-normal distribution, low number of biological reps. No max for dynamic 
 
 # DESeq2 workflow
 
-The DESeq2 workflow is shown below in green. After obtaining the counts associated with each gene, DESeq2 normalizes the count values to account for differences in library sizes and RNA composition between samples. Then, QC is performed at the gene and sample level prior to performing the differential expression analysis.
+The DESeq2 workflow is shown below in green. 
 
 <img src="../img/deseq_workflow_full.png" width="200">
 
+After obtaining the counts associated with each gene, DESeq2 normalizes the count values to account for differences in library sizes and RNA composition between samples. Then, QC is performed at the gene and sample level prior to performing the differential expression analysis.
+
 ## Normalization
 
-The first step in the workflow is normalization, which is necessary to make accurate comparisons of gene expression between samples. The raw counts, or number of reads aligning to each gene, need to be normalized to account for differences in library depth between samples, such as when performing differential expression analyses. If making comparisons between genes within samples, gene length should also be taken into account. 
+The first step in the workflow is count normalization, which is necessary to make accurate comparisons of gene expression between samples. The raw counts, or number of reads aligning to each gene, need to be normalized to account for differences in library depth between samples when performing differential expression analyses.
+
+<img src="../img/deseq_workflow_normalization.png" width="200">
+
+While normalization is necessary for differential expression analyses, it is also necessary whenever exploring or comparing counts between or within samples. 
 
 Different types of normalization methods exist, and a few of the most common methods include:
  
- - **normalization for library size:** comparison between samples
+ - **normalization for library size:** necessary for comparison of the same gene between samples
  
  	<img src="../img/sequencing_depth.png" width="400">
  
- - **normalization for gene length:** comparison within samples
+ - **normalization for gene length:** necessary for comparison of different genes within a sample
  
  	<img src="../img/length_of_gene.png" width="400">
  
- - **normalization for RNA composition:** comparison between samples (particularly important for differential expression analyses)
+ - **normalization for RNA composition:** recommended for comparison between samples (particularly important when performing differential expression analyses)
  
- 	>"A few highly and differentially expressed genes may have strong influence on the total read count, causing the ratio of total read counts not to be a good estimate for the ratio of expected counts (for all genes)"[[1](http://genomebiology.biomedcentral.com/articles/10.1186/gb-2010-11-10-r106)]
+ 	>"A few highly and differentially expressed genes may have strong influence on the total read count, causing the ratio of total read counts not to be a good estimate for the ratio of expected counts (for all genes)"[[1](https://genomebiology.biomedcentral.com/articles/10.1186/gb-2010-11-10-r106)]
  
  
 ### Common normalization measures
@@ -56,9 +62,9 @@ Several common normalization measures exist to account for these differences:
 
 - **CPM (counts per million):** counts scaled by total number of reads. This measure accounts for sequencing depth only.
 - **TPM (transcripts per kilobase million):** counts per length of transcript (kb) per million reads mapped. This measure accounts for both sequencing depth and gene length.
-- **RPKM/FPKM (reads/fragments per kilobase of exon per million reads/fragments mapped):** similar to TPM. This measure accounts for both sequencing depth and gene length as well; however, it is **not recommended**.
+- **RPKM/FPKM (reads/fragments per kilobase of exon per million reads/fragments mapped):** similar to TPM, as this measure accounts for both sequencing depth and gene length as well; however, it is **not recommended**.
 - **Tool-specific metrics for normalization:** 
-	- DESeq2 uses a median of ratios method, which accounts for sequencing depth and RNA composition[[1]()]. 
+	- DESeq2 uses a median of ratios method, which accounts for sequencing depth and RNA composition[[1](https://genomebiology.biomedcentral.com/articles/10.1186/gb-2010-11-10-r106)]. 
 	- EdgeR uses a trimmed mean of M values (TMM) method that accounts for sequencing depth, RNA composition, and gene length [[2](https://genomebiology.biomedcentral.com/articles/10.1186/gb-2010-11-3-r25)]
 
 #### RPKM/FPKM (not recommended)
@@ -86,7 +92,7 @@ Sample1 has a greater proportion of counts associated with MOV10 (5.5/1,000,000)
 In contrast to RPKM/FPKM, TPM-normalized counts normalize for both sequencing depth and gene length, but have the same total TPM-normalized counts per sample. Therefore, the normalized count values are comparable both between and within samples.
 
 #### DESeq2-normalized counts - Median of ratios method
-Since tools for differential expression analysis are comparing the counts between sample groups for the same gene, gene length does not need to be accounted for by the tool. However, sequencing depth and RNA composition do need to be included in the normalization.
+Since tools for differential expression analysis are comparing the counts between sample groups for the same gene, gene length does not need to be accounted for by the tool. However, sequencing depth and RNA composition do need to be taken into account.
 
 To normalize for sequencing depth and RNA composition, DESeq2 uses the median of ratios method, which performs the following steps when you run the tool:
 
@@ -102,7 +108,7 @@ For each gene, a pseudo-reference sample is created that is equal to the geometr
 
 **Step 2: calculates ratio of each sample to the reference**
 
-For every gene in a sample, the ratios (sample1/ref) are calculated (as shown below). This is performed for each sample in the dataset.
+For every gene in a sample, the ratios (sample1/ref) are calculated (as shown below). This is performed for each sample in the dataset. Since the majority of genes are not differentially expressed, the majority of genes in each sample should have similar ratios within the sample.
 
 | gene | sample1 | sample2 | pseudo-reference sample  | ratio sample1/ref | ratio sample2/ref |
 | ----- |:-----:|:-----:|:-----:| :-----: | :-----: |
@@ -116,22 +122,81 @@ For every gene in a sample, the ratios (sample1/ref) are calculated (as shown be
 
 <img src="../img/deseq_median_of_ratios.png" width="400">
 
-The median of ratios method makes the assumption that not ALL genes are differentially expressed; therefore, the normalization factors should account for sequencing depth and RNA composition of the sample (large outlier genes will not represent the median ratio values). This method is robust to imbalance in up-/down-regulation and large numbers of differentially expressed genes.
+The median of ratios method makes the assumption that not ALL genes are differentially expressed; therefore, the normalization factors should account for sequencing depth and RNA composition of the sample (large outlier genes will not represent the median ratio values). **This method is robust to imbalance in up-/down-regulation and large numbers of differentially expressed genes.**
 
-## QC (sample-level and gene-level)
+**Step 4: divide each raw count value in sample by that sample's normalization factor to generate normalized count values**
 
-A useful first step in an RNA-seq analysis is often to assess overall similarity between samples: Which samples are similar to each other, which are different? Does this fit to the expectation from the experiment’s design?
+For example, if median ratio for Sample1 was 1.29 and the median ratio for Sample2 was 0.78, you could calculate normalized counts as follows:
 
-Principal Component Analysis (PCA) is a technique used to emphasize variation and bring out strong patterns in a dataset (dimensionality reduction). The explanation of PCA below utilizes materials available from StatQuest, and if you would like a more thorough description, we encourage you to explore the video. If you had two samples and wanted plot the counts of one sample versus another, you could do the following:
+Sample1 median ratio = 1.29
+
+Sample2 median ratio = 0.78
+
+**Raw Counts**
+
+| gene | sample1 | sample2 |  
+| ----- |:-----:|:-----:|
+| MOV10 | 1489 | 906 | 
+| ABCD | 24 | 13 | 
+| ... | ... | ... | 
+
+**Normalized Counts**
+
+| gene | sample1 | sample2 |
+| ----- |:-----:|:-----:|
+| MOV10 | 1489 / 1.29 = **1154.26** | 906 / 0.78 = **1161.54** | 
+| ABCD | 24 / 1.29 = **18.60** | 13 / 0.78 = **16.67** | 
+| ... | ... | ... | 
+
+***
+**Exercise**
+
+Determine the normalized counts for your gene of interest, PD1, given the raw counts and size factors calculated by DESeq2:
+
+```r
+
+# Raw counts for PD1
+PD1 <- c(21, 58, 17, 97, 83, 10)
+names(PD1) <- paste("Sample", 1:6)
+PD1 <- data.frame(PD1)
+PD1 <- t(PD1)
+
+# Size factors for each sample
+size_factors <- c(1.32, 0.70, 1.04, 1.27, 1.11, 0.85)
+
+```
+
+***
+
+## Quality Control
+
+The next step in the DESeq2 workflow is QC, which includes sample-level and gene-level analyses.
+
+<img src="../img/deseq_workflow_qc.png" width="200">
+
+### Sample-level QC
+
+A useful first step in an RNA-seq analysis is often to assess overall similarity between samples: Which samples are similar to each other, which are different? Does this fit to the expectation from the experiment’s design? Log2-transformed normalized counts are used to assess similarity between samples using Principal Component Analysis (PCA) and hierarchical clustering.
+
+<img src="../img/sample_qc.png" width="600">
+
+
+#### PCA
+
+Principal Component Analysis (PCA) is a technique used to emphasize variation and bring out strong patterns in a dataset (dimensionality reduction). Details regarding PCA are given below (based on [materials from StatQuest](https://www.youtube.com/watch?v=_UVHneBUBW0), and if you would like a more thorough description, we encourage you to explore [StatQuest's video](https://www.youtube.com/watch?v=_UVHneBUBW0). 
+
+If you had two samples and wanted to plot the counts of one sample versus another, you could plot the counts of one sample on the x-axis and the other sample on the y-axis as shown below:
 
 <img src="../img/PCA_2sample_genes.png" width="600">
 
-You could draw a line through the data representing the most variation in the data, which is on the diagonal in this dataset. The maximum variation in the data is between the two endpoints of this line.  We also see the genes vary somewhat above or below the line. We could draw another line through the data representing the second most amount of variation in the data. 
+You could draw a line through the data in the direction representing the most variation, which is on the diagonal in this example. The maximum variation in the data is between the two endpoints of this line.  
+
+We also see the genes vary somewhat above and below the line. We could draw another line through the data representing the second most amount of variation in the data. 
 
 
 <img src="../img/PCA_2sample_variation1.png" width="600">
 
-The genes near the ends of the line, which would inlude those genes with the highest variation between samples (high expression in one sample and low expression in the other), have the greatest influence on the direction of the line. 
+The genes near the ends of the line, which would include those genes with the highest variation between samples (high expression in one sample and low expression in the other), have the greatest influence on the direction of the line. 
 
 <img src="../img/PCA_2sample_variation2.png" width="600">
 
@@ -166,6 +231,26 @@ The scores would then be plotted to examine whether the samples exhibit similar 
 <img src="../img/PCA_samples.png" width="600">
 
 Since genes with the greatest variation between samples will have the greatest influence on the principal components, we hope our condition of interest explains this variation (e.g. high counts in one condition and low counts in the other). With PC1 representing the most variation in the data and PC2 representing the second most variation in the data, we can visualize how similar the variation of genes is between samples.
+
+#### Hierarchical Clustering Heatmap
+
+Similar to PCA, hierarchical clustering is another, complementary method for identifying strong patterns in a dataset and potential outliers. The heatmap displays the correlation or distances for all pairwise combinations of samples. Since the majority of genes are not differentially expressed, samples generally have high correlations with each other (values higher than 0.80). Samples below 0.80 may indicate an outlier in your data and/or sample contamination.
+
+The hierarchical tree can indicate which samples are more similar to each other based on the normalized gene expression values. The color blocks indicate substructure in the data, and you would expect to see your replicates separate together as a block for each sample group.
+
+<img src="../img/heatmap_example.png" width="500">
+
+### Gene-level QC
+
+Prior to differential expression analysis it is beneficial to omit genes that have little or no chance of being detected as differentially expressed. This will increase the power to detect differentially expressed genes. The genes removed fall into three categories:
+
+- Genes with zero counts in all samples
+- Genes with an extreme count outlier
+- Genes with a low mean normalized count across all samples
+
+<img src="../img/gene_filtering.png" width="600">
+
+**DESq2 will perform this filtering by default; however other DE tools, such as EdgeR will not.** It is important to understand what filtering is performed by your tool of choice to know if you need to perform any additional filtering prior to the differential expression analysis.
 
 ## Variation / Dispersion
 
