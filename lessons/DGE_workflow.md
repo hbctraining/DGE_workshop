@@ -104,7 +104,7 @@ For each gene, a pseudo-reference sample is created that is equal to the geometr
 
 For every gene in a sample, the ratios (sample1/ref) are calculated (as shown below). This is performed for each sample in the dataset.
 
-| gene | sample1 | sample2 | | pseudo-reference sample  | ratio sample1/ref | ratio sample2/ref |
+| gene | sample1 | sample2 | pseudo-reference sample  | ratio sample1/ref | ratio sample2/ref |
 | ----- |:-----:|:-----:|:-----:| :-----: | :-----: |
 | EF2A | 1489 | 906 | 1161.5 | 1489/1161.5 = **1.28** | 906/1161.5 = **0.78** |
 | BBC1 | 22 | 13 | 16.9 | 22/16.9 = **1.30** | 13/16.9 = **0.77** |
