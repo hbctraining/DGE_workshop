@@ -79,7 +79,7 @@ Using RPKM/FPKM normalization, the total number of RPKM/FPKM normalized counts f
 | ... | ... | ... |
 |Total RPKM-normalized counts | 1,000,000 | 1,500,000 |
 
-SampleA has a greater proportion of counts associated with MOV10 (5.5/1,000,000) than does sampleB (5.5/1,500,000) even though the RPKM count values are the same. Therefore, we cannot directly compare the counts for MOV10 (or any other gene) between sample1 and sample2 because the total number of normalized counts are different between samples. 
+SampleA has a greater proportion of counts associated with MOV10 (5.5/1,000,000) than does sampleB (5.5/1,500,000) even though the RPKM count values are the same. Therefore, we cannot directly compare the counts for MOV10 (or any other gene) between sampleA and sampleB because the total number of normalized counts are different between samples. 
 
 ### TPM (recommended)
 In contrast to RPKM/FPKM, TPM-normalized counts normalize for both sequencing depth and gene length, but have the same total TPM-normalized counts per sample. Therefore, the normalized count values are comparable both between and within samples.
@@ -105,7 +105,7 @@ For each gene, a pseudo-reference sample is created that is equal to the geometr
 
 For every gene in a sample, the ratios (sample1/ref) are calculated (as shown below). This is performed for each sample in the dataset. Since the majority of genes are not differentially expressed, the majority of genes in each sample should have similar ratios within the sample.
 
-| gene | sampleA | sampleB | pseudo-reference sample  | ratio sample1/ref | ratio sample2/ref |
+| gene | sampleA | sampleB | pseudo-reference sample  | ratio sampleA/ref | ratio sampleB/ref |
 | ----- |:-----:|:-----:|:-----:| :-----: | :-----: |
 | EF2A | 1489 | 906 | 1161.5 | 1489/1161.5 = **1.28** | 906/1161.5 = **0.78** |
 | ABCD | 22 | 13 | 16.9 | 22/16.9 = **1.30** | 13/16.9 = **0.77** |
@@ -118,9 +118,9 @@ For every gene in a sample, the ratios (sample1/ref) are calculated (as shown be
 
 The median value of all ratios is taken as the normalization factor (size factor) for that sample, as calculated for SampleA below. Notice that the differentially expressed genes should not affect the median value:
 
-`normalization_factor_sample1 <- median(c(0.59, 1.28, 1.3, 1.35, 1.39))`
+`normalization_factor_sampleA <- median(c(0.59, 1.28, 1.3, 1.35, 1.39))`
 
-`normalization_factor_sample2 <- median(c(0.72, 0.74, 0.77, 0.78, 1.35))`
+`normalization_factor_sampleB <- median(c(0.72, 0.74, 0.77, 0.78, 1.35))`
  
 The figure below illustrates the median value for the distribution of all gene ratios for a single sample (frequency is on the y-axis).
 
