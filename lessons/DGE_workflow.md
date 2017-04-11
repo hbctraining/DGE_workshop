@@ -62,35 +62,32 @@ Several common normalization measures exist to account for these differences:
 - **TPM (transcripts per kilobase million):** counts per length of transcript (kb) per million reads mapped. This measure accounts for both sequencing depth and gene length.
 - **RPKM/FPKM (reads/fragments per kilobase of exon per million reads/fragments mapped):** similar to TPM, as this measure accounts for both sequencing depth and gene length as well; however, it is **not recommended**.
 - **Tool-specific metrics for normalization:** 
-	- DESeq2 uses a median of ratios method, which accounts for sequencing depth and RNA composition[[1](https://genomebiology.biomedcentral.com/articles/10.1186/gb-2010-11-10-r106)]. 
+	- DESeq2 uses a median of ratios method, which accounts for sequencing depth and RNA composition [[1](https://genomebiology.biomedcentral.com/articles/10.1186/gb-2010-11-10-r106)]. 
 	- EdgeR uses a trimmed mean of M values (TMM) method that accounts for sequencing depth, RNA composition, and gene length [[2](https://genomebiology.biomedcentral.com/articles/10.1186/gb-2010-11-3-r25)]
 
-#### RPKM/FPKM (not recommended)
+### RPKM/FPKM (not recommended)
 While TPM and RPKM/FPKM normalization methods both account for sequencing depth and gene length, RPKM/FPKM measures are not recommended. **The reason  is that the normalized count values output by the RPKM/FPKM method are not comparable between samples.** 
 
-If you sum the total number of RPKM/FPKM normalized counts for each sample, the total number will be different between samples. Therefore, you cannot compare the normalized counts for each gene equally between samples. 
-
+Using RPKM/FPKM normalization, the total number of RPKM/FPKM normalized counts for each sample will be different. Therefore, you cannot compare the normalized counts for each gene equally between samples. 
 
 **RPKM-normalized counts table**
 
-| gene | sample1 | sample2 |
+| gene | sampleA | sampleB |
 | ----- |:-----:|:-----:|
 | MOV10 | 5.5 | 5.5 |
 | ABCD | 73.4 | 21.8 |
 | ... | ... | ... |
 |Total RPKM-normalized counts | 1,000,000 | 1,500,000 |
 
-For example, using the table above, the MOV10 gene has 5.5 RPKM-normalized counts in sample1 out of 1,000,000 total RPKM-normalized counts in the sample, while sample2 also has 5.5 RPKM-normalized counts associated with MOV10 out of 1,500,000 total RPKM-normalized counts for sample2. Therefore, we cannot directly compare the counts for MOV10 (or any other gene) between sample1 and sample2 because the total number of normalized counts are different between samples. 
+SampleA has a greater proportion of counts associated with MOV10 (5.5/1,000,000) than does sampleB (5.5/1,500,000) even though the RPKM count values are the same. Therefore, we cannot directly compare the counts for MOV10 (or any other gene) between sample1 and sample2 because the total number of normalized counts are different between samples. 
 
-Sample1 has a greater proportion of counts associated with MOV10 (5.5/1,000,000) than does sample2 (5.5/1,500,000) even though the RPKM count values are the same.
+### TPM (recommended)
+In contrast to RPKM/FPKM, TPM-normalized counts normalize for both sequencing depth and gene length, but have the same total TPM-normalized counts per sample. Therefore, the normalized count values are comparable both between and within samples.
 
 > *NOTE:* [This video by StatQuest](http://www.rna-seqblog.com/rpkm-fpkm-and-tpm-clearly-explained/) shows in more detail why TPM should be used in place of RPKM/FPKM if needing to normalize for sequencing depth and gene length.
 
-#### TPM (recommended)
-In contrast to RPKM/FPKM, TPM-normalized counts normalize for both sequencing depth and gene length, but have the same total TPM-normalized counts per sample. Therefore, the normalized count values are comparable both between and within samples.
-
-#### DESeq2-normalized counts - Median of ratios method
-Since tools for differential expression analysis are comparing the counts between sample groups for the same gene, gene length does not need to be accounted for by the tool. However, sequencing depth and RNA composition do need to be taken into account.
+### DESeq2-normalized counts - Median of ratios method
+Since tools for differential expression analysis are comparing the counts between sample groups for the same gene, gene length does not need to be accounted for by the tool. However, **sequencing depth** and **RNA composition** do need to be taken into account.
 
 To normalize for sequencing depth and RNA composition, DESeq2 uses the median of ratios method, which performs the following steps when you run the tool:
 
@@ -98,25 +95,34 @@ To normalize for sequencing depth and RNA composition, DESeq2 uses the median of
 
 For each gene, a pseudo-reference sample is created that is equal to the geometric mean across all samples.
 
-| gene | sample1 | sample2 | pseudo-reference sample  |
+| gene | sampleA | sampleB | pseudo-reference sample  |
 | ----- |:-----:|:-----:|:-----:|
-| MOV10 | 1489 | 906 | sqrt(1489 * 906) = **1161.5** |
-| ABCD | 24 | 13 | sqrt(24 * 13) = **17.7** |
+| EF2A | 1489 | 906 | sqrt(1489 * 906) = **1161.5** |
+| ABCD | 22 | 13 | sqrt(24 * 13) = **17.7** |
 | ... | ... | ... | ... |
 
 **Step 2: calculates ratio of each sample to the reference**
 
 For every gene in a sample, the ratios (sample1/ref) are calculated (as shown below). This is performed for each sample in the dataset. Since the majority of genes are not differentially expressed, the majority of genes in each sample should have similar ratios within the sample.
 
-| gene | sample1 | sample2 | pseudo-reference sample  | ratio sample1/ref | ratio sample2/ref |
+| gene | sampleA | sampleB | pseudo-reference sample  | ratio sample1/ref | ratio sample2/ref |
 | ----- |:-----:|:-----:|:-----:| :-----: | :-----: |
 | EF2A | 1489 | 906 | 1161.5 | 1489/1161.5 = **1.28** | 906/1161.5 = **0.78** |
-| BBC1 | 22 | 13 | 16.9 | 22/16.9 = **1.30** | 13/16.9 = **0.77** |
+| ABCD | 22 | 13 | 16.9 | 22/16.9 = **1.30** | 13/16.9 = **0.77** |
+| MEF3 | 793 | 410 | 570.2 | 793/570.2 = **1.39** | 410/570.2 = **0.72**
+| BBC1 | 76 | 42 | 56.5 | 76/56.5 = **1.35** | 42/56.5 = **0.74**
+| MOV10 | 521 | 1196 | 883.7 | 521/883.7 = **0.590** | 1196/883.7 = **1.35** |
 | ... | ... | ... | ... |
 
 **Step 3: takes sample's median value as that sample's normalization factor**
 
- The median value of all ratios is taken as the normalization factor (size factor) for that sample, as depicted in the figure below. The figure shows a histogram with the size factors versus frequency of genes with those ratios. 
+The median value of all ratios is taken as the normalization factor (size factor) for that sample, as calculated for SampleA below. Notice that the differentially expressed genes should not affect the median value:
+
+`normalization_factor_sample1 <- median(c(0.59, 1.28, 1.3, 1.35, 1.39))`
+
+`normalization_factor_sample2 <- median(c(0.72, 0.74, 0.77, 0.78, 1.35))`
+ 
+The figure below illustrates the median value for the distribution of all gene ratios for a single sample (frequency is on the y-axis).
 
 <img src="../img/deseq_median_of_ratios.png" width="400">
 
@@ -124,26 +130,26 @@ The median of ratios method makes the assumption that not ALL genes are differen
 
 **Step 4: divide each raw count value in sample by that sample's normalization factor to generate normalized count values**
 
-For example, if median ratio for Sample1 was 1.29 and the median ratio for Sample2 was 0.78, you could calculate normalized counts as follows:
+For example, if median ratio for SampleA was 1.3 and the median ratio for SampleB was 0.77, you could calculate normalized counts as follows:
 
-Sample1 median ratio = 1.29
+SampleA median ratio = 1.3
 
-Sample2 median ratio = 0.78
+SampleB median ratio = 0.77
 
 **Raw Counts**
 
-| gene | sample1 | sample2 |  
+| gene | sampleA | sampleB |  
 | ----- |:-----:|:-----:|
-| MOV10 | 1489 | 906 | 
-| ABCD | 24 | 13 | 
+| EF2A | 1489 | 906 | 
+| ABCD | 22 | 13 | 
 | ... | ... | ... | 
 
 **Normalized Counts**
 
-| gene | sample1 | sample2 |
+| gene | sampleA | sampleB |
 | ----- |:-----:|:-----:|
-| MOV10 | 1489 / 1.29 = **1154.26** | 906 / 0.78 = **1161.54** | 
-| ABCD | 24 / 1.29 = **18.60** | 13 / 0.78 = **16.67** | 
+| EF2A | 1489 / 1.3 = **1145.39** | 906 / 0.77 = **1176.62** | 
+| ABCD | 22 / 1.3 = **16.92** | 13 / 0.77 = **16.88** | 
 | ... | ... | ... | 
 
 ***
