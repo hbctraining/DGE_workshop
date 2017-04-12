@@ -271,6 +271,30 @@ Differential expression analysis with DESeq2 requires multiple steps, as display
 
 <img src="../img/DESeq2_workflow.png" width="500">
 
+### Design formula
+
+When performing differential expression analysis, it is a good idea to know what sources of variation are present in your data, either by exploration during the QC or prior knowledge. Once you know the major sources of variation, you can remove them prior to analysis or control for them in the statistical model. For example, if you know that animal sex or age is a significant source of variation in your data, then it needs to be included in your model. The **design formula** or **model formula** needs to have all of the factors in your metadata that account for major sources of variation in your data. The last factor entered in the formula should be the condition of interest. 
+
+For example, suppose you have the following metadata appears as follows:
+
+If you want to examine the expression differences between treatments, and you know that major sources of variation include 'sex' and 'age', then your design formula would be:
+
+`design <- sex + age + treatment`
+
+***
+**Exercise**
+
+Suppose you wanted to study the expression difference between the two age groups, and major sources of variation were 'sex' and 'treatment', how would the design formula be written?
+
+***
+
+*** 
+
+age:treatment for complex design formula
+
+***
+
+
 ### Estimate size factors
 
 As you have probably noticed, this is exactly what we did to normalize our counts. DESeq2 will automatically estimate the size factors when performing the differential expression analysis if you haven't already done so. If you have already generated the size factors, then DESeq2 will use these values. **Therefore, you must input the raw counts for analysis.**
