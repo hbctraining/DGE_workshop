@@ -20,7 +20,7 @@ The count data used for differential expression analysis represents the number o
 
 Explain when to use common statistical models for counts:
 
-Poisson - normal distribution, large sample number (microarray data that has dynamic range limited maximum due to when the probes max out, and therefore uses the Poisson). Why can we use Poisson for microarray when also there are small sample sizes?
+Poisson - normal distribution, large sample number (microarray data that has dynamic range limited maximum due to when the probes max out, and therefore uses the Poisson). Why can we use Poisson for microarray when also there are small sample sizes? good info - https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3378882/
 
 NB - non-normal distribution, low number of biological reps. No max for dynamic range. Don't use technical replicates - biological replicates much more useful (cite paper? or later in md)
 
@@ -345,7 +345,7 @@ Samples 1 and 2 are controls, samples 3 and 4 are overexpression, and samples 5 
 Generally for count NGS data, there is a large variance associated with the LFC estimates for genes with low read counts, and these weakly expressed genes would be identified as differentially expressed due solely to this variation. To account for this issue and reduce false positives for lowly expressed genes, DESeq2 shrinks the LFC estimates toward zero when the infromation for a gene is low, which could include:
 
 - Low counts and high dispersion values for a gene
-- Few replicates per sample group? (few degrees of freedom)
+- Few replicates per sample group? (few degrees of freedom) - http://www.statsci.org/smyth/pubs/edgeRChapterPreprint.pdf
 
 Similar to the previous shrinkage of dispersion estimates, the shrinkage of LFC estimates uses information from all genes to generate more accurate estimates. Specifically, the distribution of LFC estimates for all genes is used (as a prior) to shrink the LFC estimates of genes with little information or high dispersion toward more likely (lower) LFC estimates.
 
@@ -356,12 +356,19 @@ The effect of dispersion on the shrunken LFC is illustrated in the figure below.
 
 <img src="../img/deseq2_shrunken_lfc.png" width="500">
 
+> **NOTE:** If very large expected fold changes for a number of individual genes are expected, but not so many large fold changes that the width of the prior adjusts to allow such large fold changes, then you may want to turn off LFC shrinkage using `DESeq(dds, betaPrior=FALSE)`.
+>
+>The reason is that shrinking of fold changes requires that the software can estimate the range of reasonable values for LFC by looking at the distribution of LFCs (particularly the upper quantile of the absolute LFC). But there might be precise fold changes which are above this upper quantile, and so the prior is too narrow for the targeted genes. The prior might then be a bad assumption for this type of dataset, so it's reasonable to turn it off. *(Response from Mike Love, creator of DESeq2 (http://seqanswers.com/forums/showthread.php?t=49101))*
+
 
 #### Hypothesis testing using the Wald test
 
- and these represent the **model coefficients**. 
+The shrunken LFC estimates for each level of each factor in the design formula relative to mean expression of all groups represent the **model coefficients**, and these coefficients are calculated regardless of the comparison of interest. The model coefficients can be viewed with `coefficients(dds)` to explore the strength of the effect for each factor group for every gene.
 
-Generally we are interested in the LFC estimates between relative to other sample groups instead of to the mean expression of all groups. To determine whether the shrunken LFC estimate differs significantly from zero, the Wald test is used.
+However, generally we are interested in the LFC estimates relative to other sample groups instead of to the mean expression of all groups. To indicate to DESeq2 the groups we want to compare whether the expression of genes are significantly different, we can use **contrasts**. 
+These can be provided to DESeq2 a couple of different ways.
+
+To determine whether the shrunken LFC estimate differs significantly from zero, the Wald test is used.
 
 ##Fold change shrinkage (Fisher info: degrees of freedom (number of samples, number of betas), estimated mean counts, dispersion estimate); beta prior (briefly - if very few reps and high variation within gene); Wald testing; LRT testing; exercises
  
