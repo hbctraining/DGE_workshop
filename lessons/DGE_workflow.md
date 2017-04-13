@@ -88,7 +88,7 @@ ggplot(df) +
 
 The variance or scatter tends to reduce as we increase the number of biological replicates. Standard deviations of averages are smaller than standard deviations of individual observations. So as you add more data (replicates), you get increasingly precise estimates of group means, and ultimately greater confidence in the ability to distinguish differences between sample classes (i.e. more DE genes).
 
-The figure below illustrates the relationship between sequencing depth and number of replicates on the number of differentially expressed genes identified [[2](https://academic.oup.com/bioinformatics/article/30/3/301/228651/RNA-seq-differential-expression-studies-more)].
+The figure below illustrates the relationship between sequencing depth and number of replicates on the number of differentially expressed genes identified [[1](https://academic.oup.com/bioinformatics/article/30/3/301/228651/RNA-seq-differential-expression-studies-more)].
 
 <img src="../img/de_replicates_img.png" width="500">
 
@@ -257,7 +257,7 @@ A useful first step in an RNA-seq analysis is often to assess overall similarity
 <img src="../img/sample_qc.png" width="700">
 
 
-#### [Principal Component Analysis (PCA)]()
+#### [Principal Component Analysis (PCA)](https://github.com/hbctraining/DGE_workshop/blob/master/lessons/principal_component_analysis.md)
 
 Principal Component Analysis (PCA) is a technique used to emphasize variation and bring out strong patterns in a dataset (dimensionality reduction). Details regarding PCA are given below (based on [materials from StatQuest](https://www.youtube.com/watch?v=_UVHneBUBW0), and if you would like a more thorough description, we encourage you to explore [StatQuest's video](https://www.youtube.com/watch?v=_UVHneBUBW0). 
 
