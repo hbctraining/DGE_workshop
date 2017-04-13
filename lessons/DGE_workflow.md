@@ -254,10 +254,10 @@ The next step in the DESeq2 workflow is QC, which includes sample-level and gene
 
 A useful first step in an RNA-seq analysis is often to assess overall similarity between samples: Which samples are similar to each other, which are different? Does this fit to the expectation from the experiment’s design? Log2-transformed normalized counts are used to assess similarity between samples using Principal Component Analysis (PCA) and hierarchical clustering.
 
-<img src="../img/sample_qc.png" width="600">
+<img src="../img/sample_qc.png" width="700">
 
 
-#### Principal Component Analysis (PCA)
+#### [Principal Component Analysis (PCA)]()
 
 Principal Component Analysis (PCA) is a technique used to emphasize variation and bring out strong patterns in a dataset (dimensionality reduction). Details regarding PCA are given below (based on [materials from StatQuest](https://www.youtube.com/watch?v=_UVHneBUBW0), and if you would like a more thorough description, we encourage you to explore [StatQuest's video](https://www.youtube.com/watch?v=_UVHneBUBW0). 
 
@@ -267,46 +267,36 @@ If you had two samples and wanted to plot the counts of one sample versus anothe
 
 You could draw a line through the data in the direction representing the most variation, which is on the diagonal in this example. The maximum variation in the data is between the two endpoints of this line.  
 
-We also see the genes vary somewhat above and below the line. We could draw another line through the data representing the second most amount of variation in the data. 
+For PCA analysis, it is essentially doing this same thing between all samples, n, in n-dimensional space. If you have more than three samples, this is hard to visualize, but essentially a line is drawn through the data representing the most variation (PC1). Another line is drawn through the data representing the second most variation in the data (PC2). We can then plot a sum of the values for each gene based on it's expression and influence on PC1 and PC2. 
 
+If two samples have similar levels of expression for the genes that contribute significantly to the variation represented by PC1, then they will be plotted close together on the PC1 axis. Since genes with the greatest variation between samples will have the greatest influence on the principal components, we hope our condition of interest explains this variation (e.g. high counts in one condition and low counts in the other). With PC1 representing the most variation in the data and PC2 representing the second most variation in the data, we can visualize how similar the variation of genes is between samples. We would expect the groups related to our condition to separate on PC1 and/or PC2, and the biological replicates to cluster together. This is easiest to understand by visualizing some PCA plots.
 
-<img src="../img/PCA_2sample_variation1.png" width="600">
+The PCA plot below is what we hope for, with our treatment groups separating on PC1, which explains 89% of the variation in the data. 
 
-The genes near the ends of the line, which would include those genes with the highest variation between samples (high expression in one sample and low expression in the other), have the greatest influence on the direction of the line. 
+<img src="../img/PCA_example4.png" width="600">
 
-<img src="../img/PCA_2sample_variation2.png" width="600">
+We can use other variables present in our metadata to explore the cause of the variation on PC2:
 
-For example, a small change in the value of *Gene C* would greatly change the direction of the line, whereas a small change in *Gene A* or *Gene D* would have little affect.
+<img src="../img/PCA_example5.png" width="600">
 
-<img src="../img/PCA_2sample_variation3.png" width="900">
+We can determine that the 5% of variation in our data represented by PC2 is due to variation between individuals in this paired design example.
 
-We could just rotate the entire plot and view the lines representing the variation as left-to-right and up-and-down. We see most of the variation in the data is left-to-right; this is and the second most variation in the data is up-and-down. These axes that represent the variation are "Principal Components", with PC1 representing the most variation in the data and PC2 representing the second most variation in the data. 
+In the following example, we can visualize the samples clustering by genotype on PC2 (13% variance). **If we saw one of the red samples below clustering with the blue samples (or vice versa), we might be worried about a mix-up. It would give us sufficient cause to remove that sample as an outlier and/or do some follow-up tests in the lab.**
 
-If we had three samples, then we would have an extra direction in which we could have variation. Therefore, if we have *N* samples we would have *N*-directions of variation or principal components.
+<img src="../img/PCA_example1.png" width="600">
 
-<img src="../img/PCA_2sample_rotate.png" width="300">
+We can see that the plasmid expression level represents the major source of variation in the data on PC1 (55% variance).
 
-We could give quantitative scores to genes based on how much they influence PC1 and PC2. Genes with little influence would get scores near zero, while genes with more influence would receive larger scores. Genes on opposite ends of the lines have a large influence, so they would receive large scores, but with opposite signs.
+<img src="../img/PCA_example2.png" width="600">
 
-<img src="../img/PCA_2sample_influence.png" width="600">
+PCA is also a nice way to look for batch effects. In the below figure, we see batch 1 separate distinctly from batches 2 and 3.
 
-To generate a score per sample, we combine the read counts for all genes. To calculate the scores, we do the following:
-	
-	Sample1 PC1 score = (read count * influence) + ... for all genes
-	
-Using the counts in the table for each gene (assuming we had only 4 genes total) we could calculate PC1 and PC2 values for each sample as follows:
+<img src="../img/PCA_example6.png" width="600">
 
-	Sample1 PC1 score = (4 * -2) + (1 * -10) + (8 * 8) + (5 * 1) = 51
-	Sample1 PC2 score = (4 * 0.5) + (1 * 1) + (8 * -5) + (5 * 6) = -7
-	
-	Sample2 PC1 score = (5 * -2) + (4 * -10) + (8 * 8) + (7 * 1) = 21
-	Sample2 PC2 score = (5 * 0.5) + (4 * 1) + (8 * -5) + (7 * 6) = 8.5
-	
-The scores would then be plotted to examine whether the samples exhibit similar variation across all genes:
+In this final figure we are looking at a time course experiment that separates nicely on the PCA. The treatment separates the samples on PC1 (26% variance), while time post-treatment is represented by PC2 (21% variance). The replicates tend to cluster together, which is good.
 
-<img src="../img/PCA_samples.png" width="600">
+<img src="../img/PCA_example3.png" width="600">
 
-Since genes with the greatest variation between samples will have the greatest influence on the principal components, we hope our condition of interest explains this variation (e.g. high counts in one condition and low counts in the other). With PC1 representing the most variation in the data and PC2 representing the second most variation in the data, we can visualize how similar the variation of genes is between samples.
 
 #### Hierarchical Clustering Heatmap
 
@@ -315,6 +305,8 @@ Similar to PCA, hierarchical clustering is another, complementary method for ide
 The hierarchical tree can indicate which samples are more similar to each other based on the normalized gene expression values. The color blocks indicate substructure in the data, and you would expect to see your replicates separate together as a block for each sample group.
 
 <img src="../img/heatmap_example.png" width="500">
+
+Even if your samples do not separate by PC1 or PC2, you still may return biologically relevant results from the DE analysis, just don't be surprised if you do not return a large number of DE genes. To give more power to detect DE genes, you should account for known major sources of variation in your model. 
 
 ### Gene-level QC
 
