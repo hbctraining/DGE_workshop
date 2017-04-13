@@ -9,16 +9,29 @@ To determine the expression levels of genes, an RNA-Seq workflow is followed wit
 
 The count data used for differential expression analysis represents the number of sequence reads that originated from a particular gene. The higher the number of counts, the more reads associated with that gene, and the assumption that there was a higher level of expression of that gene in the sample. 
 
-<img src="../img/deseq_counts_overview.png" width="500">
+<img src="../img/deseq_counts_overview.png" width="600">
 
 
 
+With differential expression analysis, we are looking for genes that change in expression between two or more groups
+- case vs. control
+- correlation of expression with some variable or clinical outcome
 
-**The goal of differential expression analysis is to determine whether the variation in expression (counts) between groups is significantly greater than variation within groups (replicates).** To test for significance, we need an appropriate statistical model that accurately performs normalization (to account for differences in sequencing depth, etc.) and variance modeling (to account for few numbers of replicates and large dynamic expression range). 
+**Why does it not work to identify differentially expressed gene by ranking the genes by how different they are between the two groups (based on fold change values)?**
 
-# Distributions for count data
 
-To get an idea about how counts are distributed, plot the counts for a single sample:
+<img src="../img/de_variation.png" width="500">
+
+There are many sources of variation present in your data, and even though the mean expression levels between groups may be quite different, the variation in the data may be so great that the difference in means are not actually significant. This is illustrated for 'GeneA' expression between 'untreated' and 'treated' groups in the figure below. The mean expression level of geneA for the 'treated' group is twice as large as for the 'untreated' group, but the variation between replicates indicates that this may not be a significant difference. **We need to take the variation in the data into account when determining whether genes are differentially expressed.** 
+
+<img src="../img/de_norm_counts_var.png" width="400">
+
+**Essentially, the goal of differential expression analysis is to determine whether the differences in expression (counts) between groups is significant given the variation within groups (replicates) for each gene.** To test for significance, we need an appropriate statistical model that accurately performs normalization (to account for differences in sequencing depth, etc.) and variance modeling (to account for few numbers of replicates and large dynamic expression range). 
+
+
+## RNA-Seq count distribution
+
+To determine the appropriate statistical model, we need information about the distribution of counts. To get an idea about how RNA-Seq counts are distributed, let's plot the counts for a single sample, 'Mov10_oe_1':
 
 ```r
 ggplot(data) +
@@ -41,22 +54,21 @@ These images illustrate some common features of RNA-Seq count data, including a 
 
 ## Modeling count data
 
-Count data is often modeled using the binomial distribution, which can give you the probability of getting a heads upon tossing a coin. However, in the case of the lottery, when the number of cases is very large (people who buy tickets), but the probability of an event is very small (probability of winning), the Poisson distribution is used to model these data. In these cases, the number of events (people who win) generally range between 1 and 10. [Details provided by Rafael Irizarry in the EdX class.](https://youtu.be/fxtB8c3u6l8)
+Count data is often modeled using the binomial distribution, which can give you the probability of getting a number of heads upon tossing a coin a number of times. However, not all count data can be fit with the binomial distribution. With some events, like the lottery, when the number of cases is very large (people who buy tickets), but the probability of an event is very small (probability of winning), the Poisson distribution is used to model these types of count data. In these cases, the number of events (people who win) generally range between 1 and 10. [Details provided by Rafael Irizarry in the EdX class.](https://youtu.be/fxtB8c3u6l8)
 
 During RNA-Seq and microarray experiments, a very large number of RNAs are present and the probability of pulling out a particular transcript is very small. However, after taking a large sample, the sum of all counts for that transcript is often between 1 and 10. If this applies, then every gene would follow the Poisson distribution. [A nice description of this concept is presented by Rafael Irizarry in the EdX class.](https://youtu.be/HK7WKsL3c2w)
 
 The Poisson model assumes a normal distribution with the mean of the data equal to the variance, and this model is used to model the log2 of the continuous microarray intensities. However, due to the different properties of the of RNA-Seq count data, such as integer counts instead of continuous measurements and non-normally distributed data, the Poisson model does not accurately model RNA-Seq counts.
 
-If the proportions of mRNA stayed exactly constant between biological replicates for RNA-Seq data, we could expect Poisson distribution. But realistically, biological variation across biological replicates is expected, and this extra variation is accounted for by the Negative Binomial distribution.
+If the proportions of mRNA stayed exactly constant between biological replicates for RNA-Seq data, we could expect Poisson distribution. But realistically, biological variation across biological replicates is expected, and, for RNA-Seq data, genes with larger average expression levels tend to have larger observed variances across replicates. That is, genes with high levels of expression vary from sample to sample more than genes with lower average expression. This phenomena of 'having different scatter' is known as data heteroscedasticity. **The Negative Binomial (NB) model is a good approximation, where this extra variability between replicates is modeled.**
 
 <img src="../img/deseq_nb.png" width="300">
 
-In RNA-Seq data, genes with larger average expression have, on average, larger observed variances across replicates, that is, they vary in expression from sample to sample more than other genes with lower average expression. This phenomena of 'having different scatter' is known as data heteroscedasticity. The Negative Binomial (NB) model is a good approximation, where the variability between replicates is modeled by a dispersion parameter.
 
 >**NOTE:** 
-> - Biological replicates represent multiple samples representing the same sample class (i.e. different mice)> - Technical replicates represent the same sample but with technical steps replicated (i.e. same mouse)> - Usually biological variance is much greater than technical variance, so we do not need to account for technical variance to model the counts
+> - Biological replicates represent multiple samples (i.e. RNA from different mice) representing the same sample class> - Technical replicates represent the same sample (i.e. RNA from the same mouse) but with technical steps replicated> - Usually biological variance is much greater than technical variance, so we do not need to account for technical variance
 > - Don't spend money on technical replicates - biological replicates much more useful  
-In the figure below we have plotted mean versus variance for the 'Mov10 overexpression' replicates. Note that the variance across replicates tends to be greater than the mean, especially for large samples. This is a good indication that our data do not fit the Poisson distribution and we need to account for this increase in variance using the Negative Binomial model (i.e. Poisson will underestimate variability).
+In the figure below we have plotted mean versus variance for the 'Mov10 overexpression' replicates. Note that the variance across replicates tends to be greater than the mean (red line), especially for large samples. **This is a good indication that our data do not fit the Poisson distribution and we need to account for this increase in variance using the Negative Binomial model (i.e. Poisson will underestimate variability).**
 
 ```r
 mean_counts <- apply(data[, 1:3], 1, mean)
@@ -72,7 +84,7 @@ ggplot(df) +
 
 <img src="../img/deseq_mean_vs_variance.png" width="400">
 
-Increasing the number of replicatesThe variance or scatter tends to reduce as we increase the number of biological replicates. Standard deviations of averages are smaller than standard deviations of individual observations. So as you add more data (replicates), you get increasingly precise estimates of group means, and ultimately greater confidence in the ability to distinguish differences between sample classes (i.e. more DE genes).
+The variance or scatter tends to reduce as we increase the number of biological replicates. Standard deviations of averages are smaller than standard deviations of individual observations. So as you add more data (replicates), you get increasingly precise estimates of group means, and ultimately greater confidence in the ability to distinguish differences between sample classes (i.e. more DE genes).
 
 The figure below illustrates the relationship between sequencing depth and number of replicates on the number of differentially expressed genes identified [[2](https://academic.oup.com/bioinformatics/article/30/3/301/228651/RNA-seq-differential-expression-studies-more)].
 
@@ -81,7 +93,10 @@ The figure below illustrates the relationship between sequencing depth and numbe
 
 # DESeq2 workflow
 
-The DESeq2 workflow is shown below in green. After obtaining the counts associated with each gene, DESeq2 normalizes the count values to account for differences in library sizes and RNA composition between samples. Then, QC is performed at the gene and sample level prior to performing the differential expression analysis.
+To model counts appropriately to determine differentially expressed genes a few different tools are generally employed. **DESeq2** and **EdgeR** both use the negative binomial model and similar methods and, typically yield similar results. Both of these tools are very sensitive, but may be somewhat stringent in reducing false positives. **Limma voom** is another tool often used for DE analysis, but may be less sensitive for small sample sizes. This tool is recommended when the number of biological replicates per group grows large (e.g. > 20).
+
+
+We will be using DESeq2 for DE analysis, and the workflow for the tool is shown below in green. After obtaining the counts associated with each gene, DESeq2 normalizes the count values to account for differences in library sizes and RNA composition between samples. Then, QC is performed at the gene and sample level prior to performing the differential expression analysis.
 
 <img src="../img/deseq_workflow_full.png" width="200">
 
