@@ -18,11 +18,65 @@ The count data used for differential expression analysis represents the number o
 
 # Distributions for count data
 
-Explain when to use common statistical models for counts:
+To get an idea about how counts are distributed, plot the counts for a single sample:
 
-Poisson - normal distribution, large sample number (microarray data that has dynamic range limited maximum due to when the probes max out, and therefore uses the Poisson). Why can we use Poisson for microarray when also there are small sample sizes? good info - https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3378882/
+```r
+ggplot(data) +
+        geom_histogram(aes(x = Mov10_oe_1), stat = "bin", bins = 200)
+```
 
-NB - non-normal distribution, low number of biological reps. No max for dynamic range. Don't use technical replicates - biological replicates much more useful (cite paper? or later in md)
+<img src="../img/deseq_counts_distribution.png" width="400">
+
+If we zoom in close to zero, we can see a large number of genes with counts of zero:
+
+```r
+ggplot(data) +
+        geom_histogram(aes(x = Mov10_oe_1), stat = "bin", bins = 200) + 
+        xlim(-5, 500) 
+```
+
+<img src="../img/deseq_counts_distribution_zoomed.png" width="400">
+
+These images illustrate some common features of RNA-Seq count data, including a low number of counts associated with the a large proportion of genes, and a long right tail due to the lack of any upper limit for expression levels. Unlike microarray data, which has a dynamic range maximum limited due to when the probes max out, there is no limit of maximum expression for RNA-Seq data. Due to the differences in these technologies, the statistical models used to fit the data are different between the two methods. 
+
+## Modeling count data
+
+Count data is often modeled using the binomial distribution, which can give you the probability of getting a heads upon tossing a coin. However, in the case of the lottery, when the number of cases is very large (people who buy tickets), but the probability of an event is very small (probability of winning), the Poisson distribution is used to model these data. In these cases, the number of events (people who win) generally range between 1 and 10. [Details provided by Rafael Irizarry in the EdX class.](https://youtu.be/fxtB8c3u6l8)
+
+During RNA-Seq and microarray experiments, a very large number of RNAs are present and the probability of pulling out a particular transcript is very small. However, after taking a large sample, the sum of all counts for that transcript is often between 1 and 10. If this applies, then every gene would follow the Poisson distribution. [A nice description of this concept is presented by Rafael Irizarry in the EdX class.](https://youtu.be/HK7WKsL3c2w)
+
+The Poisson model assumes a normal distribution with the mean of the data equal to the variance, and this model is used to model the log2 of the continuous microarray intensities. However, due to the different properties of the of RNA-Seq count data, such as integer counts instead of continuous measurements and non-normally distributed data, the Poisson model does not accurately model RNA-Seq counts.
+
+If the proportions of mRNA stayed exactly constant between biological replicates for RNA-Seq data, we could expect Poisson distribution. But realistically, biological variation across biological replicates is expected, and this extra variation is accounted for by the Negative Binomial distribution.
+
+<img src="../img/deseq_nb.png" width="300">
+
+In RNA-Seq data, genes with larger average expression have, on average, larger observed variances across replicates, that is, they vary in expression from sample to sample more than other genes with lower average expression. This phenomena of 'having different scatter' is known as data heteroscedasticity. The Negative Binomial (NB) model is a good approximation, where the variability between replicates is modeled by a dispersion parameter.
+
+>**NOTE:** 
+> - Biological replicates represent multiple samples representing the same sample class (i.e. different mice)> - Technical replicates represent the same sample but with technical steps replicated (i.e. same mouse)> - Usually biological variance is much greater than technical variance, so we do not need to account for technical variance to model the counts
+> - Don't spend money on technical replicates - biological replicates much more useful  
+In the figure below we have plotted mean versus variance for the 'Mov10 overexpression' replicates. Note that the variance across replicates tends to be greater than the mean, especially for large samples. This is a good indication that our data do not fit the Poisson distribution and we need to account for this increase in variance using the Negative Binomial model (i.e. Poisson will underestimate variability).
+
+```r
+mean_counts <- apply(data[, 1:3], 1, mean)
+variance_counts <- apply(data[, 1:3], 1, var)
+df <- data.frame(mean_counts, variance_counts)
+
+ggplot(df) +
+        geom_point(aes(x=mean_counts, y=variance_counts)) + 
+        geom_line(aes(x=mean_counts, y=mean_counts, color="red")) +
+        scale_y_log10() +
+        scale_x_log10()
+```
+
+<img src="../img/deseq_mean_vs_variance.png" width="400">
+
+Increasing the number of replicatesThe variance or scatter tends to reduce as we increase the number of biological replicates. Standard deviations of averages are smaller than standard deviations of individual observations. So as you add more data (replicates), you get increasingly precise estimates of group means, and ultimately greater confidence in the ability to distinguish differences between sample classes (i.e. more DE genes).
+
+The figure below illustrates the relationship between sequencing depth and number of replicates on the number of differentially expressed genes identified [[2](https://academic.oup.com/bioinformatics/article/30/3/301/228651/RNA-seq-differential-expression-studies-more)].
+
+<img src="../img/de_replicates_img.png" width="500">
 
 
 # DESeq2 workflow
