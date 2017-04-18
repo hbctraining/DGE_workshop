@@ -66,9 +66,10 @@ If the proportions of mRNA stayed exactly constant between biological replicates
 
 
 >**NOTE:** 
-> - **Biological replicates** represent multiple samples (i.e. RNA from different mice) representing the same sample class> - **Technical replicates** represent the same sample (i.e. RNA from the same mouse) but with technical steps replicated> - Usually biological variance is much greater than technical variance, so we do not need to account for technical variance
+>
+> - **Biological replicates** represent multiple samples (i.e. RNA from different mice) representing the same sample class> - **Technical replicates** represent the same sample (i.e. RNA from the same mouse) but with technical steps replicated> - Usually biological variance is much greater than technical variance, so we do not need to account for technical variance to identify biological differences in expression
 > - **Don't spend money on technical replicates - biological replicates are much more useful** 
-In the figure below we have plotted mean versus variance for the 'Mov10 overexpression' replicates. Note that the variance across replicates tends to be greater than the mean (red line), especially for large samples. **This is a good indication that our data do not fit the Poisson distribution and we need to account for this increase in variance using the Negative Binomial model (i.e. Poisson will underestimate variability).**
+In the figure below we have plotted *mean versus variance* for the 'Mov10 overexpression' replicates. Note that the variance across replicates tends to be greater than the mean (red line), especially for large samples. **This is a good indication that our data do not fit the Poisson distribution and we need to account for this increase in variance using the Negative Binomial model (i.e. Poisson will underestimate variability).**
 
 Run the following code to plot the mean versus variance for the 'Mov10 overexpression' replicates:
 
@@ -86,7 +87,9 @@ ggplot(df) +
 
 <img src="../img/deseq_mean_vs_variance.png" width="600">
 
-The variance or scatter tends to reduce as we increase the number of biological replicates. Standard deviations of averages are smaller than standard deviations of individual observations. So as you add more data (replicates), you get increasingly precise estimates of group means, and ultimately greater confidence in the ability to distinguish differences between sample classes (i.e. more DE genes).
+The variance or scatter tends to reduce as we increase the number of biological replicates (variance will approach the Poisson distribution with increasing numbers of replicates). Standard deviations of averages are smaller than standard deviations of individual observations. 
+
+The value of additional replicates is that as you add more data (replicates), you get increasingly precise estimates of group means, and ultimately greater confidence in the ability to distinguish differences between sample classes (i.e. more DE genes).
 
 The figure below illustrates the relationship between sequencing depth and number of replicates on the number of differentially expressed genes identified [[1](https://academic.oup.com/bioinformatics/article/30/3/301/228651/RNA-seq-differential-expression-studies-more)].
 
@@ -101,9 +104,10 @@ To model counts appropriately when performing a differential expression analysis
 
 <img src="../img/deseq_workflow_full.png" width="200">
 
+We will go through the theory of each step in the workflow prior to the hands-on execution of the steps. 
 ## Normalization
 
-The first step in the workflow is count normalization, which is necessary to make accurate comparisons of gene expression between samples. The raw counts, or number of reads aligning to each gene, need to be normalized to account for differences in library depth between samples when performing differential expression analyses.
+The first step in the workflow is **count normalization**, which is necessary to make accurate comparisons of gene expression between samples. The raw counts, or number of reads aligning to each gene, need to be normalized to account for differences in library depth and composition between samples when performing differential expression analyses.
 
 <img src="../img/deseq_workflow_normalization.png" width="200">
 
@@ -246,13 +250,16 @@ size_factors <- c(1.32, 0.70, 1.04, 1.27, 1.11, 0.85)
 
 ## Quality Control
 
-The next step in the DESeq2 workflow is QC, which includes sample-level and gene-level steps.
+The next step in the DESeq2 workflow is QC, which includes sample-level and gene-level steps. 
 
 <img src="../img/deseq_workflow_qc.png" width="200">
 
 ### Sample-level QC
 
 A useful first step in an RNA-seq analysis is often to assess overall similarity between samples: Which samples are similar to each other, which are different? Does this fit to the expectation from the experiment’s design? Log2-transformed normalized counts are used to assess similarity between samples using Principal Component Analysis (PCA) and hierarchical clustering.
+
+Sample-level QC allows us to see how well our replicates cluster together, as well as, observe whether our experimental condition represents the major source of variation in the data. Performing sample-level QC can also identify any sample outliers, which may need to be explored to determine whether they need to be removed prior to DE analysis. 
+
 
 <img src="../img/sample_qc.png" width="700">
 
@@ -267,9 +274,11 @@ If you had two samples and wanted to plot the counts of one sample versus anothe
 
 You could draw a line through the data in the direction representing the most variation, which is on the diagonal in this example. The maximum variation in the data is between the two endpoints of this line.  
 
-For PCA analysis, it is essentially doing this same thing between all samples, n, in n-dimensional space. If you have more than three samples, this is hard to visualize, but essentially a line is drawn through the data representing the most variation (PC1). Another line is drawn through the data representing the second most variation in the data (PC2). We can then plot a sum of the values for each gene based on it's expression and influence on PC1 and PC2. 
+For PCA analysis, it is essentially doing this same thing between all samples, *n*, in *n*-dimensional space. If you have more than three samples, this is hard to visualize, but essentially a line is drawn through the data representing the most variation (PC1). Another line is drawn through the data representing the second most variation in the data (PC2). PC3 represents the direction of the third most variation in the data, and so on and so forth to PC*n*. 
 
-If two samples have similar levels of expression for the genes that contribute significantly to the variation represented by PC1, then they will be plotted close together on the PC1 axis. Since genes with the greatest variation between samples will have the greatest influence on the principal components, we hope our condition of interest explains this variation (e.g. high counts in one condition and low counts in the other). With PC1 representing the most variation in the data and PC2 representing the second most variation in the data, we can visualize how similar the variation of genes is between samples. We would expect the groups related to our condition to separate on PC1 and/or PC2, and the biological replicates to cluster together. This is easiest to understand by visualizing some PCA plots.
+We can plot a sum of the values for each gene based on it's expression (normalized counts) and influence on PC1 and PC2. **If two samples have similar levels of expression for the genes that contribute significantly to the variation represented by PC1, they will be plotted close together on the PC1 axis.** 
+
+Since genes with the greatest variation between samples will have the greatest influence on the principal components, we hope our experimental condition explains this variation (e.g. high counts in one condition and low counts in the other). With PC1 representing the most variation in the data and PC2 representing the second most variation in the data, we can visualize how similar the variation of genes is between samples. **We would expect the treatment groups to separate on PC1 and/or PC2, and the biological replicates to cluster together.** This is easiest to understand by visualizing some PCA plots.
 
 The PCA plot below is what we hope for, with our treatment groups separating on PC1, which explains 89% of the variation in the data. 
 
@@ -293,20 +302,31 @@ PCA is also a nice way to look for batch effects. In the below figure, we see ba
 
 <img src="../img/PCA_example6.png" width="600">
 
-In this final figure we are looking at a time course experiment that separates nicely on the PCA. The treatment separates the samples on PC1 (26% variance), while time post-treatment is represented by PC2 (21% variance). The replicates tend to cluster together, which is good.
+Even if your samples do not separate by PC1 or PC2, you still may return biologically relevant results from the DE analysis, just don't be surprised if you do not return a large number of DE genes. To give more power to detect DE genes, you should account for known major sources of variation in your model. 
+
+***
+**Exercise**
+
+
+The figure below was generated from a time course experiment with sample groups 'Ctrl' and 'Sci' and the following timepoints: 0h, 2h, 8h, and 16h. 
+
+- Determine the sources explaining the variation represented by PC1 and PC2.
+- Do the sample groups separate well?
+- Do the replicates cluster together for each sample group?
+- Are there any outliers in the data?
+- Do you have any other concerns regarding the samples in the dataset?
 
 <img src="../img/PCA_example3.png" width="600">
 
+***
 
 #### Hierarchical Clustering Heatmap
 
-Similar to PCA, hierarchical clustering is another, complementary method for identifying strong patterns in a dataset and potential outliers. The heatmap displays the correlation or distances for all pairwise combinations of samples. Since the majority of genes are not differentially expressed, samples generally have high correlations with each other (values higher than 0.80). Samples below 0.80 may indicate an outlier in your data and/or sample contamination.
+Similar to PCA, hierarchical clustering is another, complementary method for identifying strong patterns in a dataset and potential outliers. The heatmap displays the **correlation or distances for all pairwise combinations of samples**. Since the majority of genes are not differentially expressed, samples generally have high correlations with each other (values higher than 0.80). Samples below 0.80 may indicate an outlier in your data and/or sample contamination.
 
 The hierarchical tree can indicate which samples are more similar to each other based on the normalized gene expression values. The color blocks indicate substructure in the data, and you would expect to see your replicates separate together as a block for each sample group.
 
 <img src="../img/heatmap_example.png" width="500">
-
-Even if your samples do not separate by PC1 or PC2, you still may return biologically relevant results from the DE analysis, just don't be surprised if you do not return a large number of DE genes. To give more power to detect DE genes, you should account for known major sources of variation in your model. 
 
 ### Gene-level QC
 
@@ -314,7 +334,7 @@ Prior to differential expression analysis it is beneficial to omit genes that ha
 
 - Genes with zero counts in all samples
 - Genes with an extreme count outlier
-- Genes with a low mean normalized count across all samples
+- Genes with a low mean normalized counts
 
 <img src="../img/gene_filtering.png" width="600">
 
@@ -325,7 +345,6 @@ Prior to differential expression analysis it is beneficial to omit genes that ha
 The final step in the differential expression analysis is the actual fitting of the raw counts to the statistical model and testing for differentially expressed genes. Essentially we want to determine whether the mean expression levels of two different samplegroups are significantly different.
 
 <img src="../img/de_theory.png" width="600">
-
 
 To determine differentially expressed genes, we are going to use the DESeq2 tool. This tool builds on good ideas for dispersion estimation and use of Generalized Linear Models from the DSS and edgeR methods. The [DESeq2 paper](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-014-0550-8) was published in 2014, but the package is continually updated and available for use in R through Bioconductor.
 
