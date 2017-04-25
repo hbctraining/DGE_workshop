@@ -403,7 +403,7 @@ The idea behind fitting a curve to the data is that different genes will have di
 
 This curve is displayed as a red line in the figure below, which plots the estimate for the expected dispersion value for genes of a given expression strength. Each black dot is a gene with an associated mean expression level and maximum likelihood estimation (MLE) of the dispersion (Step 1).
 
-<img src="../img/deseq_dispersion1.png" width="250">
+<img src="../img/deseq_dispersion1.png" width="400">
 
 **Step 3: Shrink gene-wise dispersion estimates toward the values predicted by the curve**
 
