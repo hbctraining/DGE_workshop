@@ -56,11 +56,13 @@ These images illustrate some common features of RNA-Seq count data, including a 
 
 ## Modeling count data
 
-Count data is often modeled using the binomial distribution, which can give you the probability of getting a number of heads upon tossing a coin a number of times. However, not all count data can be fit with the binomial distribution. With some events, like the lottery, when the number of cases is very large (people who buy tickets), but the probability of an event is very small (probability of winning), the Poisson distribution is used to model these types of count data. In these cases, the number of events (people who win) generally range between 1 and 10. [Details provided by Rafael Irizarry in the EdX class.](https://youtu.be/fxtB8c3u6l8)
+Count data (discrete) is often modeled using the **binomial distribution**, which can give you the **probability of getting a number of heads upon tossing a coin a number of times**. However, not all count data can be fit with the binomial distribution. 
+
+With some events, like the lottery, when the number of cases is very large (people who buy tickets), but the **probability of an event is very small (probability of winning), the Poisson distribution is used to model these types of count data**. In these cases, the number of events (people who win) generally range between 1 and 10. [Details provided by Rafael Irizarry in the EdX class.](https://youtu.be/fxtB8c3u6l8)
 
 During RNA-Seq, a very large number of RNAs are present and the probability of pulling out a particular transcript is very small. However, after taking a large sample, the sum of all counts for that transcript is often between 1 and 10. If this applies, then every gene would follow the Poisson distribution. [A nice description of this concept is presented by Rafael Irizarry in the EdX class.](https://youtu.be/HK7WKsL3c2w)
 
-If the proportions of mRNA stayed exactly constant between biological replicates for RNA-Seq data, we could expect Poisson distribution. But realistically, biological variation across biological replicates is expected, and, for RNA-Seq data, genes with larger average expression levels tend to have larger observed variances across replicates. This phenomena of 'having different scatter' is known as data *heteroscedasticity*. **The Negative Binomial (NB) model is a good approximation, where this extra variability between replicates is modeled.**
+**If the proportions of mRNA stayed exactly constant between biological replicates** for RNA-Seq data, we could expect Poisson distribution. But realistically, biological variation across biological replicates is expected, and, for RNA-Seq data, genes with larger average expression levels tend to have larger observed variances across replicates. This phenomena of 'having different scatter' is known as data *heteroscedasticity*. **The Negative Binomial (NB) model is a good approximation, to account for this extra variability between replicates.**
 
 <img src="../img/deseq_nb.png" width="400">
 
