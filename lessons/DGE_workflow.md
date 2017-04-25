@@ -399,9 +399,9 @@ To model the dispersion based on expression level (mean normalized counts of rep
 
 **Step 2: Fit a curve to the the gene estimates given expression strength**
 
-The idea behind fitting a curve to the data is that different genes will have different scales of biological variability, but, over all genes, there will be a distribution of reasonable estimates of dispersion. 
+The idea behind fitting a curve to the data is that different genes will have different scales of biological variability, but, over all genes, there will be a distribution of reasonable estimates of dispersion (1/variance). 
 
-This curve is displayed as a red line in the figure below, which plots the estimate for the **expected dispersion value (1/variance) for genes of a given expression strength**. Each black dot is a gene with an associated mean expression level and maximum likelihood estimation (MLE) of the dispersion (Step 1).
+This curve is displayed as a red line in the figure below, which plots the estimate for the **expected dispersion value for genes of a given expression strength**. Each black dot is a gene with an associated mean expression level and maximum likelihood estimation (MLE) of the dispersion (Step 1).
 
 <img src="../img/deseq_dispersion1.png" width="400">
 
