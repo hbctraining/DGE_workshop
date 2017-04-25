@@ -73,6 +73,7 @@ If the proportions of mRNA stayed exactly constant between biological replicates
 > - **Don't spend money on technical replicates - biological replicates are much more useful**
  
 **How do I know if my data should be modeled using the Poisson distribution or Negative Binomial distribution?** 
+
 If it's count data, it should fit the negative binomial, as discussed previously. However, if you want to verify that your data is appropriate for this model, you can plot the *mean versus the variance* of your data. *Remember for the Poisson model, the mean = variance.*
 
 Run the following code to plot the mean versus variance for the 'Mov10 overexpression' replicates:
@@ -93,11 +94,11 @@ ggplot(df) +
 
 Note that in the figure, the variance across replicates tends to be greater than the mean (red line), especially for genes with large mean expression levels. **This is a good indication that our data do not fit the Poisson distribution and we need to account for this increase in variance using the Negative Binomial model (i.e. Poisson will underestimate variability leading to an increase in false positive DE genes).**
 
-The variance or scatter tends to reduce as we increase the number of biological replicates (variance will approach the Poisson distribution with increasing numbers of replicates). Standard deviations of averages are smaller than standard deviations of individual observations. 
+**Is there anyway to improve the precision of the mean estimates (i.e. reduce the variance in my data)?**
 
-The value of additional replicates is that as you add more data (replicates), you get increasingly precise estimates of group means, and ultimately greater confidence in the ability to distinguish differences between sample classes (i.e. more DE genes).
+The variance or scatter tends to reduce as we increase the number of biological replicates (*variance will approach the Poisson distribution with increasing numbers of replicates*). Standard deviations of averages are smaller than standard deviations of individual observations. **The value of additional replicates is that as you add more data (replicates), you get increasingly precise estimates of group means, and ultimately greater confidence in the ability to distinguish differences between sample classes (i.e. more DE genes).**
 
-The figure below illustrates the relationship between sequencing depth and number of replicates on the number of differentially expressed genes identified [[1](https://academic.oup.com/bioinformatics/article/30/3/301/228651/RNA-seq-differential-expression-studies-more)].
+The figure below illustrates the relationship between sequencing depth and number of replicates on the number of differentially expressed genes identified [[1](https://academic.oup.com/bioinformatics/article/30/3/301/228651/RNA-seq-differential-expression-studies-more)]. Note that an **increase in the number of replicates tends to return more DE genes than increasing the sequencing depth after 10 million reads**, which is due to this decrease in variance. Therefore, generally more replicates are better than higher sequencing depth, with the caveat that higher depth is required for detection of lowly expressed DE genes and for performing isoform-level differential expression.
 
 <img src="../img/de_replicates_img.png" width="500">
 
