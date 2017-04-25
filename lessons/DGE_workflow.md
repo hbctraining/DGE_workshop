@@ -395,7 +395,7 @@ To accurately model our sequencing counts, we need to generate accurate estimate
 
 **Step 1: Estimate the dispersion for each gene separately**
 
-To model the dispersion based on expression level (mean normalized counts of replicates), the dispersion for each gene is estimated using maximum likelihood estimation. Given the normalized count values of the replicates, the most likely estimate of dispersion is calculated.
+To model the dispersion based on expression level (mean normalized counts of replicates), the dispersion for each gene is estimated using maximum likelihood estimation. In other words, given the normalized count values of the replicates, the most likely estimate of dispersion is calculated.
 
 **Step 2: Fit a curve to the the gene estimates given expression strength**
 
