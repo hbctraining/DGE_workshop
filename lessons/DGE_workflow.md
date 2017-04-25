@@ -373,7 +373,7 @@ For example, suppose you have the following metadata appears as follows:
 
 If you want to examine the expression differences between treatments, and you know that major sources of variation include 'sex' and 'age', then your design formula would be:
 
-`design <- sex + age + treatment`
+`design <- ~ sex + age + treatment`
 
 ***
 **Exercise**
@@ -384,9 +384,13 @@ Suppose you wanted to study the expression difference between the two age groups
 
 *** 
 
-age:treatment for complex design formula
+#### Complex designs
 
-***
+DESeq2 also allows for the analysis of complex designs. You can explore interactions or difference of differences by specifying for it in the design formula. For example, if you wanted to explore the effect of sex on the treatment  affect, you could specify for it in the design formula as follows: 
+
+`design <- ~ sex + age + treatment + sex:treatment`
+
+Since the interaction term `sex:treatment` is last in the formula, the results output from DESeq2 will output results for this term. Alternatively, as recommended in the [DESeq2 vignette](https://www.bioconductor.org/packages/release/bioc/vignettes/DESeq2/inst/doc/DESeq2.pdf), we could create a new factor variable in our metadata based on the two interaction factors. 
 
 
 ### Estimate size factors
