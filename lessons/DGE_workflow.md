@@ -267,6 +267,10 @@ The next step in the DESeq2 workflow is QC, which includes sample-level and gene
 
 A useful first step in an RNA-seq analysis is often to assess overall similarity between samples: Which samples are similar to each other, which are different? Does this fit to the expectation from the experiment’s design? Log2-transformed normalized counts are used to assess similarity between samples using Principal Component Analysis (PCA) and hierarchical clustering.
 
+We use a regularized log2 transformation (rlog) of the counts for sample-level QC as it moderates the variance across the mean, thereby improving the distances/clustering for these visualization methods.
+
+<img src="../img/rlog_transformation.png" width="500">
+
 Sample-level QC allows us to see how well our replicates cluster together, as well as, observe whether our experimental condition represents the major source of variation in the data. Performing sample-level QC can also identify any sample outliers, which may need to be explored to determine whether they need to be removed prior to DE analysis. 
 
 
@@ -291,25 +295,25 @@ Since genes with the greatest variation between samples will have the greatest i
 
 The PCA plot below is what we hope for, with our treatment groups separating on PC1, which explains 89% of the variation in the data. 
 
-<img src="../img/PCA_example4.png" width="600">
+<img src="../img/PCA_example4.png" width="400">
 
 We can use other variables present in our metadata to explore the cause of the variation on PC2:
 
-<img src="../img/PCA_example5.png" width="600">
+<img src="../img/PCA_example5.png" width="400">
 
 We can determine that the 5% of variation in our data represented by PC2 is due to variation between individuals in this paired design example.
 
 In the following example, we can visualize the samples clustering by genotype on PC2 (13% variance). **If we saw one of the red samples below clustering with the blue samples (or vice versa), we might be worried about a mix-up. It would give us sufficient cause to remove that sample as an outlier and/or do some follow-up tests in the lab.**
 
-<img src="../img/PCA_example1.png" width="600">
+<img src="../img/PCA_example1.png" width="400">
 
 We can see that the plasmid expression level represents the major source of variation in the data on PC1 (55% variance).
 
-<img src="../img/PCA_example2.png" width="600">
+<img src="../img/PCA_example2.png" width="400">
 
 PCA is also a nice way to look for batch effects. In the below figure, we see batch 1 separate distinctly from batches 2 and 3.
 
-<img src="../img/PCA_example6.png" width="600">
+<img src="../img/PCA_example6.png" width="400">
 
 Even if your samples do not separate by PC1 or PC2, you still may return biologically relevant results from the DE analysis, just don't be surprised if you do not return a large number of DE genes. To give more power to detect DE genes, you should account for known major sources of variation in your model. 
 
@@ -387,41 +391,53 @@ age:treatment for complex design formula
 
 ### Estimate size factors
 
-As you have probably noticed, this is exactly what we did to normalize our counts. DESeq2 will automatically estimate the size factors when performing the differential expression analysis if you haven't already done so. If you have already generated the size factors, then DESeq2 will use these values. **Therefore, you must input the raw counts for analysis.**
+After you have your design formula saved, you can input it into the `DESeq()` function to perform the steps in the DESeq2 differential expression analysis. 
+
+<img src="../img/deseq2_workflow_separate_sf.png" width="200">
+
+This step is estimating the size factorss exactly the same way as we did to normalize the raw counts. DESeq2 will automatically estimate the size factors when performing the differential expression analysis if you haven't already done so. If you have already generated the size factors, then DESeq2 will use these values. **Therefore, you must input the raw counts for analysis.**
 
 ### Estimate variation / dispersion
 
+The next step in the analysis is the estimation of gene-wise dispersions.
+
+<img src="../img/deseq2_workflow_separate_dis.png" width="200">
+
 To accurately model our sequencing counts, we need to generate accurate estimates of within-group variation (variation between replicates of the same samplegroup) for each gene. With only a few (3-6) replicates per group, the estimates of variation for each gene are often unreliable. Therefore, DESeq2 shares information across genes to generate more accurate estimates of variation based on the expression level of the gene using a method called 'shrinkage'. DESeq2 assumes that genes with similar expression levels have similar dispersion or variation of expression. DESeq2 generates more accurate measures of dispersion using the following steps:
 
-**Step 1: Estimate the dispersion for each gene separately**
+1. **Estimate the dispersion for each gene separately**
 
-To model the dispersion based on expression level (mean normalized counts of replicates), the dispersion for each gene is estimated using maximum likelihood estimation. In other words, given the normalized count values of the replicates, the most likely estimate of dispersion is calculated.
+	To model the dispersion based on expression level (mean normalized counts of replicates), the dispersion for each gene is estimated using maximum likelihood estimation. In other words, given the normalized count values of the replicates, the most likely estimate of dispersion is calculated.
 
-**Step 2: Fit a curve to the the gene estimates given expression strength**
+2. **Fit a curve to the the gene estimates given expression strength**
 
-The idea behind fitting a curve to the data is that different genes will have different scales of biological variability, but, over all genes, there will be a distribution of reasonable estimates of dispersion (1/variance). 
+	The idea behind fitting a curve to the data is that different genes will have different scales of biological variability, but, over all genes, there will be a distribution of reasonable estimates of dispersion (1/variance). 
 
-This curve is displayed as a red line in the figure below, which plots the estimate for the **expected dispersion value for genes of a given expression strength**. Each black dot is a gene with an associated mean expression level and maximum likelihood estimation (MLE) of the dispersion (Step 1).
+	This curve is displayed as a red line in the figure below, which plots the estimate for the **expected dispersion value for genes of a given expression strength**. Each black dot is a gene with an associated mean expression level and maximum likelihood estimation (MLE) of the dispersion (Step 1).
 
-<img src="../img/deseq_dispersion1.png" width="400">
+	<img src="../img/deseq_dispersion1.png" width="400">
 
-**Step 3: Shrink gene-wise dispersion estimates toward the values predicted by the curve**
+3. **Shrink gene-wise dispersion estimates toward the values predicted by the curve**
 
-The curve allows for more accurate identification of differentially expressed genes when sample sizes are small, and the strength of the shrinkage for each gene depends on :
+	The curve allows for more accurate identification of differentially expressed genes when sample sizes are small, and the strength of the shrinkage for each gene depends on :
 	
-- how close gene dispersions are from the curve
-- sample size (more samples = less shrinkage)
+	- how close gene dispersions are from the curve
+	- sample size (more samples = less shrinkage)
 
 
-This shrinkage method is particularly important to reduce false positives in the differential expression analysis. Genes with extremely low levels of variation are shrunken towards the curve, and the more accurate, higher dispersion values are output for differential expression testing. 
+	**This shrinkage method is particularly important to reduce false positives in the differential expression analysis.** Genes with extremely low levels of variation are shrunken towards the curve, and the more accurate, higher dispersion values are output for fitting of the model and differential expression testing. 
 
-Dispersion estimates that are slightly above the curve are also shrunk toward the curve for better dispersion estimation; however, genes with extremely high dispersion values are not shrunken toward the curve due to the likelihood that the gene does not follow the modeling assumptions and has higher variability than others for biological or technical reasons. Shrinking the values toward the curve could result in false positives, so these values are not shrunken. These genes are shown surrounded by blue circles below. 
+	Dispersion estimates that are slightly above the curve are also shrunk toward the curve for better dispersion estimation; however, genes with extremely high dispersion values are not shrunken toward the curve due to the likelihood that the gene does not follow the modeling assumptions and has higher variability than others for biological or technical reasons [[1](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-014-0550-8)]. Shrinking the values toward the curve could result in false positives, so these values are not shrunken. These genes are shown surrounded by blue circles below. 
 
-<img src="../img/deseq_dispersion2.png" width="600">
+	<img src="../img/deseq_dispersion2.png" width="600">
 
-> **NOTE:** This is a good plot to examine to ensure your data is a good fit for the DESeq2 model. You expect your data to generally scatter around the curve, with the dispersion decreasing with increasing expression levels. If you see a cloud or different shapes, then you might want to explore your data more to see if you have contamination (mitochondrial, etc.) or outlier samples.
+	> **NOTE:** This is a good plot to examine to ensure your data is a good fit for the DESeq2 model. You expect your data to generally scatter around the curve, with the dispersion decreasing with increasing expression levels. If you see a cloud or different shapes, then you might want to explore your data more to see if you have contamination (mitochondrial, etc.) or outlier samples.
 
 ### Generalized Linear Model fit for each gene
+
+The final step in the DESeq2 workflow is fitting the Negative Binomial model for each gene and performing differential expression testing.
+
+<img src="../img/deseq2_workflow_separate.png" width="200">
 
 As discussed earlier, the count data generated by RNA-Seq exhibits overdispersion and the statistical distribution used to model the counts needs to account for this overdispersion. DESeq2 uses a negative binomial distribution to model the RNA-Seq counts using the equation below:
 
@@ -435,39 +451,55 @@ By fitting the model, DESeq2 will determine the **estimates for the log2 foldcha
 
 #### Shrunken log2 foldchanges (LFC)
 
-Generally for count NGS data, there is a large variance associated with the LFC estimates for genes with low read counts, and these weakly expressed genes would be identified as differentially expressed due solely to this variation. To account for this issue and reduce false positives for lowly expressed genes, DESeq2 shrinks the LFC estimates toward zero when the infromation for a gene is low, which could include:
+Generally for count NGS data, there is a large variance associated with the LFC estimates for genes with low read counts, and these weakly expressed genes would be identified as differentially expressed due solely to this variation. To account for this issue and reduce false positives for lowly expressed genes, DESeq2 shrinks the LFC estimates toward zero when the information for a gene is low, which could include:
 
-- Low counts and high dispersion values for a gene
-- Few replicates per sample group? (few degrees of freedom) - http://www.statsci.org/smyth/pubs/edgeRChapterPreprint.pdf
+- Low counts
+- High dispersion values
 
-Similar to the previous shrinkage of dispersion estimates, the shrinkage of LFC estimates uses information from all genes to generate more accurate estimates. Specifically, the distribution of LFC estimates for all genes is used (as a prior) to shrink the LFC estimates of genes with little information or high dispersion toward more likely (lower) LFC estimates.
-
-The effect of dispersion on the shrunken LFC is illustrated in the figure below. Note that the green gene has low dispersion while the purple gene has high levels of dispersion, but the same mean normalized counts. For the green gene with low dispersion, the unshrunken LFC estimate (vertex of the green solid line) is very similar to the shrunken LFC estimate (vertex of the green dotted line), but quite the LFC estimates for the purple gene are quite different due to the high dispersion. So even though two genes can have similar normalized count values, they can have differing degrees of shrinkage. Notice the LFC estimates are shrunken toward the prior (black solid line). 
-
-*Illustration below taken from the [DESeq2 paper](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-014-0550-8).*
-
+Similar to the previous shrinkage of dispersion estimates, the shrinkage of LFC estimates uses information from all genes to generate more accurate estimates. Specifically, the distribution of LFC estimates for all genes is used (as a prior) to shrink the LFC estimates of genes with little information or high dispersion toward more likely (lower) LFC estimates. 
 
 <img src="../img/deseq2_shrunken_lfc.png" width="500">
 
-> **NOTE:** If very large expected fold changes for a number of individual genes are expected, but not so many large fold changes that the width of the prior adjusts to allow such large fold changes, then you may want to turn off LFC shrinkage.
+*Illustration taken from the [DESeq2 paper](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-014-0550-8).*
+
+For example, in the figure above, the green gene and purple gene have the same mean values for the two sample groups (C57BL/6J and DBA/2J), but the green gene has low variation while the purple gene has high levels of variation. For the green gene with low variation, the unshrunken LFC estimate (vertex of the green solid line) is very similar to the shrunken LFC estimate (vertex of the green dotted line), but the LFC estimates for the purple gene are quite different due to the high dispersion. So even though two genes can have similar normalized count values, they can have differing degrees of LFC shrinkage. Notice the LFC estimates are shrunken toward the prior (black solid line).
+
+
+>**NOTE:** If very large expected fold changes for a number of individual genes are expected, but not so many large fold changes that the width of the prior adjusts to allow such large fold changes, then you may want to turn off LFC shrinkage.
 >
 >The reason is that shrinking of fold changes requires that the software can estimate the range of reasonable values for LFC by looking at the distribution of LFCs (particularly the upper quantile of the absolute LFC). But there might be precise fold changes which are above this upper quantile, and so the prior is too narrow for the targeted genes. The prior might then be a bad assumption for this type of dataset, so it's reasonable to turn it off. *(Response from Mike Love, creator of DESeq2 (http://seqanswers.com/forums/showthread.php?t=49101))*
 
 
 #### Hypothesis testing using the Wald test
 
-The shrunken LFC estimates for each level of each factor in the design formula relative to mean expression of all groups represent the **model coefficients**, and these coefficients are calculated regardless of the comparison of interest. The model coefficients can be viewed with `coefficients(dds)` to explore the strength of the effect for each factor group for every gene.
+The shrunken LFC estimates are given for each sample group relative to the mean expression of all groups. These estimates represent the **model coefficients**, and these coefficients are calculated regardless of the comparison of interest. The model coefficients can be viewed with `coefficients(dds)` to explore the strength of the effect for each factor group relative the overall mean for every gene. 
 
-However, generally we are interested in the LFC estimates relative to other sample groups instead of to the mean expression of all groups. To indicate to DESeq2 the groups we want to compare whether the expression of genes are significantly different, we can use **contrasts**. 
-These can be provided to DESeq2 a couple of different ways.
+However, generally we are interested in the LFC estimates relative to other sample groups instead of to the mean expression of all groups. To do this, we must test if difference in the log2 fold changes between groups is zero. To determine whether the difference in shrunken LFC estimate differs significantly from zero, the Wald test is used. 
 
-To determine whether the shrunken LFC estimate differs significantly from zero, the Wald test is used.
+To indicate to DESeq2 the groups we want to compare, we can use **contrasts** to perform differential expression testing between two groups using the Wald test. 
+Contrasts can be provided to DESeq2 a couple of different ways:
 
-##Fold change shrinkage (Fisher info: degrees of freedom (number of samples, number of betas), estimated mean counts, dispersion estimate); beta prior (briefly - if very few reps and high variation within gene); Wald testing; LRT testing; exercises
+1. Using the `results()` function, specify the factor and it's levels you would like to compare: `results(dds, contrast=c("sex", "F", "M"))`. The level given last is the base level for the comparison.
+2. Instead of giving the factor and levels as a vector, you can create a list using the factor levels given in `resultsNames()`. For example, if the output of `resultsNames(dds)` is "sexF", "sexM", then you could write the contrast as follows:
+	
+	`contast_sex <- list("sexF", "sexM")`
+	
+	`results(dds, contrast=contrast_sex)`
+
+#### Multiple test correction
+
+If we used the p-value directly from the Wald test with a significance cut-off of 0.05, then 5% of all genes would be called as differentially expressed (i.e. 5% False positive genes). The more genes we test, the more 'false positives' we discover. DESeq2 helps reduce the number of genes tested by removing those genes unlikely to be significantly DE, such as those with low number of counts and outlier samples. However, we still need to correct for multiple testing, and there are a few common approaches:
+
+- **Bonferroni:** Reject any hypothesis with p-value ≤ α/m. **This is a very conservative approach with a high probability of false negatives.**
+- **FDR / Benjamini-Hochberg:** Rank j / m multiplied by the FDR levels. This approach is designed to control the proportion of false positives among the set of rejected hypotheses
+- **Q-value:** The minimum FDR that can be attained when calling that feature significant. For example, if gene X has a q-value of 0.013 it means that 1.3% of genes that show p-values at least as small as gene X are false positives
+
+In DESeq2, the p-values attained by the Wald test are corrected for multiple testing using the Benjamin and Hochberg method. The p-adjusted values should be used to determine significant genes.
+
  
 
 
-To determine whether the model estimate (LFC) differs significantly from zero, the shrunken LFC estimate is divided by it's standard error to generate a z-statistic, which is compared to the normal distribution.
+
 
 ***
 # Turning off prior
