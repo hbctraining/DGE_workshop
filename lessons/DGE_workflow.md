@@ -67,9 +67,14 @@ If the proportions of mRNA stayed exactly constant between biological replicates
 
 >**NOTE:** 
 >
-> - **Biological replicates** represent multiple samples (i.e. RNA from different mice) representing the same sample class> - **Technical replicates** represent the same sample (i.e. RNA from the same mouse) but with technical steps replicated> - Usually biological variance is much greater than technical variance, so we do not need to account for technical variance to identify biological differences in expression
-> - **Don't spend money on technical replicates - biological replicates are much more useful** 
-In the figure below we have plotted *mean versus variance* for the 'Mov10 overexpression' replicates. Note that the variance across replicates tends to be greater than the mean (red line), especially for large samples. **This is a good indication that our data do not fit the Poisson distribution and we need to account for this increase in variance using the Negative Binomial model (i.e. Poisson will underestimate variability).**
+> - **Biological replicates** represent multiple samples (i.e. RNA from different mice) representing the same sample class
+> - **Technical replicates** represent the same sample (i.e. RNA from the same mouse) but with technical steps replicated
+> - Usually biological variance is much greater than technical variance, so we do not need to account for technical variance to identify biological differences in expression
+> - **Don't spend money on technical replicates - biological replicates are much more useful**
+ 
+**What model does my data fit?** If it's count data, it should fit the negative binomial, as discussed previously. However, if you want to verify that your data is appropriate for this model, you can plot the *mean versus the variance* of your data to see if it adheres to the Poisson model.
+
+In the figure below we have plotted *mean versus variance* for the 'Mov10 overexpression' replicates. Note that the variance across replicates tends to be greater than the mean (red line), especially for large samples. **This is a good indication that our data do not fit the Poisson distribution and we need to account for this increase in variance using the Negative Binomial model (i.e. Poisson will underestimate variability leading to an increase in false positive DE genes).**
 
 Run the following code to plot the mean versus variance for the 'Mov10 overexpression' replicates:
 
