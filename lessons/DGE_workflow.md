@@ -72,9 +72,8 @@ If the proportions of mRNA stayed exactly constant between biological replicates
 > - Usually biological variance is much greater than technical variance, so we do not need to account for technical variance to identify biological differences in expression
 > - **Don't spend money on technical replicates - biological replicates are much more useful**
  
-**What model does my data fit?** If it's count data, it should fit the negative binomial, as discussed previously. However, if you want to verify that your data is appropriate for this model, you can plot the *mean versus the variance* of your data to see if it adheres to the Poisson model.
-
-In the figure below we have plotted *mean versus variance* for the 'Mov10 overexpression' replicates. Note that the variance across replicates tends to be greater than the mean (red line), especially for large samples. **This is a good indication that our data do not fit the Poisson distribution and we need to account for this increase in variance using the Negative Binomial model (i.e. Poisson will underestimate variability leading to an increase in false positive DE genes).**
+**How do I know if my data should be modeled using the Poisson distribution or Negative Binomial distribution?** 
+If it's count data, it should fit the negative binomial, as discussed previously. However, if you want to verify that your data is appropriate for this model, you can plot the *mean versus the variance* of your data. *Remember for the Poisson model, the mean = variance.*
 
 Run the following code to plot the mean versus variance for the 'Mov10 overexpression' replicates:
 
@@ -91,6 +90,8 @@ ggplot(df) +
 ```
 
 <img src="../img/deseq_mean_vs_variance.png" width="600">
+
+Note that in the figure, the variance across replicates tends to be greater than the mean (red line), especially for genes with large mean expression levels. **This is a good indication that our data do not fit the Poisson distribution and we need to account for this increase in variance using the Negative Binomial model (i.e. Poisson will underestimate variability leading to an increase in false positive DE genes).**
 
 The variance or scatter tends to reduce as we increase the number of biological replicates (variance will approach the Poisson distribution with increasing numbers of replicates). Standard deviations of averages are smaller than standard deviations of individual observations. 
 
