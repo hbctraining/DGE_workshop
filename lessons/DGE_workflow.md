@@ -431,28 +431,7 @@ DESq2 will use this formula to create the model for each gene, but what we reall
 
  <img src="../img/NB_model_formula_betas.png" width="500">
 
-By fitting the model, DESeq2 will determine the estimates for the log2 foldchanges between conditions. 
-
->For example, if we had our samples divided into three conditions, control (ctrl), overexpression (oe) and knockdown (kd), our model would be:
->
-> <img src="../img/NB_model_formula_betas_example.png" width="570">
-
-In DESeq2 and most other DE tools, you will assign your samples to specific conditions using a 'model matrix' or 'design matrix'. For example, we can assign our samples to conditions in the model matrix using binary (0,1) notation:
-
-|  | ctrl | oe | kd |
-| ----- |:-----:|:-----:|:-----:|
-| sample1 | 1 | 0 | 0 |
-| sample2 | 1 | 0 | 0 |
-| sample3 | 0 | 1 | 0 |
-| sample4 | 0 | 1 | 0 |
-| sample5 | 0 | 0 | 1 |
-| sample6 | 0 | 0 | 1 |
-
-Samples 1 and 2 are controls, samples 3 and 4 are overexpression, and samples 5 and 6 are knockdown. This information is utilized to inform the model about which replicates should be used to estimate the **log2 foldchanges (LFC)** for each level of each factor in the model.
-
->For example, sample1 and sample2 should be used to estimate the LFC for the expression of the control group relative to mean expression of all groups, and the model formula for this comparison would be:
->
-><img src="../img/NB_model_formula_betas_example3.png" width="400">
+By fitting the model, DESeq2 will determine the **estimates for the log2 foldchanges and their standard error values for each samplegroup relative to the mean expression of all samples**. 
 
 #### Shrunken log2 foldchanges (LFC)
 
@@ -489,3 +468,22 @@ To determine whether the shrunken LFC estimate differs significantly from zero, 
 
 
 To determine whether the model estimate (LFC) differs significantly from zero, the shrunken LFC estimate is divided by it's standard error to generate a z-statistic, which is compared to the normal distribution.
+
+***
+# Model matrix
+In DESeq2 and most other DE tools, you will assign your samples to specific conditions using a 'model matrix' or 'design matrix'. For example, we can assign our samples to conditions in the model matrix using binary (0,1) notation:
+
+|  | ctrl | oe | kd |
+| ----- |:-----:|:-----:|:-----:|
+| sample1 | 1 | 0 | 0 |
+| sample2 | 1 | 0 | 0 |
+| sample3 | 0 | 1 | 0 |
+| sample4 | 0 | 1 | 0 |
+| sample5 | 0 | 0 | 1 |
+| sample6 | 0 | 0 | 1 |
+
+Samples 1 and 2 are controls, samples 3 and 4 are overexpression, and samples 5 and 6 are knockdown. This information is utilized to inform the model about which replicates should be used to estimate the **log2 foldchanges (LFC)** for each level of each factor in the model.
+
+>For example, sample1 and sample2 should be used to estimate the LFC for the expression of the control group relative to mean expression of all groups, and the model formula for this comparison would be:
+>
+><img src="../img/NB_model_formula_betas_example3.png" width="400">
