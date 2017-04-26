@@ -1,18 +1,17 @@
-# DESeq2 differential expression analysis workflow
+---
+title: "Gene-level differential expression analysis with DESeq2"
+author: "Meeta Mistry, Radhika Khetani, Mary Piper"
+date: "April 26, 2017"
+---
 
-To model counts appropriately when performing a differential expression analysis, there are a number of software packages that have been developed for differential expression analysis of RNA-seq data, and new methods are continuously being developed; however, a few different tools are generally recommended. **DESeq2** and **EdgeR** both use the negative binomial model and similar methods and, typically, yield similar results. Both of these tools are very sensitive, but may be somewhat stringent at reducing false positives. **Limma voom** is another tool often used for DE analysis, but may be less sensitive for small sample sizes. This tool is recommended when the number of biological replicates per group grows large (e.g. > 20). Many studies describing comparisons between these methods show that while there is some agreement, there is also much variability. **Additionally, there is no one method that performs optimally under all conditions ([Soneson and Dleorenzi, 2013](https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-14-91)).**
+Approximate time: 60 minutes
 
+## Learning Objectives 
 
-![deg1](../img/deg_methods1.png) 
+* 1
+* 2
+* 3
 
-![deg1](../img/deg_methods2.png) 
-
-
-**We will be using [DESeq2](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-014-0550-8) for the DE analysis, and the workflow for the tool is shown below in green.** After obtaining the counts associated with each gene, DESeq2 normalizes the count values to account for differences in library sizes and RNA composition between samples. Then, QC is performed at the gene and sample level prior to performing the differential expression analysis.
-
-<img src="../img/deseq_workflow_full.png" width="200">
-
-We will go through the theory of each step in the workflow prior to the hands-on execution of the steps. 
 
 
 ## Differential expression analysis with DESeq2

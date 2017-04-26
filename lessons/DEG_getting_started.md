@@ -125,5 +125,14 @@ class(data)
 class(meta)
 ```
 
+## View your data
+
+Make sure your datasets contain the expected samples / information before proceeding to perfom any type of analysis. 
+
+```r
+View(data)
+View(meta)
+```
+
 ---
 *This lesson has been developed by members of the teaching team at the [Harvard Chan Bioinformatics Core (HBC)](http://bioinformatics.sph.harvard.edu/). These are open access materials distributed under the terms of the [Creative Commons Attribution license](https://creativecommons.org/licenses/by/4.0/) (CC BY 4.0), which permits unrestricted use, distribution, and reproduction in any medium, provided the original author and source are credited.*
