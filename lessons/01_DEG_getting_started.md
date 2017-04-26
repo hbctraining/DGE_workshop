@@ -1,7 +1,7 @@
 ---
-title: "Setting up for Gene-level differential expression analysis using DESeq2"
+title: "Setting up for Gene-level differential expression analysis"
 author: "Meeta Mistry, Radhika Khetani"
-date: "October 17, 2016"
+date: "April 26, 2017"
 ---
 
 Approximate time: 40 minutes
@@ -11,7 +11,6 @@ Approximate time: 40 minutes
 * Have a general idea of the experiment and its objectives
 * Understand how and why we choose this dataset
 * Getting setup in R (project setup, loading data, loading libraries)
-* Becoming familiar with the `DESeqDataSet` object 
 
  
 ## Understanding the dataset
@@ -67,26 +66,6 @@ Below is some of the metadata associated with the dataset we are using today.
 
 ***
 
-## From Sequence Data to Count Matrix
-
-Arguably the most common use for transcriptome data is to search for differentially expressed genes. Finding genes that are differentially expressed between conditions is an integral part of understanding the molecular basis of phenotypic variation. The following steps briefly describe the steps and give examples of tools that one might use to obtain gene counts to perform differential expression (DE analysis) on RNA-Seq data.
-
-<img src="../img/Overview_DGE_workshop.png" width="400">
-
-An in-depth explanation of these steps is outside the scope of today's class, but a couple of points:
-* Even though this flow diagram only shows 1 tool per step after the sequencing step, there are several tools available.
-* This is the more standard workflow with an alignment + a counting step, but more recently people are moving to an alignment-free counting workflow using tools like [Salmon](https://combine-lab.github.io/salmon/) and [Kallisto](https://pachterlab.github.io/kallisto/about.html). These newer tools will generate an abundance estimate for the genes, instead of "raw" counts, but the downstream steps for statistical analysis are similar. 
-
-## Differential expression analysis
-
-There are a number of software packages that have been developed for differential expression analysis of RNA-seq data, and new methods are continuously being developed. Many studies describing comparisons between these methods show that while there is some agreement, there is also much variability. **Additionally, there is no one method that performs optimally under all conditions ([Soneson and Dleorenzi, 2013](https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-14-91)).**
-
-
-![deg1](../img/deg_methods1.png) 
-
-![deg1](../img/deg_methods2.png) 
-
-In the next few lessons, we will walk you through an **end-to-end gene-level RNA-seq differential expression workflow** using various R packages. We will start with the count matrix, perform exploratory data analysis for quality assessment and to explore the relationship between samples, perform differential expression analysis, and visually explore the results.
 
 ## Setting up
 
@@ -102,7 +81,7 @@ Go to the `File` menu at the top left, and select `New File` followed by `R Scri
 
 ```
 ## Gene-level differential expression analysis using DESeq2
-## Feb 15th 2017
+## May 18th, 2017
 ```
 
 Now save the file as `de_script.R`. When finished your working directory should now look similar to this:
@@ -145,82 +124,6 @@ Use `class()` to inspect our data and make sure we are working with data frames:
 class(data)
 class(meta)
 ```
-
-As a sanity check we should also make sure that we have sample names that match between the two files, and that the samples are in the right order.
-
-```r
-### Check that sample names match in both files
-all(colnames(data) %in% rownames(meta))
-all(colnames(data) == rownames(meta))
-```
-
-***
-
-**Exercise**	
-
-1. Suppose we had sample names matching in the counts matrix and metadata file, but they were out of order. Write the line(s) of code required to create a new matrix with columns ordered such that they were identical to the row names of the metadata.
-
-*** 
-
-
-## `DESeq2DataSet`
-
-Now that we have all the required files and libraries loaded we are ready to begin with the exploratory part of our analysis. 
-
-Amongst the DE tools that work on count data directly, a popular one is [DESeq2](https://bioconductor.org/packages/release/bioc/html/DESeq2.html). The methodology of DESeq2 (as described in the lecture) has high sensitivity and precision, while controlling the false positive rate. It also has various functions for QC assessment conveniently built-in.
-
-The first thing we need to do is create `DESeqDataSet` object. Bioconductor software packages often define and use a custom class for storing data that makes sure that all the needed 'data slots' are consistently provided and fulfill the requirements. These objects are similar to `lists` in that the `data slots` are analogous to components as they store a number of different types of data structures. These objects are **different from lists** in that the slots are designated for specific information and access to that information (i.e. selecting data from the object) is by using object-specific functions as defined by the package.
-
-Let's start by creating the `DESeqDataSet` object and then we can talk a bit more about what is stored inside it. To create the object we will need the **count matrix** and the **metadata** table as input. We will also need to specify a **design formula**. The design formula specifies the column(s) in the metadata table and how they should be used in the analysis. For our dataset we only have one column we are interested in, that is `~sampletype`. This column has three factor levels, which tells DESeq2 that for each gene we want to evaluate gene expression change with respect to these different levels.
-
-```r
-## Create DESeq2Dataset object
-dds <- DESeqDataSetFromMatrix(countData = data, colData = meta, design = ~ sampletype)
-```
-
-![deseq1](../img/deseq_obj1.png)
-
-
-You can use DESeq-specific functions to access the different slots and retrieve information, if you wish. For example, suppose we wanted the original count matrix we would use `counts()` (*Note: we nested it within the `View()` function so that rather than getting printed in the console we can see it in the script editor*) :
-
-```r
-View(counts(dds))
-```
-
-As we go through the workflow we will use the relevant functions to check what information gets stored inside our object.
-
-
-## Normalization of counts
-
-The next step is to normalize the count data in order to be able to make fair gene comparisons both within and between samples.
-
-
-<img src="../img/slide5_DGE.png" width="400">
-
-Remember, that there are other factors that are proportional to the read counts in addition to the gene expression that we are interested in. In DESeq2, `sizeFactors` are computed based on the median of ratios method. This method only accounts for sequencing depth. To generate these size factors we can use the `estimateSizeFactors()` function:
-
-```r
-dds <- estimateSizeFactors(dds)
-```
-
-By assigning the results back to the `dds` object we are filling in the slots of the `DESeqDataSet` object with the appropriate information. We can take a look at the normalization factor applied to each sample using:
-
-```r
-sizeFactors(dds)
-```
-
-Now, to retrieve the normalized counts matrix from `dds`, we use the `counts()` function and add the argument `normalized=TRUE`.
-
-```r
-normalized_counts <- counts(dds, normalized=TRUE)
-```
-
-We can save this normalized data matrix to file for later use:
-
-```r
-write.table(normalized_counts, file="data/normalized_counts.txt", sep="\t", quote=F, col.names=NA)
-```
-
 
 ---
 *This lesson has been developed by members of the teaching team at the [Harvard Chan Bioinformatics Core (HBC)](http://bioinformatics.sph.harvard.edu/). These are open access materials distributed under the terms of the [Creative Commons Attribution license](https://creativecommons.org/licenses/by/4.0/) (CC BY 4.0), which permits unrestricted use, distribution, and reproduction in any medium, provided the original author and source are credited.*
