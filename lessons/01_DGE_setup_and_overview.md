@@ -1,6 +1,6 @@
 ---
-title: "Setting up for Gene-level differential expression analysis"
-author: "Meeta Mistry, Radhika Khetani"
+title: "Set up and overview for gene-level differential expression analysis"
+author: "Meeta Mistry, Radhika Khetani, Mary Piper"
 date: "April 26, 2017"
 ---
 
