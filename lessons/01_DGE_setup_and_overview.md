@@ -11,7 +11,7 @@ Approximate time: 60 minutes
 * Have a general idea of the experiment and its objectives
 * Understand how and why we choose this dataset
 * Getting setup in R (project setup, loading data, loading libraries)
-* General understanding of the differential gene expression analysis workflow and why we use the negative binomial model to model RNA-Seq count datas
+* Gain a general understanding of the differential gene expression analysis workflow and why we use the negative binomial model for RNA-Seq count datas
 
 
 # Differential gene expression (DGE) analysis overview 
