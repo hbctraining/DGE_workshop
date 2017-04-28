@@ -92,7 +92,7 @@ The figure below was generated from a time course experiment with sample groups 
 
 Similar to PCA, hierarchical clustering is another, complementary method for identifying strong patterns in a dataset and potential outliers. The heatmap displays the **correlation or distances for all pairwise combinations of samples**. Since the majority of genes are not differentially expressed, samples generally have high correlations with each other (values higher than 0.80). Samples below 0.80 may indicate an outlier in your data and/or sample contamination.  
 
-The hierarchical tree can indicate which samples are more similar to each other based on the normalized gene expression values. The color blocks indicate substructure in the data, and you would expect to see your replicates separate together as a block for each sample group. Additionally, we expect to see samples clustered similar to the groupings observed in a PCA plot.
+The hierarchical tree can indicate which samples are more similar to each other based on the normalized gene expression values. The color blocks indicate substructure in the data, and you would expect to see your replicates separate together as a block for each sample group. Additionally, we expect to see samples clustered similar to the groupings observed in a PCA plot. In the plot below, we would be a bit concerned about 'Wt_3' and 'KO_3' samples not clustering with the other replicates.
 
 <img src="../img/heatmap_example.png" width="500">
 
