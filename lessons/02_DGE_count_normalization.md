@@ -155,7 +155,7 @@ size_factors <- c(1.32, 0.70, 1.04, 1.27, 1.11, 0.85)
 
 ***
 
-## Count normalization of Mov10 dataset
+## Count normalization of Mov10 dataset using DESeq2
 
 Now that we know the theory of count normalization, we will normalize the counts for the Mov10 dataset using DESeq2. This requires a few steps:
 
