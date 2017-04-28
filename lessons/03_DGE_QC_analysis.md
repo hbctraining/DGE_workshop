@@ -112,16 +112,18 @@ Prior to differential expression analysis it is beneficial to omit genes that ha
 **DESeq2 will perform this filtering by default; however other DE tools, such as EdgeR will not.** It is important to understand what filtering is performed by your tool of choice to know if you need to perform any additional filtering prior to the differential expression analysis.
 
 
+### Mov10 quality assessment and exploratory analysis	
 
+#### Transform normalized counts using the rlog transformation
+
+**To improve the distances/clustering for the PCA and heirarchical clustering visualization methods**, we need to moderate the variance across the mean by applying the rlog transformation to the normalized counts. The rlog transformation of the normalized counts is only necessary for these visualization methods during this quality assessment. We will not be using these tranformed counts downstream.
 
 ```r
 ### Transform counts for data visualization
 rld <- rlog(dds, blind=TRUE)
 ```
 
-The `rlog` function returns a `DESeqTransform` object, another type of DESeq-specific object. The reason you don't just get a matrix of transformed values is because all of the parameters (i.e. size factors) that went in to computing the rlog transform are stored in that object. We will be using this object to plot figures for quality assessment.
-
-### Mov10 quality assessment and exploratory analysis	
+The `rlog` function returns a `DESeqTransform` object, another type of DESeq-specific object. The reason you don't just get a matrix of transformed values is because all of the parameters (i.e. size factors) that went into computing the rlog transform are stored in that object. We use this object to plot the PCA and heirarchical clustering figures for quality assessment.
 
 #### Principal components analysis (PCA)
 
