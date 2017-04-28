@@ -163,7 +163,7 @@ Now that we know the theory of count normalization, we will normalize the counts
 2. Create a `DESeqDataSet` object
 3. Generate the normalized counts
 
-### Match the metadata and counts data
+### 1. Match the metadata and counts data
 
 We should always make sure that we have sample names that match between the two files, and that the samples are in the right order. DESeq2 will output an error if this is not the case.
 
@@ -183,7 +183,7 @@ Suppose we had sample names matching in the counts matrix and metadata file, but
 
 *** 
 
-### Create DESEq2 object
+### 2. Create DESEq2 object
 
 Bioconductor software packages often define and use a custom class for storing data that makes sure that all the needed 'data slots' are consistently provided and fulfill the requirements. These objects are similar to `lists` in that the `data slots` are analogous to components as they store a number of different types of data structures. These objects are **different from lists** in that the slots are designated for specific information and access to that information (i.e. selecting data from the object) is by using object-specific functions as defined by the package.
 
@@ -205,7 +205,7 @@ View(counts(dds))
 
 As we go through the workflow we will use the relevant functions to check what information gets stored inside our object.
 
-### Generate the Mov10 normalized counts
+### 3. Generate the Mov10 normalized counts
 
 The next step is to normalize the count data in order to be able to make fair gene comparisons both within and between samples.
 
