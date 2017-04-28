@@ -117,7 +117,7 @@ Prior to differential expression analysis it is beneficial to omit genes that ha
 
 ## Mov10 quality assessment and exploratory analysis using DESeq2	
 
-### Transform normalized counts using the rlog transformation for visualization with PCA and heirarchical clustering
+### Transform normalized counts using the rlog transformation
 
 **To improve the distances/clustering for the PCA and heirarchical clustering visualization methods**, we need to moderate the variance across the mean by applying the rlog transformation to the normalized counts. The rlog transformation of the normalized counts is only necessary for these visualization methods during this quality assessment. We will not be using these tranformed counts downstream.
 
