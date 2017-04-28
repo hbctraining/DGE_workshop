@@ -12,13 +12,13 @@ Approximate time: 80 minutes
 * Evaluating quality of samples using Principal Components Analysis
 * Hierarchical clustering of samples in the dataset 
 
-## Quality Control
+# Quality Control
 
 The next step in the DESeq2 workflow is QC, which includes sample-level and gene-level steps to perform QC checks on the count data to help us ensure that the samples/replicates look good. 
 
 <img src="../img/deseq_workflow_qc.png" width="200">
 
-### Sample-level QC
+## Sample-level QC
 
 A useful initial step in an RNA-seq analysis is often to assess overall similarity between samples: Which samples are similar to each other, which are different? Does this fit to the expectation from the experiment’s design? Log2-transformed normalized counts are used to assess similarity between samples using Principal Component Analysis (PCA) and hierarchical clustering.
 
@@ -32,7 +32,7 @@ Sample-level QC allows us to see how well our replicates cluster together, as we
 <img src="../img/sample_qc.png" width="700">
 
 
-#### [Principal Component Analysis (PCA)](https://github.com/hbctraining/DGE_workshop/blob/master/lessons/principal_component_analysis.md)
+### [Principal Component Analysis (PCA)](https://github.com/hbctraining/DGE_workshop/blob/master/lessons/principal_component_analysis.md)
 
 Principal Component Analysis (PCA) is a technique used to emphasize variation and bring out strong patterns in a dataset (dimensionality reduction). Details regarding PCA are given below (based on [materials from StatQuest](https://www.youtube.com/watch?v=_UVHneBUBW0), and if you would like a more thorough description, we encourage you to explore [StatQuest's video](https://www.youtube.com/watch?v=_UVHneBUBW0). 
 
@@ -88,7 +88,7 @@ The figure below was generated from a time course experiment with sample groups 
 
 ***
 
-#### Hierarchical Clustering Heatmap
+### Hierarchical Clustering Heatmap
 
 Similar to PCA, hierarchical clustering is another, complementary method for identifying strong patterns in a dataset and potential outliers. The heatmap displays the **correlation or distances for all pairwise combinations of samples**. Since the majority of genes are not differentially expressed, samples generally have high correlations with each other (values higher than 0.80). Samples below 0.80 may indicate an outlier in your data and/or sample contamination.  
 
@@ -99,7 +99,7 @@ In the plot below, we would be a bit concerned about 'Wt_3' and 'KO_3' samples n
 <img src="../img/heatmap_example.png" width="500">
 
 
-### Gene-level QC
+## Gene-level QC
 
 Prior to differential expression analysis it is beneficial to omit genes that have little or no chance of being detected as differentially expressed. This will increase the power to detect differentially expressed genes. The genes omitted fall into three categories:
 
@@ -112,9 +112,9 @@ Prior to differential expression analysis it is beneficial to omit genes that ha
 **DESeq2 will perform this filtering by default; however other DE tools, such as EdgeR will not.** It is important to understand what filtering is performed by your tool of choice to know if you need to perform any additional filtering prior to the differential expression analysis.
 
 
-### Mov10 quality assessment and exploratory analysis	
+## Mov10 quality assessment and exploratory analysis using DESeq2	
 
-#### Transform normalized counts using the rlog transformation
+### Transform normalized counts using the rlog transformation for visualization with PCA and heirarchical clustering
 
 **To improve the distances/clustering for the PCA and heirarchical clustering visualization methods**, we need to moderate the variance across the mean by applying the rlog transformation to the normalized counts. The rlog transformation of the normalized counts is only necessary for these visualization methods during this quality assessment. We will not be using these tranformed counts downstream.
 
@@ -125,7 +125,7 @@ rld <- rlog(dds, blind=TRUE)
 
 The `rlog` function returns a `DESeqTransform` object, another type of DESeq-specific object. The reason you don't just get a matrix of transformed values is because all of the parameters (i.e. size factors) that went into computing the rlog transform are stored in that object. We use this object to plot the PCA and heirarchical clustering figures for quality assessment.
 
-#### Principal components analysis (PCA)
+### Principal components analysis (PCA)
 
 DESeq2 has a built-in function for plotting PCA plots, that uses `ggplot2` under the hood. This is great because it saves us having to type out lines of code and having to fiddle with the different ggplot2 layers. In addition, it takes the `rlog` object as an input directly, hence saving us the trouble of extracting the relevant information from it.
 
@@ -150,7 +150,7 @@ Plot the PCA using *all of the genes* in your original count matrix. *Hint: you 
 
 ***
 
-#### Hierarchical Clustering
+### Hierarchical Clustering
 
 Since there is no built-in function for heatmaps in DESeq2 we will be using the `pheatmap()` function from the `pheatmap` package. This function requires a matrix/dataframe of numeric values as input, and so the first thing we need to is retrieve that information from the `rld` object:
 
