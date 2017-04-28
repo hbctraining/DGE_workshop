@@ -46,17 +46,17 @@ For PCA analysis, it is essentially doing this same thing between all samples, *
 
 We can plot a sum of the values for each gene based on it's expression (normalized counts) and influence on PC1 and PC2. **If two samples have similar levels of expression for the genes that contribute significantly to the variation represented by PC1, they will be plotted close together on the PC1 axis.** 
 
-Since genes with the greatest variation between samples will have the greatest influence on the principal components, we hope our experimental condition explains this variation (e.g. high counts in one condition and low counts in the other). With PC1 representing the most variation in the data and PC2 representing the second most variation in the data, we can visualize how similar the variation of genes is between samples. **We would expect the treatment groups to separate on PC1 and/or PC2, and the biological replicates to cluster together.** This is easiest to understand by visualizing some PCA plots.
+Since genes with the greatest variation between samples will have the greatest influence on the principal components, we hope our experimental condition explains this variation (e.g. high counts in one condition and low counts in the other). With PC1 representing the most variation in the data and PC2 representing the second most variation in the data, we can visualize how similar the variation of genes is between samples. **We would expect the treatment groups to separate on PC1 and/or PC2, and the biological replicates to cluster together.** This is easiest to understand by visualizing example PCA plots.
 
-The PCA plot below is what we hope for, with our treatment groups separating on PC1, which explains 89% of the variation in the data. 
+The example PCA plot below is what we hope for, with our treatment groups separating on PC1, which explains 89% of the variation in the data. 
 
 <img src="../img/PCA_example4.png" width="400">
 
-We can use other variables present in our metadata to explore the cause of the variation on PC2:
+We can use other variables **present in our metadata** to explore other causes of the variation in our data:
 
 <img src="../img/PCA_example5.png" width="400">
 
-We can determine that the 5% of variation in our data represented by PC2 is due to variation between individuals in this paired design example.
+We can determine that the 5% of variation in the data represented by PC2 is due to variation between individuals in this paired design example.
 
 In the following example, we can visualize the samples clustering by genotype on PC2 (13% variance). **If we saw one of the red samples below clustering with the blue samples (or vice versa), we might be worried about a mix-up. It would give us sufficient cause to remove that sample as an outlier and/or do some follow-up tests in the lab.**
 
