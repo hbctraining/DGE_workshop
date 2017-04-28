@@ -14,11 +14,11 @@ Approximate time: 60 minutes
 
 ## Normalization
 
-The first step in the workflow is **count normalization**, which is necessary to make accurate comparisons of gene expression between samples. The raw counts, or number of reads aligning to each gene, need to be normalized to account for differences in library depth and composition between samples when performing differential expression analyses.
+The first step in the workflow is **count normalization**, which is necessary to make accurate comparisons of gene expression between samples. The raw counts, or number of reads aligning to each gene, need to be normalized by the differential expression tool to account for differences in library depth and composition between samples. 
 
 <img src="../img/deseq_workflow_normalization.png" width="200">
 
-While normalization is necessary for differential expression analyses, it is also necessary whenever exploring or comparing counts between or within samples. 
+While normalization is necessary for differential expression analyses, it is also necessary whenever **exploring or comparing counts between or within samples**. 
 
 Different types of normalization methods exist, and a few of the most common methods include:
  
@@ -67,7 +67,7 @@ In contrast to RPKM/FPKM, TPM-normalized counts normalize for both sequencing de
 
 > *NOTE:* [This video by StatQuest](http://www.rna-seqblog.com/rpkm-fpkm-and-tpm-clearly-explained/) shows in more detail why TPM should be used in place of RPKM/FPKM if needing to normalize for sequencing depth and gene length.
 
-### DESeq2-normalized counts - Median of ratios method
+### DESeq2-normalized counts: Median of ratios method
 Since tools for differential expression analysis are comparing the counts between sample groups for the same gene, gene length does not need to be accounted for by the tool. However, **sequencing depth** and **RNA composition** do need to be taken into account.
 
 To normalize for sequencing depth and RNA composition, DESeq2 uses the median of ratios method, which performs the following steps when you run the tool:
@@ -95,7 +95,7 @@ For every gene in a sample, the ratios (sample/ref) are calculated (as shown bel
 | MOV10 | 521 | 1196 | 883.7 | 521/883.7 = **0.590** | 1196/883.7 = **1.35** |
 | ... | ... | ... | ... |
 
-**Step 3: takes sample's median value as that sample's normalization factor**
+**Step 3: takes sample's median value as that sample's normalization factor (size factor)**
 
 The median value of all ratios for a single sample is taken as the normalization factor (size factor) for that sample, as calculated below. Notice that the differentially expressed genes should not affect the median value:
 
@@ -111,7 +111,7 @@ The median of ratios method makes the assumption that not ALL genes are differen
 
 **Step 4: divide each raw count value in sample by that sample's normalization factor to generate normalized count values**
 
-For example, if median ratio for SampleA was 1.3 and the median ratio for SampleB was 0.77, you could calculate normalized counts as follows:
+For example, if the median ratio for SampleA was 1.3 and the median ratio for SampleB was 0.77, you could calculate normalized counts as follows:
 
 SampleA median ratio = 1.3
 
@@ -155,7 +155,7 @@ size_factors <- c(1.32, 0.70, 1.04, 1.27, 1.11, 0.85)
 
 ***
 
-### Mov10 count normalization
+## Mov10 count normalization: hands-on
 
 Now that we know the theory of count normalization, we will normalize the counts for the Mov10 dataset using DESeq2. This requires a few steps:
 
@@ -163,7 +163,7 @@ Now that we know the theory of count normalization, we will normalize the counts
 2. Create a `DESeqDataSet` object
 3. Generate the normalized counts
 
-#### Match the metadata and counts data
+### Match the metadata and counts data
 
 We should always make sure that we have sample names that match between the two files, and that the samples are in the right order. DESeq2 will output an error if this is not the case.
 
@@ -183,7 +183,7 @@ Suppose we had sample names matching in the counts matrix and metadata file, but
 
 *** 
 
-#### Create DESEq2 object
+### Create DESEq2 object
 
 Bioconductor software packages often define and use a custom class for storing data that makes sure that all the needed 'data slots' are consistently provided and fulfill the requirements. These objects are similar to `lists` in that the `data slots` are analogous to components as they store a number of different types of data structures. These objects are **different from lists** in that the slots are designated for specific information and access to that information (i.e. selecting data from the object) is by using object-specific functions as defined by the package.
 
@@ -205,7 +205,7 @@ View(counts(dds))
 
 As we go through the workflow we will use the relevant functions to check what information gets stored inside our object.
 
-#### Generate the Mov10 normalized counts
+### Generate the Mov10 normalized counts
 
 The next step is to normalize the count data in order to be able to make fair gene comparisons both within and between samples.
 
@@ -235,3 +235,6 @@ We can save this normalized data matrix to file for later use:
 ```r
 write.table(normalized_counts, file="data/normalized_counts.txt", sep="\t", quote=F, col.names=NA)
 ```
+
+***
+*This lesson has been developed by members of the teaching team at the [Harvard Chan Bioinformatics Core (HBC)](http://bioinformatics.sph.harvard.edu/). These are open access materials distributed under the terms of the [Creative Commons Attribution license](https://creativecommons.org/licenses/by/4.0/) (CC BY 4.0), which permits unrestricted use, distribution, and reproduction in any medium, provided the original author and source are credited.*
