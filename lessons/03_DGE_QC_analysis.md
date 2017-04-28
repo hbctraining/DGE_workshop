@@ -58,7 +58,7 @@ We can use other variables **present in our metadata** to explore other causes o
 
 We can determine that the 5% of variation in the data represented by PC2 is due to variation between individuals in this paired design example.
 
-In the following example, we can visualize the samples clustering by genotype on PC2 (13% variance). **If we saw one of the red samples below clustering with the blue samples (or vice versa), we might be worried about a mix-up. It would give us sufficient cause to remove that sample as an outlier and/or do some follow-up tests in the lab.**
+In the next example, we can visualize the samples clustering by genotype on PC2 (13% variance). **If we saw one of the red samples below clustering with the blue samples (or vice versa), we might be worried about a mix-up. It would give us sufficient cause to remove that sample as an outlier and/or do some follow-up tests in the lab.**
 
 <img src="../img/PCA_example1.png" width="400">
 
