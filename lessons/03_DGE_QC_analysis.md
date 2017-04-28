@@ -24,6 +24,7 @@ A useful initial step in an RNA-seq analysis is often to assess overall similari
 
 - Which samples are similar to each other, which are different? 
 - Does this fit to the expectation from the experiment’s design? 
+- What are the major sources of variation in the dataset?
 
 Log2-transformed normalized counts are used to assess similarity between samples using Principal Component Analysis (PCA) and hierarchical clustering. DESeq2 uses a **regularized log transform** (rlog) of the normalized counts for sample-level QC as it moderates the variance across the mean, thereby improving the distances/clustering for these visualization methods.
 
