@@ -20,14 +20,16 @@ The next step in the DESeq2 workflow is QC, which includes sample-level and gene
 
 ## Sample-level QC
 
-A useful initial step in an RNA-seq analysis is often to assess overall similarity between samples: Which samples are similar to each other, which are different? Does this fit to the expectation from the experiment’s design? Log2-transformed normalized counts are used to assess similarity between samples using Principal Component Analysis (PCA) and hierarchical clustering.
+A useful initial step in an RNA-seq analysis is often to assess overall similarity between samples: 
 
-DESq2 uses a **regularized log transform** (rlog) of the counts for sample-level QC as it moderates the variance across the mean, thereby improving the distances/clustering for these visualization methods.
+- Which samples are similar to each other, which are different? 
+- Does this fit to the expectation from the experiment’s design? 
+
+Log2-transformed normalized counts are used to assess similarity between samples using Principal Component Analysis (PCA) and hierarchical clustering. DESeq2 uses a **regularized log transform** (rlog) of the normalized counts for sample-level QC as it moderates the variance across the mean, thereby improving the distances/clustering for these visualization methods.
 
 <img src="../img/rlog_transformation.png" width="500">
 
 Sample-level QC allows us to see how well our replicates cluster together, as well as, observe whether our experimental condition represents the major source of variation in the data. Performing sample-level QC can also identify any sample outliers, which may need to be explored to determine whether they need to be removed prior to DE analysis. 
-
 
 <img src="../img/sample_qc.png" width="700">
 
