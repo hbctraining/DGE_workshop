@@ -73,7 +73,7 @@ PCA is also a nice way to look for batch effects. In the below figure, we see ba
 
 <img src="../img/PCA_example6.png" width="400">
 
-Even if your samples do not separate by PC1 or PC2, you still may return biologically relevant results from the DE analysis, just don't be surprised if you do not return a large number of DE genes. To give more power to detect DE genes, you should account for known major sources of variation in your model. 
+Even if your samples do not separate by PC1 or PC2, you may still get biologically relevant results from the DE analysis, just don't be surprised if you do not get a large number of DE genes. To give more power to the tool for detecting DE genes, it is best to account for  major, known sources of variation in your model. 
 
 ***
 **Exercise**
@@ -85,7 +85,7 @@ The figure below was generated from a time course experiment with sample groups 
 - Do the sample groups separate well?
 - Do the replicates cluster together for each sample group?
 - Are there any outliers in the data?
-- Do you have any other concerns regarding the samples in the dataset?
+- Should we have any other concerns regarding the samples in the dataset?
 
 <img src="../img/PCA_example3.png" width="600">
 
