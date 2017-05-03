@@ -1,5 +1,5 @@
 ---
-title: "Functional Analysis for RNA-Seq"
+title: "Functional Analysis for RNA-seq"
 author: "Mary Piper"
 date: "Thursday, December 1, 2016"
 ---
@@ -16,7 +16,7 @@ Learning Objectives:
 
 # Functional analysis 
 
-The output of RNA-Seq differential expression analysis is a list of significant differentially expressed genes (DEGs). To gain greater biological insight on the DEGs there are various analyses that can be done:
+The output of RNA-seq differential expression analysis is a list of significant differentially expressed genes (DEGs). To gain greater biological insight on the DEGs there are various analyses that can be done:
 
 - determine whether there is enrichment of known biological functions, interactions, or pathways
 - identify genes' involvement in novel pathways or networks by grouping genes together based on similar trends

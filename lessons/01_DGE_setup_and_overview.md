@@ -11,14 +11,14 @@ Approximate time: 60 minutes
 * Have a general idea of the experiment and its objectives
 * Understand how and why we choose this dataset
 * Getting setup in R (project setup, loading data, loading libraries)
-* Gain a general understanding of the differential gene expression analysis workflow and why the negative binomial distribution is used to model RNA-Seq count data
+* Gain a general understanding of the differential gene expression analysis workflow and why the negative binomial distribution is used to model RNA-seq count data
 
 
 # Differential gene expression (DGE) analysis overview 
 
-The goal of RNA-Seq is often to perform differential expression testing to determine which genes are expressed at different levels between conditions. These genes can offer biological insight into the processes affected by the condition(s) of interest. 
+The goal of RNA-seq is often to perform differential expression testing to determine which genes are expressed at different levels between conditions. These genes can offer biological insight into the processes affected by the condition(s) of interest. 
 
-To determine the expression levels of genes, an RNA-Seq workflow is followed with the steps detailed in the image below. All steps are performed on the command line (Linux/Unix) through the generation of the read counts per gene. The differential expression analysis and any downstream functional analysis are generally performed in R using R packages specifically designed for the complex statistical analyses required to determine whether genes are differentially expressed.
+To determine the expression levels of genes, an RNA-seq workflow is followed with the steps detailed in the image below. All steps are performed on the command line (Linux/Unix) through the generation of the read counts per gene. The differential expression analysis and any downstream functional analysis are generally performed in R using R packages specifically designed for the complex statistical analyses required to determine whether genes are differentially expressed.
 
 
 <img src="../img/rnaseq_full_workflow.png" width="400">
@@ -33,9 +33,9 @@ In the next few lessons, we will walk you through an **end-to-end gene-level RNA
  
 ## Understanding the dataset
 
-To better interpret the results of our differential expression analysis, it is helpful to know about the dataset. We will be using a real RNA-Seq dataset that is part of a larger study described in [Kenny PJ et al, Cell Rep 2014](http://www.ncbi.nlm.nih.gov/pubmed/25464849). 
+To better interpret the results of our differential expression analysis, it is helpful to know about the dataset. We will be using a real RNA-seq dataset that is part of a larger study described in [Kenny PJ et al, Cell Rep 2014](http://www.ncbi.nlm.nih.gov/pubmed/25464849). 
 
-We are only using the [RNA-Seq](http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE50499) dataset which is publicly available in the [SRA](http://www.ncbi.nlm.nih.gov/sra). The RNA-Seq was performed on HEK293F cells that were either transfected with a MOV10 transgene, or siRNA to knock down Mov10 expression, or non-specific (irrelevant) siRNA. This resulted in 3 conditions **Mov10 oe** (over expression), **Mov10 kd** (knock down) and **Irrelevant kd**, respectively. The number of replicates is as shown below. 
+We are only using the [RNA-seq](http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE50499) dataset which is publicly available in the [SRA](http://www.ncbi.nlm.nih.gov/sra). The RNA-seq was performed on HEK293F cells that were either transfected with a MOV10 transgene, or siRNA to knock down Mov10 expression, or non-specific (irrelevant) siRNA. This resulted in 3 conditions **Mov10 oe** (over expression), **Mov10 kd** (knock down) and **Irrelevant kd**, respectively. The number of replicates is as shown below. 
 
 Using these data, we will evaluate transcriptional patterns associated with perturbation of MOV10 expression. Please note that the irrelevant siRNA will be treated as our control condition.
 
@@ -179,9 +179,9 @@ This is illustrated for 'GeneA' expression between 'untreated' and 'treated' gro
 **Essentially, the goal of differential expression analysis is to determine whether the differences in expression (counts) between groups is significant given the variation within groups (replicates) for each gene.** To test for significance, we need an appropriate statistical model that accurately performs normalization (to account for differences in sequencing depth, etc.) and variance modeling (to account for few numbers of replicates and large dynamic expression range). 
 
 
-### RNA-Seq count distribution
+### RNA-seq count distribution
 
-To determine the appropriate statistical model, we need information about the distribution of counts. To get an idea about how RNA-Seq counts are distributed, let's plot the counts for a single sample, 'Mov10_oe_1':
+To determine the appropriate statistical model, we need information about the distribution of counts. To get an idea about how RNA-seq counts are distributed, let's plot the counts for a single sample, 'Mov10_oe_1':
 
 ```r
 ggplot(data) +
@@ -200,9 +200,9 @@ ggplot(data) +
 
 <img src="../img/deseq_counts_distribution_zoomed.png" width="400">
 
-These images illustrate some common features of RNA-Seq count data, including a **low number of counts associated with the a large proportion of genes**, and a long right tail due to the **lack of any upper limit for expression**. Unlike microarray data, which has a dynamic range maximum limited due to when the probes max out, there is no limit of maximum expression for RNA-Seq data. Due to the differences in these technologies, the statistical models used to fit the data are different between the two methods. 
+These images illustrate some common features of RNA-seq count data, including a **low number of counts associated with the a large proportion of genes**, and a long right tail due to the **lack of any upper limit for expression**. Unlike microarray data, which has a dynamic range maximum limited due to when the probes max out, there is no limit of maximum expression for RNA-seq data. Due to the differences in these technologies, the statistical models used to fit the data are different between the two methods. 
 
-> **NOTE:** The log intensities of the microarray data approximate a normal distribution. However, due to the different properties of the of RNA-Seq count data, such as integer counts instead of continuous measurements and non-normally distributed data, the normal distribution does not accurately model RNA-Seq counts [[1](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3541212/)].
+> **NOTE:** The log intensities of the microarray data approximate a normal distribution. However, due to the different properties of the of RNA-seq count data, such as integer counts instead of continuous measurements and non-normally distributed data, the normal distribution does not accurately model RNA-seq counts [[1](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3541212/)].
 
 ### Modeling count data
 
@@ -210,9 +210,9 @@ Count data (discrete) is often modeled using the **binomial distribution**, whic
 
 With some events, like the lottery, when **the number of cases is very large (people who buy tickets), but the probability of an event is very small (probability of winning)**, the **Poisson distribution** is used to model these types of count data. In these cases, the number of events (people who win) generally range between 1 and 10. [Details provided by Rafael Irizarry in the EdX class.](https://youtu.be/fxtB8c3u6l8)
 
-**During RNA-Seq, a very large number of RNAs are present and the probability of pulling out a particular transcript is very small.** However, after taking a large sample, the sum of all counts for that transcript is often between 1 and 10.  **If the proportions of mRNA stayed exactly constant between biological replicates** for RNA-Seq data, we could expect Poisson distribution. [A nice description of this concept is presented by Rafael Irizarry in the EdX class.](https://youtu.be/HK7WKsL3c2w)
+**During RNA-seq, a very large number of RNAs are present and the probability of pulling out a particular transcript is very small.** However, after taking a large sample, the sum of all counts for that transcript is often between 1 and 10.  **If the proportions of mRNA stayed exactly constant between biological replicates** for RNA-seq data, we could expect Poisson distribution. [A nice description of this concept is presented by Rafael Irizarry in the EdX class.](https://youtu.be/HK7WKsL3c2w)
 
-Realistically, biological variation across biological replicates is expected, and, for RNA-Seq data, genes with larger average expression levels tend to have larger observed variances across replicates. **The Negative Binomial (NB) model is a good approximation, to account for this extra variability between replicates.** 
+Realistically, biological variation across biological replicates is expected, and, for RNA-seq data, genes with larger average expression levels tend to have larger observed variances across replicates. **The Negative Binomial (NB) model is a good approximation, to account for this extra variability between replicates.** 
 
 
 <img src="../img/deseq_nb.png" width="400">
@@ -251,7 +251,7 @@ Note that in the figure, the variance across replicates tends to be greater than
 
 The variance or scatter tends to reduce as we increase the number of biological replicates (*variance will approach the Poisson distribution with increasing numbers of replicates*), since standard deviations of averages are smaller than standard deviations of individual observations. **The value of additional replicates is that as you add more data (replicates), you get increasingly precise estimates of group means, and ultimately greater confidence in the ability to distinguish differences between sample classes (i.e. more DE genes).**
 
-The figure below illustrates the relationship between sequencing depth and number of replicates on the number of differentially expressed genes identified [[1](https://academic.oup.com/bioinformatics/article/30/3/301/228651/RNA-seq-differential-expression-studies-more)]. Note that an **increase in the number of replicates tends to return more DE genes than increasing the sequencing depth**. Therefore, generally more replicates are better than higher sequencing depth, with the caveat that higher depth is required for detection of lowly expressed DE genes and for performing isoform-level differential expression. Generally, the minimum sequencing depth recommended is 20-30 million reads per sample, but we have seen good RNA-Seq experiments with 10 million reads if there are a good number of replicates.
+The figure below illustrates the relationship between sequencing depth and number of replicates on the number of differentially expressed genes identified [[1](https://academic.oup.com/bioinformatics/article/30/3/301/228651/RNA-seq-differential-expression-studies-more)]. Note that an **increase in the number of replicates tends to return more DE genes than increasing the sequencing depth**. Therefore, generally more replicates are better than higher sequencing depth, with the caveat that higher depth is required for detection of lowly expressed DE genes and for performing isoform-level differential expression. Generally, the minimum sequencing depth recommended is 20-30 million reads per sample, but we have seen good RNA-seq experiments with 10 million reads if there are a good number of replicates.
 
 <img src="../img/de_replicates_img.png" width="500">
 
