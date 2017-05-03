@@ -104,7 +104,7 @@ In the plot below, we would be a bit concerned about 'Wt_3' and 'KO_3' samples n
 
 ## Gene-level QC
 
-Prior to differential expression analysis it is beneficial to omit genes that have little or no chance of being detected as differentially expressed. This will increase the power to detect differentially expressed genes. The genes omitted fall into three categories:
+In addition to examining how well the samples/replicates cluster together, there are a few more QC steps. Prior to differential expression analysis it is beneficial to omit genes that have little or no chance of being detected as differentially expressed. This will increase the power to detect differentially expressed genes. The genes omitted fall into three categories:
 
 - Genes with zero counts in all samples
 - Genes with an extreme count outlier
