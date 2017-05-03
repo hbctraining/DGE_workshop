@@ -117,9 +117,13 @@ In addition to examining how well the samples/replicates cluster together, there
 
 ## Mov10 quality assessment and exploratory analysis using DESeq2	
 
+Now that we have a good understanding of the QC steps normally employed for RNA-seq, let's implement them for the Mov10 dataset we are going to be working with.
+
 ### Transform normalized counts using the rlog transformation
 
-**To improve the distances/clustering for the PCA and heirarchical clustering visualization methods**, we need to moderate the variance across the mean by applying the rlog transformation to the normalized counts. The rlog transformation of the normalized counts is only necessary for these visualization methods during this quality assessment. We will not be using these tranformed counts downstream.
+**To improve the distances/clustering for the PCA and heirarchical clustering visualization methods**, we need to moderate the variance across the mean by applying the rlog transformation to the normalized counts. 
+
+> The rlog transformation of the normalized counts is only necessary for these visualization methods during this quality assessment. We will not be using these tranformed counts downstream.
 
 ```r
 ### Transform counts for data visualization
@@ -149,7 +153,7 @@ plotPCA(rld, intgroup="sampletype")
 
 **Exercise**
 
-Plot the PCA using *all of the genes* in your original count matrix. *Hint: you can use `nrow()` to help get the total number of genes*
+Plot the PCA using *all of the genes* in your original count matrix. *Hint: you can use `nrow()` to help get the total number of genes.* Does this plot look different from before, when we considered only the top 500 most variable genes?
 
 ***
 
@@ -167,6 +171,8 @@ Then we need to compute the pairwise correlation values for samples. We can do t
 ```r
 ### Compute pairwise corrrelation values
 rld_cor <- cor(rld_mat)    ## cor() is a base R function
+
+head(rld_cor)   ## check the output of cor(), make note of the rownames and colnames
 ```
 
 And now to plot the correlation values as a heatmap:
@@ -178,7 +184,7 @@ pheatmap(rld_cor)
 
 ![heatmap1](../img/pheatmap-1.png)
 
-Overall, we observe pretty high correlations across the board ( > 0.999) suggesting no outlying sample(s). Also, similar to the PCA plot you see the samples clustering together by sampletype. Together, these plots suggest to us that the data are of good quality and we have the green light to proceed to differential expression analysis.
+Overall, we observe pretty high correlations across the board ( > 0.999) suggesting no outlying sample(s). Also, similar to the PCA plot you see the samples clustering together by sample group. Together, these plots suggest to us that the data are of good quality and we have the green light to proceed to differential expression analysis.
 
 
 > NOTE: The `pheatmap` function has a number of different arguments that we can alter from default values to enhance the aesthetics of the plot. If you are curious and want to explore more, try running the code below. *How does your plot change?* Take a look through the help pages (`?pheatmap`) and identify what each of the added arguments is contributing to the plot.
