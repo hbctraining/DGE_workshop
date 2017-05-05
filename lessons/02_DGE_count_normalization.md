@@ -14,40 +14,39 @@ Approximate time: 60 minutes
 
 ## Normalization
 
-The first step in the workflow is **count normalization**, which is necessary to make accurate comparisons of gene expression between samples. The raw counts, or number of reads aligning to each gene, need to be normalized by the differential expression tool to account for differences in library depth and composition between samples. 
+The first step in the DE analysis workflow is count normalization, which is necessary to make accurate comparisons of gene expression between samples.
 
 <img src="../img/deseq_workflow_normalization.png" width="200">
 
-While normalization is necessary for differential expression analyses, it is also necessary whenever **exploring or comparing counts between or within samples**. 
-
-Different types of normalization methods exist, and a few of the most common methods include:
+The raw count data is affected by various factors that need to be accounted for and "normalized". A few of these factors are listed below:
  
- - **normalization for library size:** necessary for comparison of expression of the same gene between samples
+ - **normalization for library size: necessary for comparison of expression of the same gene between samples. In the example below, sample 2 has a higher number of reads associated with it.
  
- 	<img src="../img/sequencing_depth.png" width="400">
+    <img src="../img/sequencing_depth.png" width="400">
  
- - **normalization for gene length:** necessary for comparison of expression of different genes within the same sample
+ - **normalization for gene length: necessary for comparison of expression of different genes of varying lengths within the same sample.
  
- 	<img src="../img/length_of_gene.png" width="400">
+    <img src="../img/length_of_gene.png" width="400">
  
  - **normalization for RNA composition:** recommended for comparison of expression between samples (particularly important when performing differential expression analyses)
  
- 	>"A few highly and differentially expressed genes may have strong influence on the total read count, causing the ratio of total read counts not to be a good estimate for the ratio of expected counts (for all genes)"[[1](https://genomebiology.biomedcentral.com/articles/10.1186/gb-2010-11-10-r106)]
+ > "A few highly and differentially expressed genes may have strong influence on the total read count, causing the ratio of total read counts not to be a good estimate for the ratio of expected counts (for all genes)"[[1](https://genomebiology.biomedcentral.com/articles/10.1186/gb-2010-11-10-r106)]
+    
+While normalization is essential for differential expression analyses, it is also necessary whenever you are exploring or comparing counts between or within samples, e.g. if you plot the counts for a figure.]
  
- 
-### Common normalization measures
+### Common normalization methods
 
-Several common normalization measures exist to account for these differences:
+Several common normalization methods exist to account for these differences:
 
-- **CPM (counts per million):** counts scaled by total number of reads. This measure accounts for sequencing depth only.
-- **TPM (transcripts per kilobase million):** counts per length of transcript (kb) per million reads mapped. This measure accounts for both sequencing depth and gene length.
-- **RPKM/FPKM (reads/fragments per kilobase of exon per million reads/fragments mapped):** similar to TPM, as this measure accounts for both sequencing depth and gene length as well; however, it is **not recommended**.
+- **CPM (counts per million):** counts scaled by total number of reads. This method accounts for sequencing depth only.
+- **TPM (transcripts per kilobase million):** counts per length of transcript (kb) per million reads mapped. This method accounts for both sequencing depth and gene length.
+- **RPKM/FPKM (reads/fragments per kilobase of exon per million reads/fragments mapped):** similar to TPM, as this method also accounts for both sequencing depth and gene length as well; however, it is **not recommended**.
 - **Tool-specific metrics for normalization:** 
 	- DESeq2 uses a median of ratios method, which accounts for sequencing depth and RNA composition [[1](https://genomebiology.biomedcentral.com/articles/10.1186/gb-2010-11-10-r106)]. 
 	- EdgeR uses a trimmed mean of M values (TMM) method that accounts for sequencing depth, RNA composition, and gene length [[2](https://genomebiology.biomedcentral.com/articles/10.1186/gb-2010-11-3-r25)]
 
 ### RPKM/FPKM (not recommended)
-While TPM and RPKM/FPKM normalization methods both account for sequencing depth and gene length, RPKM/FPKM measures are not recommended. **The reason  is that the normalized count values output by the RPKM/FPKM method are not comparable between samples.** 
+While TPM and RPKM/FPKM normalization methods both account for sequencing depth and gene length, RPKM/FPKM are not recommended. **The reason  is that the normalized count values output by the RPKM/FPKM method are not comparable between samples.** 
 
 Using RPKM/FPKM normalization, the total number of RPKM/FPKM normalized counts for each sample will be different. Therefore, you cannot compare the normalized counts for each gene equally between samples. 
 
@@ -95,13 +94,13 @@ For every gene in a sample, the ratios (sample/ref) are calculated (as shown bel
 | MOV10 | 521 | 1196 | 883.7 | 521/883.7 = **0.590** | 1196/883.7 = **1.35** |
 | ... | ... | ... | ... |
 
-**Step 3: takes sample's median value as that sample's normalization factor (size factor)**
+**Step 3: calculate the normalization factor for each sample (size factor)**
 
-The median value of all ratios for a single sample is taken as the normalization factor (size factor) for that sample, as calculated below. Notice that the differentially expressed genes should not affect the median value:
+The median value of all ratios for a given sample is taken as the normalization factor (size factor) for that sample, as calculated below. Notice that the differentially expressed genes should not affect the median value:
 
-`normalization_factor_sampleA <- median(c(0.59, 1.28, 1.3, 1.35, 1.39))`
+`normalization_factor_sampleA <- median(c(1.28, 1.3, 1.39, 1.35, 0.59))`
 
-`normalization_factor_sampleB <- median(c(0.72, 0.74, 0.77, 0.78, 1.35))`
+`normalization_factor_sampleB <- median(c(0.78, 0.77, 0.72, 0.74, 1.35))`
  
 The figure below illustrates the median value for the distribution of all gene ratios for a single sample (frequency is on the y-axis).
 
@@ -109,9 +108,11 @@ The figure below illustrates the median value for the distribution of all gene r
 
 The median of ratios method makes the assumption that not ALL genes are differentially expressed; therefore, the normalization factors should account for sequencing depth and RNA composition of the sample (large outlier genes will not represent the median ratio values). **This method is robust to imbalance in up-/down-regulation and large numbers of differentially expressed genes.**
 
-**Step 4: divide each raw count value in sample by that sample's normalization factor to generate normalized count values**
+> Usually these size factors are around 1, if you see large variations between samples it is important to take note since it might indicate the presence of extreme outliers.
 
-For example, if the median ratio for SampleA was 1.3 and the median ratio for SampleB was 0.77, you could calculate normalized counts as follows:
+**Step 4: calculate the normalized count values using the normalization factor**
+
+This is performed by dividing each raw count value in a given sample by that sample's normalization factor to generate normalized count values. This is performed for all count values (every gene in every sample). For example, if the median ratio for SampleA was 1.3 and the median ratio for SampleB was 0.77, you could calculate normalized counts as follows:
 
 SampleA median ratio = 1.3
 
@@ -132,6 +133,8 @@ SampleB median ratio = 0.77
 | EF2A | 1489 / 1.3 = **1145.39** | 906 / 0.77 = **1176.62** | 
 | ABCD | 22 / 1.3 = **16.92** | 13 / 0.77 = **16.88** | 
 | ... | ... | ... | 
+
+> Please note that normalized count values are not whole numbers.
 
 ***
 **Exercise**
@@ -175,17 +178,9 @@ all(colnames(data) == rownames(meta))
 
 If your data did not match, you could use the `match()` function to rearrange them to be matching.
 
-***
-
-**Exercise**	
-
-Suppose we had sample names matching in the counts matrix and metadata file, but they were out of order. Write the line(s) of code required to create a new matrix with columns ordered such that they were identical to the row names of the metadata.
-
-*** 
-
 ### 2. Create DESEq2 object
 
-Bioconductor software packages often define and use a custom class for storing data that makes sure that all the needed 'data slots' are consistently provided and fulfill the requirements. These objects are similar to `lists` in that the `data slots` are analogous to components as they store a number of different types of data structures. These objects are **different from lists** in that the slots are designated for specific information and access to that information (i.e. selecting data from the object) is by using object-specific functions as defined by the package.
+Bioconductor software packages often define and use a custom class within R for storing data (input data, intermediate data and also results). These custom data structures are similar to `lists` in that they can contain multiple different data types/structures within them. But, unlike lists they have pre-specified `data slots`, which hold specific types/classes of data. The data stored in these pre-specified slots can be accessed by using specific package-defined functions.
 
 Let's start by creating the `DESeqDataSet` object and then we can talk a bit more about what is stored inside it. To create the object we will need the **count matrix** and the **metadata** table as input. We will also need to specify a **design formula**. The design formula specifies the column(s) in the metadata table and how they should be used in the analysis. For our dataset we only have one column we are interested in, that is `~sampletype`. This column has three factor levels, which tells DESeq2 that for each gene we want to evaluate gene expression change with respect to these different levels.
 
