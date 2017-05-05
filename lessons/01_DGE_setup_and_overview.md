@@ -185,7 +185,9 @@ To determine the appropriate statistical model, we need information about the di
 
 ```r
 ggplot(data) +
-        geom_histogram(aes(x = Mov10_oe_1), stat = "bin", bins = 200)
+  geom_histogram(aes(x = Mov10_oe_1), stat = "bin", bins = 200) +
+  xlab("Raw expression counts") +
+  ylab("Number of genes")
 ```
 
 <img src="../img/deseq_counts_distribution.png" width="400">
@@ -194,8 +196,10 @@ If we zoom in close to zero, we can see a large number of genes with counts of z
 
 ```r
 ggplot(data) +
-        geom_histogram(aes(x = Mov10_oe_1), stat = "bin", bins = 200) + 
-        xlim(-5, 500) 
+   geom_histogram(aes(x = Mov10_oe_1), stat = "bin", bins = 200) + 
+   xlim(-5, 500)  +
+   xlab("Raw expression counts") +
+   ylab("Number of genes")
 ```
 
 <img src="../img/deseq_counts_distribution_zoomed.png" width="400">
@@ -210,10 +214,9 @@ Count data (discrete) is often modeled using the **binomial distribution**, whic
 
 With some events, like the lottery, when **the number of cases is very large (people who buy tickets), but the probability of an event is very small (probability of winning)**, the **Poisson distribution** is used to model these types of count data. In these cases, the number of events (people who win) generally range between 1 and 10. [Details provided by Rafael Irizarry in the EdX class.](https://youtu.be/fxtB8c3u6l8)
 
-**During RNA-seq, a very large number of RNAs are present and the probability of pulling out a particular transcript is very small.** However, after taking a large sample, the sum of all counts for that transcript is often between 1 and 10.  **If the proportions of mRNA stayed exactly constant between biological replicates** for RNA-seq data, we could expect Poisson distribution. [A nice description of this concept is presented by Rafael Irizarry in the EdX class.](https://youtu.be/HK7WKsL3c2w)
+**With RNA-Seq data, a very large number of RNAs are represented and the probability of pulling out a particular transcript is very small**; however, the sum of all counts for that transcript is often between 1 and 10. Hence, if the proportions of mRNA stayed exactly constant between the biological replicates for each sample class, we could expect Poisson distribution (where mean == variance). [A nice description of this concept is presented by Rafael Irizarry in the EdX class.](https://youtu.be/HK7WKsL3c2w)
 
-Realistically, biological variation across biological replicates is expected, and, for RNA-seq data, genes with larger average expression levels tend to have larger observed variances across replicates. **The Negative Binomial (NB) model is a good approximation, to account for this extra variability between replicates.** 
-
+Realistically, for RNA-Seq data biological variation across the replicates (within a sample class) is expected, and genes with larger average expression levels tend to have larger observed variances across replicates. The model that fits best, given this type of variability between replicates, is the Negative Binomial (NB) model. Essentially, **the NB model is a good approximation for data where the mean < variance**, as is the case with RNA-Seq count data.
 
 <img src="../img/deseq_nb.png" width="400">
 
@@ -245,11 +248,11 @@ ggplot(df) +
 
 <img src="../img/deseq_mean_vs_variance.png" width="600">
 
-Note that in the figure, the variance across replicates tends to be greater than the mean (red line), especially for genes with large mean expression levels. **This is a good indication that our data do not fit the Poisson distribution and we need to account for this increase in variance using the Negative Binomial model (i.e. Poisson will underestimate variability leading to an increase in false positive DE genes).**
+Note that in the above figure, the variance across replicates tends to be greater than the mean (red line), especially for genes with large mean expression levels. *This is a good indication that our data do not fit the Poisson distribution and we need to account for this increase in variance using the Negative Binomial model (i.e. Poisson will underestimate variability leading to an increase in false positive DE genes).*
 
 #### Improving mean estimates (i.e. reducing variance) with biological replicates
 
-The variance or scatter tends to reduce as we increase the number of biological replicates (*variance will approach the Poisson distribution with increasing numbers of replicates*), since standard deviations of averages are smaller than standard deviations of individual observations. **The value of additional replicates is that as you add more data (replicates), you get increasingly precise estimates of group means, and ultimately greater confidence in the ability to distinguish differences between sample classes (i.e. more DE genes).**
+The variance or scatter tends to reduce as we increase the number of biological replicates (*the distribution will approach the Poisson distribution with increasing numbers of replicates*), since standard deviations of averages are smaller than standard deviations of individual observations. **The value of additional replicates is that as you add more data (replicates), you get increasingly precise estimates of group means, and ultimately greater confidence in the ability to distinguish differences between sample classes (i.e. more DE genes).**
 
 The figure below illustrates the relationship between sequencing depth and number of replicates on the number of differentially expressed genes identified [[1](https://academic.oup.com/bioinformatics/article/30/3/301/228651/RNA-seq-differential-expression-studies-more)]. Note that an **increase in the number of replicates tends to return more DE genes than increasing the sequencing depth**. Therefore, generally more replicates are better than higher sequencing depth, with the caveat that higher depth is required for detection of lowly expressed DE genes and for performing isoform-level differential expression. Generally, the minimum sequencing depth recommended is 20-30 million reads per sample, but we have seen good RNA-seq experiments with 10 million reads if there are a good number of replicates.
 
@@ -257,7 +260,11 @@ The figure below illustrates the relationship between sequencing depth and numbe
 
 ### Differential expression analysis workflow
 
-To model counts appropriately when performing a differential expression analysis, there are a number of software packages that have been developed for differential expression analysis of RNA-seq data, and new methods are continuously being developed; however, a few different tools are generally recommended. **DESeq2** and **EdgeR** both use the negative binomial model and similar methods and, typically, yield similar results. Both of these tools are very sensitive, but may be somewhat stringent at reducing false positives. **Limma voom** is another tool often used for DE analysis, but may be less sensitive for small sample sizes. This tool is recommended when the number of biological replicates per group grows large (e.g. > 20). Many studies describing comparisons between these methods show that while there is some agreement, there is also much variability between tools. **Additionally, there is no one method that performs optimally under all conditions ([Soneson and Dleorenzi, 2013](https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-14-91)).**
+To model counts appropriately when performing a differential expression analysis, there are a number of software packages that have been developed for differential expression analysis of RNA-seq data. Even as new methods are continuously being developed a few  tools are generally recommended as best practice, e.g. **[DESeq2])(https://bioconductor.org/packages/release/bioc/html/DESeq2.html)** and **[EdgeR](https://bioconductor.org/packages/release/bioc/html/edgeR.html)**. Both these tools use the negative binomial model, employ similar methods, and typically, yield similar results. They are pretty stringent, and have a good balance between sensitivity and specificity (reducing both false positives and false negatives).
+
+**Limma-Voom** is another set of tools often used together for DE analysis, but this method may be less sensitive for small sample sizes. This method is recommended when the number of biological replicates per group grows large (> 20). 
+
+Many studies describing comparisons between these methods show that while there is some agreement, there is also much variability between tools. **Additionally, there is no one method that performs optimally under all conditions ([Soneson and Dleorenzi, 2013](https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-14-91)).**
 
 
 ![deg1](../img/deg_methods1.png) 
@@ -265,7 +272,9 @@ To model counts appropriately when performing a differential expression analysis
 ![deg1](../img/deg_methods2.png) 
 
 
-**We will be using [DESeq2](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-014-0550-8) for the DE analysis, and the analysis workflow is shown below in green.** After obtaining the counts associated with each gene, DESeq2 normalizes the count values to account for differences in library sizes and RNA composition between samples. Then, QC is performed at the gene and sample level prior to performing the differential expression analysis. We will go in-depth into each of these steps in the analysis workflow.
+**We will be using [DESeq2](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-014-0550-8) for the DE analysis, and the analysis steps with DESeq2 are shown in the flowchart below in green**. DESeq2 first normalizes the count data to account for differences in library sizes and RNA composition between samples. Then, we will use the normalized counts to make some plots for QC at the gene and sample level. The final step is to use the appropriate functions from the DESeq2 package to perform the differential expression analysis. We will go in-depth into each of these steps in the following lessons.
 
 <img src="../img/deseq_workflow_full.png" width="200">
 
+***
+*This lesson has been developed by members of the teaching team at the [Harvard Chan Bioinformatics Core (HBC)](http://bioinformatics.sph.harvard.edu/). These are open access materials distributed under the terms of the [Creative Commons Attribution license](https://creativecommons.org/licenses/by/4.0/) (CC BY 4.0), which permits unrestricted use, distribution, and reproduction in any medium, provided the original author and source are credited.*
