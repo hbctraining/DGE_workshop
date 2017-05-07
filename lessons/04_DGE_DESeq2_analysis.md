@@ -33,7 +33,7 @@ You can specify the sources of variation in your DESeq2 model using a **design f
 
 For example, suppose you have the following metadata:
 
-<img src="../img/meta_example.png" width="500">
+<img src="../img/meta_example.png" width="300">
 
 If you want to examine the expression differences between treatments, and you know that major sources of variation include 'sex' and 'age', then your design formula would be:
 
