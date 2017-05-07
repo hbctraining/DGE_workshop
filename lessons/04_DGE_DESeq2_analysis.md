@@ -29,15 +29,17 @@ Differential expression analysis with DESeq2 requires multiple steps, as display
 Prior to performing the differential expression analysis, it is a good idea to know what sources of variation are present in your data, either by exploration during the QC and/or prior knowledge. Once you know the major sources of variation, you can remove them prior to analysis or control for them in the statistical model. 
 
 ## Design formula
-You can specify the sources of variation in your DESeq2 model using a **design formula**. A design formula tells the statistical software which sources of variation to control for, as well as, the factor of interest to test for differential expression. For example, if you know that sex is a significant source of variation in your data, then `sex` should be included in your model. The **design formula** should have **all of the factors in your metadata that account for major sources of variation** in your data. The last factor entered in the formula should be the condition of interest. 
+You can specify the sources of variation in your DESeq2 model using a **design formula**. A design formula tells the statistical software which sources of variation to control for, as well as, the factor of interest to test for differential expression. For example, if you know that sex is a significant source of variation in your data, then `sex` should be included in your model. The **design formula** should have **all of the factors in your metadata that account for major sources of variation** in your data. **The last factor entered in the formula should be the condition of interest.**
 
 For example, suppose you have the following metadata:
 
 <img src="../img/meta_example.png" width="300">
 
-If you want to examine the expression differences between treatments, and you know that major sources of variation include 'sex' and 'age', then your design formula would be:
+If you want to examine the expression differences between treatments, and you know that major sources of variation include `sex` and `age`, then your design formula would be:
 
 `design <- ~ sex + age + treatment`
+
+The tilde (`~`) should always proceed your factors and tells DESeq2 to model the counts using the following formula. Note the **factors included in the design formula need to match the column names in the metadata**. 
 
 ***
 **Exercises**
@@ -48,19 +50,23 @@ If you want to examine the expression differences between treatments, and you kn
 
 ***
 
-
 ### Complex designs
 
-DESeq2 also allows for the analysis of complex designs. You can explore interactions or difference of differences by specifying for it in the design formula. For example, if you wanted to explore the effect of sex on the treatment  effect, you could specify for it in the design formula as follows: 
+DESeq2 also allows for the analysis of complex designs. You can explore interactions or difference of differences by specifying for it in the design formula. For example, if you wanted to explore the effect of sex on the treatment effect, you could specify for it in the design formula as follows: 
 
 `design <- ~ sex + age + treatment + sex:treatment`
 
-Since the interaction term `sex:treatment` is last in the formula, the results output from DESeq2 will output results for this term. Alternatively, as recommended in the [DESeq2 vignette](https://www.bioconductor.org/packages/release/bioc/vignettes/DESeq2/inst/doc/DESeq2.pdf), we could create a new factor variable in our metadata based on the two interaction factors (i.e. "Ftreated", "Fcontrol", "Mtreated", "Mcontrol"). 
+Since the interaction term `sex:treatment` is last in the formula, the results output from DESeq2 will output results for this term. Alternatively, as recommended in the [DESeq2 vignette](https://www.bioconductor.org/packages/release/bioc/vignettes/DESeq2/inst/doc/DESeq2.pdf), we could create a new factor variable in our metadata based on the two interaction factors (i.e. "Ftreated", "Fcontrol", "Mtreated", "Mcontrol") as shown below:
 
+<img src="../img/meta_example2.png" width="300">
 
-### Running DESeq2
+The design formula would be:
 
-To run the differential expression pipeline on the **raw counts** in DESeq2, we must create a DESeqDataSet as we did in the 'Count normalization' lesson:
+`design <- ~ sex + age + treatment + treat_sex`
+
+## Running DESeq2
+
+Now that we know how to specify the model to DESeq2, we can run the differential expression pipeline on the **raw counts**. To do this, we must create a DESeqDataSet as we did in the 'Count normalization' lesson and specify the location of our raw counts and metadata, and input our design forumla:
 
 ```r
 dds <- DESeqDataSetFromMatrix(countData = data, colData = meta, design = ~ sampletype)
@@ -92,29 +98,59 @@ fitting model and testing
 ![deseq1](../img/deseq_obj2.png)
 
 
-> **NOTE:** There are individual functions available in DESeq2 that would allow us to carry out each step in the workflow in a step-wise manner, rather than a single call. We demonstrated one example when generating size factors to create a normalized matrix. By calling `DESeq()`, the individual functions for each step are run for you.## Design formula
+> **NOTE:** There are individual functions available in DESeq2 that would allow us to carry out each step in the workflow in a step-wise manner, rather than a single call. We demonstrated one example when generating size factors to create a normalized matrix. By calling `DESeq()`, the individual functions for each step are run for you.
 
+### Estimate size factors
 
-
-## Estimate size factors
-
-After you have your design formula saved to a variable, you can input the **design formula**, in addition to the **raw counts** and **metadata** into the `DESeq()` function to perform the steps in the DESeq2 differential expression analysis. **You must input the RAW counts (not normalized) for the analysis.**
+The first step in the differential expression is to estimate the size factors, which is exactly what we already did to normalize the raw counts. DESeq2 will automatically estimate the size factors when performing the differential expression analysis if you haven't already done so. However, if you have already generated the size factors, then DESeq2 will use these values. 
 
 <img src="../img/deseq2_workflow_separate_sf.png" width="200">
 
-The first step in the differential expression is to estimate the size factors, which is exactly what we already did to normalize the raw counts. DESeq2 will automatically estimate the size factors when performing the differential expression analysis if you haven't already done so. However,  you have already generated the size factors, then DESeq2 will use these values. 
+To normalize the count data DESeq2 calculates size factors for each sample, using the *median of ratios method* discussed previously. Let's take a quick look at size factor values we have for each sample:
 
-## Estimate variation / dispersion
+```
+sizeFactors(dds)
+
+Mov10_kd_2 Mov10_kd_3 Mov10_oe_1 Mov10_oe_2 Mov10_oe_3 Irrel_kd_1 Irrel_kd_2 Irrel_kd_3 
+ 1.5646728  0.9351760  1.2016082  1.1205912  0.6534987  1.1224020  0.9625632  0.7477715  
+```
+ 
+These numbers should be identical to those we generated initially when we had run the function `estimateSizeFactors(dds)`. Take a look at the total number of reads for each sample using:
+
+```r
+colSums(counts(dds))
+```
+
+*How do the numbers correlate with the size factor?*
+
+Now take a look at the total depth after normalization using:
+
+```r
+colSums(counts(dds, normalized=T))
+```
+How do the values across samples compare with the total counts taken for each sample?
+
+> **NOTE:** It can be advantageous to calculate gene-specific normalization factors (size factors) to account for further sources of technical biases such as differing dependence on GC content, gene length or the like, and these can be supplied to DESeq2 instead of using the median of ratios method.
+
+### Estimate gene-wise dispersion
 
 The next step in the differential expression analysis is the estimation of gene-wise dispersions.
 
 <img src="../img/deseq2_workflow_separate_dis.png" width="200">
 
+**What is dispersion?** Dispersion is a measure of spread or variability in the data. Variance, standard deviation, IQR, among other measures, can all be used to measure dispersion. However, DESeq2 has a specific measure of dispersion (α) related to the mean and variance of the data: `Var = μ + α*μ^2`. 
+
+**What information does it give us?** If you remember the plot of mean versus variance in count data below, we know that the variance in the measurements increases with the mean, as shown in the figure below:
+
+<img src="../img/deseq_mean_vs_variance.png" width="600">
+
+Notice that the relationship between mean and variance is linear on the log scale, and for higher means, we could predict the variance relatively accurately given the mean. However, for low mean counts, the variance differs much more between genes. **Using the dispersion estimate, we can determine how much spread there is in the data for a given mean.** For count data, the dispersion should be greater for lower mean counts and higher for larger mean counts.
+
 To accurately model our sequencing counts, we need to generate accurate estimates of within-group variation (variation between replicates of the same samplegroup) for each gene. With only a few (3-6) replicates per group, the estimates of variation for each gene are often unreliable. Therefore, DESeq2 shares information across genes to generate more accurate estimates of variation based on the expression level of the gene using a method called 'shrinkage'. DESeq2 assumes that genes with similar expression levels have similar dispersion or variation of expression. DESeq2 generates more accurate measures of dispersion using the following steps:
 
 1. **Estimate the dispersion for each gene separately**
 
-	To model the dispersion based on expression level (mean normalized counts of replicates), the dispersion for each gene is estimated using maximum likelihood estimation. In other words, **given the normalized count values of the replicates, the most likely estimate of dispersion is calculated**.
+	To model the dispersion based on expression level (mean counts of replicates), the dispersion for each gene is estimated using maximum likelihood estimation. In other words, **given the count values of the replicates, the most likely estimate of dispersion is calculated**.
 
 2. **Fit a curve to the the gene estimates given expression strength**
 
@@ -124,21 +160,28 @@ To accurately model our sequencing counts, we need to generate accurate estimate
 
 	<img src="../img/deseq_dispersion1.png" width="400">
 
-3. **Shrink gene-wise dispersion estimates toward the values predicted by the curve**
+<img src="../img/deseq2_workflow_separate_dis.png" width="200">
 
-	The curve allows for more accurate identification of differentially expressed genes when sample sizes are small, and the strength of the shrinkage for each gene depends on :
+### Shrink gene-wise dispersion estimates toward the values predicted by the curve
+
+<img src="../img/deseq2_workflow_separate_shr.png" width="200">
+
+The curve allows for more accurate identification of differentially expressed genes when sample sizes are small, and the strength of the shrinkage for each gene depends on :
 	
 	- how close gene dispersions are from the curve
 	- sample size (more samples = less shrinkage)
 
 
-	**This shrinkage method is particularly important to reduce false positives in the differential expression analysis.** Genes with extremely low levels of variation are shrunken towards the curve, and the more accurate, higher dispersion values are output for fitting of the model and differential expression testing. 
+**This shrinkage method is particularly important to reduce false positives in the differential expression analysis.** Genes with low dispersion estimates are shrunken towards the curve, and the more accurate, higher dispersion values are output for fitting of the model and differential expression testing. 
 
-	Dispersion estimates that are slightly above the curve are also shrunk toward the curve for better dispersion estimation; however, genes with extremely high dispersion values are not shrunken toward the curve due to the likelihood that the gene does not follow the modeling assumptions and has higher variability than others for biological or technical reasons [[1](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-014-0550-8)]. Shrinking the values toward the curve could result in false positives, so these values are not shrunken. These genes are shown surrounded by blue circles below. 
+Dispersion estimates that are slightly above the curve are also shrunk toward the curve for better dispersion estimation; however, genes with extremely high dispersion values are not shrunken toward the curve due to the likelihood that the gene does not follow the modeling assumptions and has higher variability than others for biological or technical reasons [[1](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-014-0550-8)]. Shrinking the values toward the curve could result in false positives, so these values are not shrunken. These genes are shown surrounded by blue circles below. 
 
-	<img src="../img/deseq_dispersion2.png" width="600">
+<img src="../img/deseq_dispersion2.png" width="600">
 
-	> **NOTE:** This is a good plot to examine to ensure your data is a good fit for the DESeq2 model. You expect your data to generally scatter around the curve, with the dispersion decreasing with increasing expression levels. If you see a cloud or different shapes, then you might want to explore your data more to see if you have contamination (mitochondrial, etc.) or outlier samples.
+> **NOTE:** This is a good plot to examine to ensure your data is a good fit for the DESeq2 model. You expect your data to generally scatter around the curve, with the dispersion decreasing with increasing expression levels. If you see a cloud or different shapes, then you might want to explore your data more to see if you have contamination (mitochondrial, etc.) or outlier samples.
+
+
+
 
 ## Generalized Linear Model fit for each gene
 
@@ -223,31 +266,7 @@ Let's put the theory into practice by performing differential gene expression an
 
 ## Normalization
 
-To normalize the count data DESeq2 calculates size factors for each sample, using the *median of ratios method* discussed previously. Let's take a quick look at size factor values we have for each sample:
 
-```
-sizeFactors(dds)
-
-Mov10_kd_2 Mov10_kd_3 Mov10_oe_1 Mov10_oe_2 Mov10_oe_3 Irrel_kd_1 Irrel_kd_2 Irrel_kd_3 
- 1.5646728  0.9351760  1.2016082  1.1205912  0.6534987  1.1224020  0.9625632  0.7477715  
-```
- 
-These numbers should be identical to those we generated initially when we had run the function `estimateSizeFactors(dds)`. Take a look at the total number of reads for each sample using:
-
-```r
-colSums(counts(dds))
-```
-
-*How do the numbers correlate with the size factor?*
-
-Now take a look at the total depth after normalization using:
-
-```r
-colSums(counts(dds, normalized=T))
-```
-How do the values across samples compare with the total counts taken for each sample?
-
-> **NOTE:** it can be advantageous to calculate gene-specific normalization factors (size factors) to account for further sources of technical biases such as differing dependence on GC content, gene length or the like, and these can be supplied to DESeq2 instead of using the median of ratios method.
 
 ## Dispersion estimates
 
@@ -284,15 +303,16 @@ We have three sample classes so we can make three possible pairwise comparisons:
 **We are really only interested in #1 and #2 from above**. Using the design formula we provided `~sampletype`, DESeq 2 internally created the following design matrix:
 
 ```
-   	      Intercept	sampletypecontrol sampletypeMOV10_knockdown	sampletypeMOV10_overexpression
-Mov10_kd_2	 1		0		1		0
-Mov10_kd_3	 1		0		1		0
-Mov10_oe_1   1		0		0		1
-Mov10_oe_2   1		0		0		1
-Mov10_oe_3   1		0		0		1
-Irrel_kd_1	 1		1		0		0
-Irrel_kd_2	 1		1		0		0
-Irrel_kd_3	 1		1		0		0	
+   	     | Intercept | sampletypecontrol |  sampletypeMOV10_knockdown | sampletypeMOV10_overexpression |
+	     |:------:|:----:|:----:|:----:|:----:|
+| Mov10_kd_2	|  1	|	0		|  1		|		0 |
+Mov10_kd_3	 1		0		  1				0
+Mov10_oe_1   	 1		0		  0				1
+Mov10_oe_2   	 1		0		  0				1
+Mov10_oe_3   	 1		0		  0				1
+Irrel_kd_1	 1		1		  0				0
+Irrel_kd_2	 1		1		  0				0
+Irrel_kd_3	 1		1		  0				0	
 
 ```
 This design matrix is now used to setup the contrasts to request the comparisons we want to make. This information is utilized to inform the model about which replicates should be used to estimate the **log2 foldchanges (LFC)**.
