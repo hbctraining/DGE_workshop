@@ -26,11 +26,14 @@ Differential expression analysis with DESeq2 requires multiple steps, as display
 
 <img src="../img/DESeq2_workflow.png" width="500">
 
+Prior to performing the differential expression analysis, it is a good idea to know what sources of variation are present in your data, either by exploration during the QC and/or prior knowledge. Once you know the major sources of variation, you can remove them prior to analysis or control for them in the statistical model. 
+
 ## Design formula
+You can specify the sources of variation in your DESeq2 model using a **design formula**. A design formula tells the statistical software which sources of variation to control for, as well as, the factor of interest to test for differential expression. For example, if you know that sex is a significant source of variation in your data, then `sex` should be included in your model. The **design formula** should have **all of the factors in your metadata that account for major sources of variation** in your data. The last factor entered in the formula should be the condition of interest. 
 
-When performing differential expression analysis, it is a good idea to know what sources of variation are present in your data, either by exploration during the QC and/or prior knowledge. Once you know the major sources of variation, you can remove them prior to analysis or control for them in the statistical model. For example, if you know that animal sex or age is a significant source of variation in your data, then it needs to be included in your model. The **design formula** or **model formula** should have **all of the factors in your metadata that account for major sources of variation** in your data. The last factor entered in the formula should be the condition of interest. 
+For example, suppose you have the following metadata:
 
-For example, suppose you have the following metadata appears as follows:
+<img src="../img/metadata_example.png" width="500">
 
 If you want to examine the expression differences between treatments, and you know that major sources of variation include 'sex' and 'age', then your design formula would be:
 
@@ -53,6 +56,44 @@ DESeq2 also allows for the analysis of complex designs. You can explore interact
 `design <- ~ sex + age + treatment + sex:treatment`
 
 Since the interaction term `sex:treatment` is last in the formula, the results output from DESeq2 will output results for this term. Alternatively, as recommended in the [DESeq2 vignette](https://www.bioconductor.org/packages/release/bioc/vignettes/DESeq2/inst/doc/DESeq2.pdf), we could create a new factor variable in our metadata based on the two interaction factors (i.e. "Ftreated", "Fcontrol", "Mtreated", "Mcontrol"). 
+
+
+### Running DESeq2
+
+To run the differential expression pipeline on the **raw counts** in DESeq2, we must create a DESeqDataSet as we did in the 'Count normalization' lesson:
+
+```r
+dds <- DESeqDataSetFromMatrix(countData = data, colData = meta, design = ~ sampletype)
+```
+
+To run the actual differential expression analysis, we use a single call to the function DESeq(). By re-assigning the results of the function back to the same variable name (`dds`), we can continue to fill in the `slots` of our `DESeqDataSet` object.
+
+```r
+##Run analysis
+dds <- DESeq(dds)
+```
+
+This function will print out a message for the various steps it performs: 
+
+```
+estimating size factors
+estimating dispersions
+gene-wise dispersion estimates
+mean-dispersion relationship
+final dispersion estimates
+fitting model and testing
+``` 
+
+<img src="../img/deseq2_workflow_separate.png" width="200">
+
+
+**Everything from normalization to linear modeling was carried out by the use of a single function!** The results of each step were inserted into the object that you initialized.
+
+![deseq1](../img/deseq_obj2.png)
+
+
+> **NOTE:** There are individual functions available in DESeq2 that would allow us to carry out each step in the workflow in a step-wise manner, rather than a single call. We demonstrated one example when generating size factors to create a normalized matrix. By calling `DESeq()`, the individual functions for each step are run for you.## Design formula
+
 
 
 ## Estimate size factors
@@ -174,57 +215,7 @@ In DESeq2, the p-values attained by the Wald test are corrected for multiple tes
 
 ## Differential expression analysis of Mov10 dataset 
 
-Let's put the theory into practice by performing differential gene expression analysis on the Mov10 dataset using DESeq2. We will be using several different R packages to perform the analysis, so we will start by loading these libraries:
-
-### Loading libraries
-
-```r
-library(ggplot2)
-library(RColorBrewer)
-library(DESeq2)
-library(pheatmap)
-```
-
-
-### Running DESeq2
-
-To run the differential expression pipeline on the **raw counts** in DESeq2, we must create a DESeqDataSet as we did in the 'Count normalization' lesson Remember the following code:
-
-```r
-# DO NOT RUN!
-
-dds <- DESeqDataSetFromMatrix(countData = data, colData = meta, design = ~ sampletype)
-```
-
-We do not need to repeat this step, but note that the only factor we choose to put in our design model is `sampletype`; we have no other sources of variation included.
-
-To run the actual differential expression analysis, we use a single call to the function DESeq(). By re-assigning the results of the function back to the same variable name (`dds`), we can continue to fill in the `slots` of our `DESeqDataSet` object.
-
-```r
-##Run analysis
-dds <- DESeq(dds)
-```
-
-This function will print out a message for the various steps it performs: 
-
-```
-estimating size factors
-estimating dispersions
-gene-wise dispersion estimates
-mean-dispersion relationship
-final dispersion estimates
-fitting model and testing
-``` 
-
-<img src="../img/deseq2_workflow_separate.png" width="200">
-
-
-**Everything from normalization to linear modeling was carried out by the use of a single function!** The results of each step were inserted into the object that you initialized.
-
-![deseq1](../img/deseq_obj2.png)
-
-
-> **NOTE:** There are individual functions available in DESeq2 that would allow us to carry out each step in the workflow in a step-wise manner, rather than a single call. We demonstrated one example when generating size factors to create a normalized matrix. By calling `DESeq()`, the individual functions for each step are run for you.
+Let's put the theory into practice by performing differential gene expression analysis on the Mov10 dataset using DESeq2. 
 
 >**NOTE:** At this step, if you expected a number of genes to have log2 fold changes far outside the normal range for your dataset, you could turn off the beta prior (as discussed previously), which would turn off the LFC shrinkage. You can turn off the beta prior using `DESeq(dds, betaPrior=FALSE)`.
 
