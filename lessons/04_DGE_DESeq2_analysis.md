@@ -303,9 +303,8 @@ We have three sample classes so we can make three possible pairwise comparisons:
 **We are really only interested in #1 and #2 from above**. Using the design formula we provided `~sampletype`, DESeq 2 internally created the following design matrix:
 
 ```
-   	     | Intercept | sampletypecontrol |  sampletypeMOV10_knockdown | sampletypeMOV10_overexpression |
-	     |:------:|:----:|:----:|:----:|:----:|
-| Mov10_kd_2	|  1	|	0		|  1		|		0 |
+   	      Intercept  sampletypecontrol  sampletypeMOV10_knockdown  sampletypeMOV10_overexpression
+Mov10_kd_2	 1	 	0		  1		 		0 
 Mov10_kd_3	 1		0		  1				0
 Mov10_oe_1   	 1		0		  0				1
 Mov10_oe_2   	 1		0		  0				1
