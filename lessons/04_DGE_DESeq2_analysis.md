@@ -94,10 +94,15 @@ final dispersion estimates
 fitting model and testing
 ``` 
 
-<img src="../img/deseq2_workflow_separate.png" width="200">
-
 > **NOTE:** There are individual functions available in DESeq2 that would allow us to carry out each step in the workflow in a step-wise manner, rather than a single call. We demonstrated one example when generating size factors to create a normalized matrix. By calling `DESeq()`, the individual functions for each step are run for you.
 
+### DESeq2 differential gene expression analysis workflow
+
+The workflow for the differential gene expression analysis with DESeq2 is output below:
+
+<img src="../img/deseq2_workflow_separate.png" width="200">
+
+We will be taking a detailed look at each of these steps to better understand how DESeq2 is performing the statistical analysis and what metrics we should examine to explore the quality of our analysis.
 
 ### Estimate size factors
 
@@ -107,7 +112,7 @@ The first step in the differential expression analysis is to estimate the size f
 
 DESeq2 will automatically estimate the size factors when performing the differential expression analysis if you haven't already done so. However, if you have already generated the size factors, then DESeq2 will use these values. 
 
-To normalize the count data DESeq2 calculates size factors for each sample, using the *median of ratios method* discussed previously. Let's take a quick look at size factor values we have for each sample:
+To normalize the count data DESeq2 calculates size factors for each sample, using the *median of ratios method* discussed previously in the 'Count normalization' lesson. Let's take a quick look at size factor values we have for each sample:
 
 ```
 sizeFactors(dds)
@@ -139,7 +144,7 @@ The next step in the differential expression analysis is the estimation of gene-
 
 <img src="../img/deseq2_workflow_separate_dis.png" width="200">
 
-**What is dispersion?** Dispersion is a measure of spread or variability in the data. Variance, standard deviation, IQR, among other measures, can all be used to measure dispersion. However, DESeq2 has a specific measure of dispersion (α) related to the mean (μ) and variance of the data: `Var = μ + α*μ^2`. 
+**What exactly is dispersion?** Dispersion is a measure of spread or variability in the data. Variance, standard deviation, IQR, among other measures, can all be used to measure dispersion. However, DESeq2 has a specific measure of dispersion (α) related to the mean (μ) and variance of the data: `Var = μ + α*μ^2`. 
 
 **What information does it give us?** The plot of mean versus variance in count data below shows the variance in gene expression increases with the mean expression (each black dot is a gene):
 
@@ -148,7 +153,7 @@ The next step in the differential expression analysis is the estimation of gene-
 Notice that the relationship between mean and variance is linear on the log scale, and for higher means, we could predict the variance relatively accurately given the mean. However, for low mean counts, the variance has a much larger spread. **The dispersion estimate represents the spread in the data for a given mean.** For count data, the dispersion should be greater for lower mean counts and higher for larger mean counts. 
 
 **How does the dispersion relate to our model?**
-To accurately model sequencing counts, we need to generate accurate estimates of within-group variation (variation between replicates of the same samplegroup) for each gene. With only a few (3-6) replicates per group, the estimates of variation for each gene are often unreliable. Therefore, DESeq2 shares information across genes to generate more accurate estimates of variation based on the expression level of the gene using a method called 'shrinkage'. DESeq2 assumes that genes with similar expression levels have similar dispersion or variation of expression. DESeq2 generates more accurate measures of dispersion using the following steps:
+To accurately model sequencing counts, we need to generate accurate estimates of within-group variation (variation between replicates of the same samplegroup) for each gene. With only a few (3-6) replicates per group, the estimates of variation for each gene are often unreliable. Therefore, DESeq2 shares information across genes to generate more accurate estimates of variation based on the mean expression level of the gene using a method called 'shrinkage'. DESeq2 assumes that genes with similar expression levels have similar dispersion. DESeq2 generates more accurate measures of dispersion using the following steps:
 
 1. **Estimate the dispersion for each gene separately**
 
@@ -162,9 +167,9 @@ To accurately model sequencing counts, we need to generate accurate estimates of
 
 	<img src="../img/deseq_dispersion1.png" width="400">
 
-<img src="../img/deseq2_workflow_separate_dis.png" width="200">
-
 ### Shrink gene-wise dispersion estimates toward the values predicted by the curve
+
+The next step in the workflow is to shrink the gene-wise dispersion estimates toward the expected dispersion values.
 
 <img src="../img/deseq2_workflow_separate_shr.png" width="200">
 
@@ -173,17 +178,13 @@ The curve allows for more accurate identification of differentially expressed ge
 	- how close gene dispersions are from the curve
 	- sample size (more samples = less shrinkage)
 
-
-**This shrinkage method is particularly important to reduce false positives in the differential expression analysis.** Genes with low dispersion estimates are shrunken towards the curve, and the more accurate, higher dispersion values are output for fitting of the model and differential expression testing. 
+**This shrinkage method is particularly important to reduce false positives in the differential expression analysis.** Genes with low dispersion estimates are shrunken towards the curve, and the more accurate, higher shrunken values are output for fitting of the model and differential expression testing. 
 
 Dispersion estimates that are slightly above the curve are also shrunk toward the curve for better dispersion estimation; however, genes with extremely high dispersion values are not shrunken toward the curve due to the likelihood that the gene does not follow the modeling assumptions and has higher variability than others for biological or technical reasons [[1](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-014-0550-8)]. Shrinking the values toward the curve could result in false positives, so these values are not shrunken. These genes are shown surrounded by blue circles below. 
 
 <img src="../img/deseq_dispersion2.png" width="600">
 
-> **NOTE:** This is a good plot to examine to ensure your data is a good fit for the DESeq2 model. You expect your data to generally scatter around the curve, with the dispersion decreasing with increasing expression levels. If you see a cloud or different shapes, then you might want to explore your data more to see if you have contamination (mitochondrial, etc.) or outlier samples.
-
-
-
+**This is a good plot to examine to ensure your data is a good fit for the DESeq2 model.** You expect your data to generally scatter around the curve, with the dispersion decreasing with increasing expression levels. If you see a cloud or different shapes, then you might want to explore your data more to see if you have contamination (mitochondrial, etc.) or outlier samples.
 
 ## Generalized Linear Model fit for each gene
 
