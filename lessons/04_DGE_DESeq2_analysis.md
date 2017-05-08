@@ -140,7 +140,7 @@ The next step in the differential expression analysis is the estimation of gene-
 
 **What is dispersion?** Dispersion is a measure of spread or variability in the data. Variance, standard deviation, IQR, among other measures, can all be used to measure dispersion. However, DESeq2 has a specific measure of dispersion (α) related to the mean (μ) and variance of the data: `Var = μ + α*μ^2`. 
 
-**What information does it give us?** The plot of mean versus variance in count data below shows the variance in gene expression per gene increases with the mean expression:
+**What information does it give us?** The plot of mean versus variance in count data below shows the variance in gene expression increases with the mean expression (each black dot is a gene):
 
 <img src="../img/deseq_mean_vs_variance.png" width="600">
 
