@@ -50,7 +50,7 @@ The tilde (`~`) should always proceed your factors and tells DESeq2 to model the
 
 ***
 
-#### Complex designs
+### Complex designs
 
 DESeq2 also allows for the analysis of complex designs. You can explore interactions or difference of differences by specifying for it in the design formula. For example, if you wanted to explore the effect of sex on the treatment effect, you could specify for it in the design formula as follows: 
 
@@ -66,7 +66,7 @@ The design formula would be:
 
 ## Running DESeq2
 
-Now that we know how to specify the model to DESeq2, we can run the differential expression pipeline on the **raw counts**. To do this, we must create a DESeqDataSet as we did in the 'Count normalization' lesson and specify the location of our raw counts and metadata, and input our design forumla:
+Now that we know how to specify the model to DESeq2, we can run the differential expression pipeline on the **raw counts**. To do this, we must create a DESeqDataSet as we did in the 'Count normalization' lesson and specify the location of our raw counts and metadata, and input our design formula:
 
 ```r
 dds <- DESeqDataSetFromMatrix(countData = data, colData = meta, design = ~ sampletype)
@@ -99,9 +99,9 @@ fitting model and testing
 
 ### Estimate size factors
 
-The first step in the differential expression is to estimate the size factors, which is exactly what we already did to normalize the raw counts. DESeq2 will automatically estimate the size factors when performing the differential expression analysis if you haven't already done so. However, if you have already generated the size factors, then DESeq2 will use these values. 
-
 <img src="../img/deseq2_workflow_separate_sf.png" width="200">
+
+The first step in the differential expression analysis is to estimate the size factors, which is exactly what we already did to normalize the raw counts. DESeq2 will automatically estimate the size factors when performing the differential expression analysis if you haven't already done so. However, if you have already generated the size factors, then DESeq2 will use these values. 
 
 To normalize the count data DESeq2 calculates size factors for each sample, using the *median of ratios method* discussed previously. Let's take a quick look at size factor values we have for each sample:
 
