@@ -146,14 +146,13 @@ The next step in the differential expression analysis is the estimation of gene-
 
 **What exactly is dispersion?** Dispersion is a measure of spread or variability in the data. Variance, standard deviation, IQR, among other measures, can all be used to measure dispersion. However, DESeq2 has a specific measure of dispersion (α) related to the mean (μ) and variance of the data: `Var = μ + α*μ^2`. 
 
-**What information does it give us?** The plot of mean versus variance in count data below shows the variance in gene expression increases with the mean expression (each black dot is a gene):
+**What does the DESeq2 dispersion represent?** **The dispersion reflects the spread in variance for a given mean.** The plot of mean versus variance in count data below shows the variance in gene expression increases with the mean expression (each black dot is a gene).
 
 <img src="../img/deseq_mean_vs_variance.png" width="600">
 
-Notice that the relationship between mean and variance is linear on the log scale, and for higher means, we could predict the variance relatively accurately given the mean. However, for low mean counts, the variance has a much larger spread. **The dispersion estimate represents the spread in the data for a given mean.** For count data, the dispersion should be greater for lower mean counts and higher for larger mean counts. 
+Notice that the relationship between mean and variance is linear on the log scale, and for higher means, we could predict the variance relatively accurately given the mean. However, for low mean counts, the variance has a much larger spread. **For count data, the dispersion is generally greater for lower mean counts and higher for larger mean counts.** 
 
-**How does the dispersion relate to our model?**
-To accurately model sequencing counts, we need to generate accurate estimates of within-group variation (variation between replicates of the same samplegroup) for each gene. With only a few (3-6) replicates per group, the estimates of variation for each gene are often unreliable. Therefore, DESeq2 shares information across genes to generate more accurate estimates of variation based on the mean expression level of the gene using a method called 'shrinkage'. DESeq2 assumes that genes with similar expression levels have similar dispersion. DESeq2 generates more accurate measures of dispersion using the following steps:
+**How does the dispersion relate to our model?** To accurately model sequencing counts, we need to generate accurate estimates of within-group variation (variation between replicates of the same samplegroup) for each gene. With only a few (3-6) replicates per group, the estimates of variation for each gene are often unreliable. Therefore, DESeq2 shares information across genes to generate more accurate estimates of variation based on the mean expression level of the gene using a method called 'shrinkage'. DESeq2 assumes that genes with similar expression levels have similar dispersion. DESeq2 generates more accurate measures of dispersion using the following steps:
 
 1. **Estimate the dispersion for each gene separately**
 
