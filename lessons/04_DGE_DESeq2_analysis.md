@@ -142,7 +142,7 @@ The next step in the differential expression analysis is the estimation of gene-
 
 **What information does it give us?** The plot of mean versus variance in count data below shows the variance in gene expression per gene increases with the mean expression:
 
-<img src="../img/deseq2_mean_vs_variance2.png" width="600">
+<img src="../img/deseq_mean_vs_variance.png" width="600">
 
 Notice that the relationship between mean and variance is linear on the log scale, and for higher means, we could predict the variance relatively accurately given the mean. However, for low mean counts, the variance has a much larger spread. **The dispersion estimate represents the spread in the data for a given mean.** For count data, the dispersion should be greater for lower mean counts and higher for larger mean counts. 
 
