@@ -56,7 +56,7 @@ DESeq2 also allows for the analysis of complex designs. You can explore interact
 
 `design <- ~ sex + age + treatment + sex:treatment`
 
-Since the interaction term `sex:treatment` is last in the formula, the results output from DESeq2 will output results for this term. Alternatively, as recommended in the [DESeq2 vignette](https://www.bioconductor.org/packages/release/bioc/vignettes/DESeq2/inst/doc/DESeq2.pdf), we could create a new factor variable in our metadata based on the two interaction factors (i.e. "Ftreated", "Fcontrol", "Mtreated", "Mcontrol") as shown below:
+Since the interaction term `sex:treatment` is last in the formula, the results output from DESeq2 will output results for this term. Alternatively, as recommended in the [DESeq2 vignette](https://www.bioconductor.org/packages/release/bioc/vignettes/DESeq2/inst/doc/DESeq2.pdf), we could create a new factor variable in our metadata based on the two interaction factors as shown in the table below:
 
 <img src="../img/meta_example2.png" width="300">
 
