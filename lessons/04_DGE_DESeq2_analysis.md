@@ -79,7 +79,9 @@ To run the actual differential expression analysis, we use a single call to the 
 dds <- DESeq(dds)
 ```
 
-This function will print out a message for the various steps it performs: 
+![deseq1](../img/deseq_obj2.png)
+
+**Everything from normalization to linear modeling was carried out by the use of a single function!** This function will print out a message for the various steps it performs: 
 
 ```
 estimating size factors
@@ -92,13 +94,8 @@ fitting model and testing
 
 <img src="../img/deseq2_workflow_separate.png" width="200">
 
-
-**Everything from normalization to linear modeling was carried out by the use of a single function!** The results of each step were inserted into the object that you initialized.
-
-![deseq1](../img/deseq_obj2.png)
-
-
 > **NOTE:** There are individual functions available in DESeq2 that would allow us to carry out each step in the workflow in a step-wise manner, rather than a single call. We demonstrated one example when generating size factors to create a normalized matrix. By calling `DESeq()`, the individual functions for each step are run for you.
+
 
 ### Estimate size factors
 
