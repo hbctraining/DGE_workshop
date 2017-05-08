@@ -72,7 +72,7 @@ Now that we know how to specify the model to DESeq2, we can run the differential
 dds <- DESeqDataSetFromMatrix(countData = data, colData = meta, design = ~ sampletype)
 ```
 
-To run the actual differential expression analysis, we use a single call to the function DESeq(). By re-assigning the results of the function back to the same variable name (`dds`), we can continue to fill in the `slots` of our `DESeqDataSet` object.
+To run the actual differential expression analysis, we use a single call to the function `DESeq()`. By re-assigning the results of the function back to the same variable name (`dds`), we can continue to fill in the `slots` of our `DESeqDataSet` object.
 
 ```r
 ##Run analysis
