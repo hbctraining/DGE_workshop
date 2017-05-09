@@ -21,7 +21,7 @@ The final step in the differential expression workflow is the actual fitting of 
 
 DESeq2 builds on good ideas for dispersion estimation and use of Generalized Linear Models from the DSS and edgeR methods. The [DESeq2 paper](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-014-0550-8) was published in 2014, but the package is continually updated and available for use in R through Bioconductor.
 
-Differential expression analysis with DESeq2 requires multiple steps, as displayed below. During the analysis, DESeq2 will model the raw counts, using normalization factors (size factors) to account for differences in library depth and composition. Then DESeq2 will estimate the gene-wise dispersion used to model the counts. Finally, DESeq2 will fit the negative binomial model and perform hypothesis testing using the Wald test or Likelihood Ratio Test.
+Differential expression analysis with DESeq2 requires multiple steps, as displayed below. During the analysis, DESeq2 will model the raw counts, using normalization factors (size factors) to account for differences in library depth and composition. Then DESeq2 will estimate the gene-wise dispersions and shrink these estimates to generate more accurate estimates of dispersion to model the counts. Finally, DESeq2 will fit the negative binomial model and perform hypothesis testing using the Wald test or Likelihood Ratio Test.
 
 <img src="../img/DESeq2_workflow.png" width="500">
 
@@ -139,19 +139,23 @@ How do the values across samples compare with the total counts taken for each sa
 
 ### Estimate gene-wise dispersion
 
-The next step in the differential expression analysis is the estimation of gene-wise dispersions.
+The next step in the differential expression analysis is the estimation of gene-wise dispersions. Before we get into the details, we should have a good idea about what dispersion is referring to in DESeq2.
 
 <img src="../img/deseq2_workflow_separate_dis.png" width="200">
 
 **What exactly is dispersion?** Dispersion is a measure of spread or variability in the data. Variance, standard deviation, IQR, among other measures, can all be used to measure dispersion. However, DESeq2 has a specific measure of dispersion (α) related to the mean (μ) and variance of the data: `Var = μ + α*μ^2`. 
 
-**What does the DESeq2 dispersion represent?** **The dispersion reflects the spread in variance for a given mean.** The plot of mean versus variance in count data below shows the variance in gene expression increases with the mean expression (each black dot is a gene).
+**What does the DESeq2 dispersion represent?** The dispersion estimates are inversely related to the mean and directly related to variance. **Based on this relationship, the dispersion is generally greater for lower mean counts and higher for larger mean counts.** We can compare dispersion estimates to compare the variance of genes for a given mean (the dispersion estimates for genes with the same mean will differ only based on their variance). **Therefore, the dispersion estimates reflect the variance in gene expression for a given mean value.** 
+
+The plot of mean versus variance in count data below shows the variance in gene expression increases with the mean expression (each black dot is a gene).
 
 <img src="../img/deseq_mean_vs_variance.png" width="600">
 
-Notice that the relationship between mean and variance is linear on the log scale, and for higher means, we could predict the variance relatively accurately given the mean. However, for low mean counts, the variance has a much larger spread. **For count data, the dispersion is generally greater for lower mean counts and higher for larger mean counts.** 
+Notice that the relationship between mean and variance is linear on the log scale, and for higher means, we could predict the variance relatively accurately given the mean. However, **for low mean counts, the variance estimates have a much larger spread (higher dispersion values)**. 
 
-**How does the dispersion relate to our model?** To accurately model sequencing counts, we need to generate accurate estimates of within-group variation (variation between replicates of the same samplegroup) for each gene. With only a few (3-6) replicates per group, the estimates of variation for each gene are often unreliable. Therefore, DESeq2 shares information across genes to generate more accurate estimates of variation based on the mean expression level of the gene using a method called 'shrinkage'. DESeq2 assumes that genes with similar expression levels have similar dispersion. DESeq2 generates more accurate measures of dispersion using the following steps:
+**How does the dispersion relate to our model?** To accurately model sequencing counts, we need to generate accurate estimates of within-group variation (variation between replicates of the same samplegroup) for each gene. With only a few (3-6) replicates per group, the estimates of variation for each gene are often unreliable (reason we see the high dispersion for low counts). Therefore, DESeq2 shares information across genes to generate more accurate estimates of variation based on the mean expression level of the gene using a method called 'shrinkage'. DESeq2 assumes that genes with similar expression levels have similar dispersion. 
+
+DESeq2 generates more accurate measures of dispersion using the following steps:
 
 1. **Estimate the dispersion for each gene separately**
 
@@ -165,7 +169,7 @@ Notice that the relationship between mean and variance is linear on the log scal
 
 	<img src="../img/deseq_dispersion1.png" width="400">
 
-### Shrink gene-wise dispersion estimates toward the values predicted by the curve
+3. Shrink gene-wise dispersion estimates toward the values predicted by the curve
 
 The next step in the workflow is to shrink the gene-wise dispersion estimates toward the expected dispersion values.
 
@@ -173,7 +177,7 @@ The next step in the workflow is to shrink the gene-wise dispersion estimates to
 
 The curve allows for more accurate identification of differentially expressed genes when sample sizes are small, and the strength of the shrinkage for each gene depends on :
 	
-	- how close gene dispersions are from the curve
+	- how close gene dispersions are from the curve 
 	- sample size (more samples = less shrinkage)
 
 **This shrinkage method is particularly important to reduce false positives in the differential expression analysis.** Genes with low dispersion estimates are shrunken towards the curve, and the more accurate, higher shrunken values are output for fitting of the model and differential expression testing. 
@@ -182,7 +186,7 @@ Dispersion estimates that are slightly above the curve are also shrunk toward th
 
 <img src="../img/deseq_dispersion2.png" width="600">
 
-**This is a good plot to examine to ensure your data is a good fit for the DESeq2 model.** You expect your data to generally scatter around the curve, with the dispersion decreasing with increasing expression levels. If you see a cloud or different shapes, then you might want to explore your data more to see if you have contamination (mitochondrial, etc.) or outlier samples.
+**This is a good plot to examine to ensure your data is a good fit for the DESeq2 model.** You expect your data to generally scatter around the curve, with the dispersion decreasing with increasing mean expression levels. If you see a cloud or different shapes, then you might want to explore your data more to see if you have contamination (mitochondrial, etc.) or outlier samples.
 
 ## Generalized Linear Model fit for each gene
 
@@ -190,15 +194,15 @@ The final step in the DESeq2 workflow is fitting the Negative Binomial model for
 
 <img src="../img/deseq2_workflow_separate.png" width="200">
 
-As discussed earlier, the count data generated by RNA-seq exhibits overdispersion and the statistical distribution used to model the counts needs to account for this overdispersion. DESeq2 uses a negative binomial distribution to model the RNA-seq counts using the equation below:
+As discussed earlier, the count data generated by RNA-seq exhibits overdispersion (variance > mean) and the statistical distribution used to model the counts needs to account for this overdispersion. DESeq2 uses a negative binomial distribution to model the RNA-seq counts using the equation below:
 
  <img src="../img/NB_model_formula.png" width="500">
  
-DESq2 will use this formula to create the model for each gene, but what we really want to know is the log2 foldchanges between conditions. The log2 foldchanges can be estimated using the normalized counts with the formula:
+DESq2 will use this formula to create the model for **each** gene, but what we really want to know is whether the log2 foldchanges between conditions is significantly different from 0. The log2 foldchanges and their standard error can be estimated using the normalized counts with the formula:
 
  <img src="../img/NB_model_formula_betas.png" width="500">
 
-By fitting the model, DESeq2 will determine the **estimates for the log2 foldchanges and their standard error values for each samplegroup relative to the mean expression of all samples**. 
+By fitting the model, DESeq2 will determine the **estimates for the log2 foldchanges and their standard error values for each samplegroup relative to the mean expression of all samples**. However, the log2 foldchanges are adjusted to account for the large variance associated with the estimates for low read counts, so that these genes are not included as false positives.
 
 ### Shrunken log2 foldchanges (LFC)
 
@@ -216,10 +220,13 @@ Similar to the previous shrinkage of dispersion estimates, the shrinkage of LFC 
 For example, in the figure above, the green gene and purple gene have the same mean values for the two sample groups (C57BL/6J and DBA/2J), but the green gene has low variation while the purple gene has high levels of variation. For the green gene with low variation, the unshrunken LFC estimate (vertex of the green solid line) is very similar to the shrunken LFC estimate (vertex of the green dotted line), but the LFC estimates for the purple gene are quite different due to the high dispersion. So even though two genes can have similar normalized count values, they can have differing degrees of LFC shrinkage. Notice the LFC estimates are shrunken toward the prior (black solid line).
 
 
->**NOTE:** If very large expected fold changes for a number of individual genes are expected, but not so many large fold changes that the width of the prior adjusts to allow such large fold changes, then you may want to turn off LFC shrinkage.
+>**NOTE:** If very large expected fold changes for a number of individual genes are expected, but not so many large fold changes that the prior would not include such large fold changes, then you may want to turn off LFC shrinkage.
 >
 >The reason is that shrinking of fold changes requires that the software can estimate the range of reasonable values for LFC by looking at the distribution of LFCs (particularly the upper quantile of the absolute LFC). But there might be precise fold changes which are above this upper quantile, and so the prior is too narrow for the targeted genes. The prior might then be a bad assumption for this type of dataset, so it's reasonable to turn it off. *(Response from Mike Love, creator of DESeq2 (http://seqanswers.com/forums/showthread.php?t=49101))*
-
+> 
+> By turning off the prior, the log2 foldchanges would be the same as those calculated by:
+>
+>`log2 (normalized_counts_group1 / normalized_counts_group2)`
 
 ### Hypothesis testing using the Wald test
 
