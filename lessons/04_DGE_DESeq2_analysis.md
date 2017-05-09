@@ -9,14 +9,13 @@ Approximate time: 60 minutes
 ## Learning Objectives 
 
 * Understanding the different steps in a differential expression analysis in the context of DESeq2
-* Exploring different objects in DESeq2 
-* Building results tables for comprison of different sample classes
+* Building results tables for comparison of different sample classes
 
 
 
 # Differential expression analysis with DESeq2
 
-The final step in the differential expression analysis is the actual fitting of the raw counts to the statistical model and testing for differentially expressed genes. Essentially we want to determine whether the mean expression levels of two different sample groups are significantly different.
+The final step in the differential expression workflow is the actual fitting of the raw counts to the statistical model and testing for differentially expressed genes. Essentially we want to determine whether the mean expression levels of different sample groups are significantly different.
 
 <img src="../img/de_theory.png" width="600">
 
