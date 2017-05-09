@@ -169,7 +169,7 @@ DESeq2 generates more accurate measures of dispersion using the following steps:
 
 	<img src="../img/deseq_dispersion1.png" width="400">
 
-3. Shrink gene-wise dispersion estimates toward the values predicted by the curve
+3. **Shrink gene-wise dispersion estimates toward the values predicted by the curve**
 
 The next step in the workflow is to shrink the gene-wise dispersion estimates toward the expected dispersion values.
 
