@@ -177,8 +177,8 @@ The next step in the workflow is to shrink the gene-wise dispersion estimates to
 
 The curve allows for more accurate identification of differentially expressed genes when sample sizes are small, and the strength of the shrinkage for each gene depends on :
 	
-	- how close gene dispersions are from the curve 
-	- sample size (more samples = less shrinkage)
+- how close gene dispersions are from the curve 
+- sample size (more samples = less shrinkage)
 
 **This shrinkage method is particularly important to reduce false positives in the differential expression analysis.** Genes with low dispersion estimates are shrunken towards the curve, and the more accurate, higher shrunken values are output for fitting of the model and differential expression testing. 
 
