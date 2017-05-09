@@ -21,7 +21,7 @@ The final step in the differential expression workflow is the actual fitting of 
 
 DESeq2 builds on good ideas for dispersion estimation and use of Generalized Linear Models from the DSS and edgeR methods. The [DESeq2 paper](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-014-0550-8) was published in 2014, but the package is continually updated and available for use in R through Bioconductor.
 
-Differential expression analysis with DESeq2 requires multiple steps, as displayed below.
+Differential expression analysis with DESeq2 requires multiple steps, as displayed below. During the analysis, DESeq2 will model the raw counts, using normalization factors (size factors) to account for differences in library depth and composition. Then DESeq2 will estimate the gene-wise dispersion used to model the counts. Finally, DESeq2 will fit the negative binomial model and perform hypothesis testing using the Wald test or Likelihood Ratio Test.
 
 <img src="../img/DESeq2_workflow.png" width="500">
 
