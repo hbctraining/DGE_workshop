@@ -147,11 +147,9 @@ The next step in the differential expression analysis is the estimation of gene-
 
 **What does the DESeq2 dispersion represent?** The dispersion estimates are inversely related to the mean and directly related to variance. **Based on this relationship, the dispersion is higher for small mean counts and lower for large mean counts.** We can compare dispersion estimates to compare the variance of genes for a given mean (the dispersion estimates for genes with the same mean will differ only based on their variance). **Therefore, the dispersion estimates reflect the variance in gene expression for a given mean value.** 
 
-The plot of mean versus variance in count data below shows the variance in gene expression increases with the mean expression (each black dot is a gene).
+The plot of mean versus variance in count data below shows the variance in gene expression increases with the mean expression (each black dot is a gene). Notice that the relationship between mean and variance is linear on the log scale, and for higher means, we could predict the variance relatively accurately given the mean. However, **for low mean counts, the variance estimates have a much larger spread (higher dispersion values)**. 
 
 <img src="../img/deseq_mean_vs_variance.png" width="600">
-
-Notice that the relationship between mean and variance is linear on the log scale, and for higher means, we could predict the variance relatively accurately given the mean. However, **for low mean counts, the variance estimates have a much larger spread (higher dispersion values)**. 
 
 **How does the dispersion relate to our model?** To accurately model sequencing counts, we need to generate accurate estimates of within-group variation (variation between replicates of the same samplegroup) for each gene. With only a few (3-6) replicates per group, the estimates of variation for each gene are often unreliable (reason we see the high dispersion for low counts). Therefore, DESeq2 shares information across genes to generate more accurate estimates of variation based on the mean expression level of the gene using a method called 'shrinkage'. DESeq2 assumes that genes with similar expression levels have similar dispersion. 
 
