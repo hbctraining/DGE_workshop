@@ -188,6 +188,17 @@ Dispersion estimates that are slightly above the curve are also shrunk toward th
 
 **This is a good plot to examine to ensure your data is a good fit for the DESeq2 model.** You expect your data to generally scatter around the curve, with the dispersion decreasing with increasing mean expression levels. If you see a cloud or different shapes, then you might want to explore your data more to see if you have contamination (mitochondrial, etc.) or outlier samples.
 
+Let's take a look at the dispersion estimates for our MOV10 data:
+
+```r
+# Plot dispersion estimates
+plotDispEsts(dds)
+```
+
+<img src="../img/plotDispersion.png">
+ 
+**Since we have a small sample size, for many genes we see quite a bit of shrinkage. Do you think our data are a good fit for the model?**
+
 ## Generalized Linear Model fit for each gene
 
 The final step in the DESeq2 workflow is fitting the Negative Binomial model for each gene and performing differential expression testing.
@@ -224,23 +235,23 @@ For example, in the figure above, the green gene and purple gene have the same m
 >
 >The reason is that shrinking of fold changes requires that the software can estimate the range of reasonable values for LFC by looking at the distribution of LFCs (particularly the upper quantile of the absolute LFC). But there might be precise fold changes which are above this upper quantile, and so the prior is too narrow for the targeted genes. The prior might then be a bad assumption for this type of dataset, so it's reasonable to turn it off. *(Response from Mike Love, creator of DESeq2 (http://seqanswers.com/forums/showthread.php?t=49101))*
 > 
-> By turning off the prior, the log2 foldchanges would be the same as those calculated by:
+>You can turn off the beta prior when calling the `DESeq()` fucntion: `DESeq(dds, betaPrior=FALSE)`. By turning off the prior, the log2 foldchanges would be the same as those calculated by:
 >
 >`log2 (normalized_counts_group1 / normalized_counts_group2)`
 
 ### Hypothesis testing using the Wald test
 
-The shrunken LFC estimates are given for each sample group relative to the mean expression of all groups. These estimates represent the **model coefficients**, and these coefficients are calculated regardless of the comparison of interest. The model coefficients can be viewed with `coefficients(dds)` to explore the strength of the effect for each factor group relative the overall mean for every gene. 
+The shrunken LFC estimates are output for each sample group relative to the mean expression of all groups. These estimates represent the **model coefficients**, and these coefficients are calculated regardless of the comparison of interest. The model coefficients can be viewed with `coefficients(dds)` to explore the strength of the effect for each factor group relative the overall mean for every gene. 
 
-Generally we are interested in the LFC estimates relative to other sample groups instead of to the mean expression of all groups. To do this, we must test if the difference in the log2 fold changes between groups is zero. To determine whether the difference in shrunken LFC estimates differs significantly from zero, the **Wald test** is used. The Wald test is generally used to make pair-wise comparisons (i.e. compare the LFCs from two different conditions).
+However, generally we are interested in the LFC estimates relative to other sample groups instead of to the mean expression of all groups. To do this, we must test if the difference in the log2 fold changes between groups is zero. To determine whether the difference in shrunken LFC estimates differs significantly from zero, the **Wald test** is used. The Wald test is generally used to make pair-wise comparisons (i.e. compare the LFCs from two different conditions).
 
-To indicate to DESeq2 the two groups we want to compare, we can use **contrasts** to perform differential expression testing using the Wald test. 
+#### Creating contrasts
 
-Contrasts can be provided to DESeq2 a couple of different ways:
+To indicate to DESeq2 the two groups we want to compare, we can use **contrasts** to perform differential expression testing using the Wald test. Contrasts can be provided to DESeq2 a few different ways:
 
 1. Automatically DESeq2 will use the base factor level of the condition of interest as the base for statistical testing. 
 2. Using the `results()` function, specify the factor and it's levels you would like to compare: `results(dds, contrast=c("sex", "F", "M"))`. The level given last is the base level for the comparison.
-3. Instead of giving the factor and levels as a vector, you can create a list using the factor levels given in `resultsNames()`. The level given last is the base level for the comparison. For example, if the output of `resultsNames(dds)` is "sexF", "sexM", then you could write the contrast as follows:
+3. Instead of giving the factor and levels as a vector, you can create a list using the factor levels given in `resultsNames()`. The level given last is the base level for the comparison. For example, if the output of `resultsNames(dds)` is `"sexF", "sexM"`, then you could write the contrast as follows:
 	
 	```r
 	
@@ -254,50 +265,18 @@ Contrasts can be provided to DESeq2 a couple of different ways:
 
 > **NOTE:** The Wald test can also be used with **continuous variables**. If the variable of interest provided in the design formula is continuous-valued, then the reported log2 fold change is per unit of change of that variable.
 
-### Multiple test correction
+#### Multiple test correction
 
-If we used the p-value directly from the Wald test with a significance cut-off of 0.05 (α = 0.05), then 5% of all genes would be called as differentially expressed (i.e. 5% False positive genes). The more genes we test, the more 'false positives' we discover. DESeq2 helps reduce the number of genes tested by removing those genes unlikely to be significantly DE, such as those with low number of counts and outlier samples. However, we still need to correct for multiple testing, and there are a few common approaches:
+If we used the `p-value` directly from the Wald test with a significance cut-off of 0.05 (α = 0.05), then 5% of all genes would be called as differentially expressed (i.e. 5% false positive genes). The more genes we test, the more 'false positives' we discover. For example, if we test 20,000 genes for differential expression, we would expect to find 1,000 false positive genes. 
 
-- **Bonferroni:** Reject any hypothesis with p-value ≤ α/m. **This is a very conservative approach with a high probability of false negatives.**
-- **FDR / Benjamini-Hochberg:** Rank j / m multiplied by the FDR levels. This approach is designed to control the proportion of false positives among the set of rejected hypotheses
-- **Q-value:** The minimum FDR that can be attained when calling that feature significant. For example, if gene X has a q-value of 0.013 it means that 1.3% of genes that show p-values at least as small as gene X are false positives
+DESeq2 helps reduce the number of genes tested by removing those genes unlikely to be significantly DE prior to testing, such as those with low number of counts and outlier samples (gene-level QC). However, we still need to correct for multiple testing, and there are a few common approaches:
+
+- **Bonferroni:** The adjusted p-value is calculated by: p-value * m (m = total number of tests). **This is a very conservative approach with a high probability of false negatives.**
+- **FDR / Benjamini-Hochberg:** Rank the genes by p-value, then multiply each ranked p-value by m/rank. This approach is designed to control the proportion of false positives among the set of rejected null hypotheses.
+- **Q-value / Storey method:** The minimum FDR that can be attained when calling that feature significant. For example, if gene X has a q-value of 0.013 it means that 1.3% of genes that show p-values at least as small as gene X are false positives
 
 In DESeq2, the p-values attained by the Wald test are corrected for multiple testing using the Benjamin and Hochberg method. The p-adjusted values should be used to determine significant genes. The significant genes can be output for visualization and/or functional analysis.
 
-## Differential expression analysis of Mov10 dataset 
-
-Let's put the theory into practice by performing differential gene expression analysis on the Mov10 dataset using DESeq2. 
-
->**NOTE:** At this step, if you expected a number of genes to have log2 fold changes far outside the normal range for your dataset, you could turn off the beta prior (as discussed previously), which would turn off the LFC shrinkage. You can turn off the beta prior using `DESeq(dds, betaPrior=FALSE)`.
-
-
-
-## Normalization
-
-
-
-## Dispersion estimates
-
-In our model, the **within group variability** is accounted for using the dispersion parameter. Dispersion estimates are computed **per gene**, because different genes naturally have a different scale of biological variability. The next step is therefore taking information from all gene dispersion estimates to shrink them to more reasonable values.
-
-Let's take a look at the dispersion estimates for our data:
-
-```r
-# Plot dispersion estimates
-plotDispEsts(dds)
-```
-
-<img src="../img/plotDispersion.png">
- 
-
-The black dots are the original estimates for each gene. The red smooth curve provides an accurate estimate for the expected dispersion value for genes of a given expression strength. The blue dots represent shrunken estimates. The circles indicate outliers, where we don't perform shrinkage. Remember that the strength of shrinkage depend on:
-	
-- how close gene dispersions are from the curve
-- sample size (more samples = less shrinkage)
-	
-**Since we have a small sample size, for many genes we see quite a bit of shrinkage.**
-
-This is often a plot we check to make sure that our data are a good fit for the DESeq2 model based on how well the dispersion estimates follow the curve. **Do you think our data are a good fit?**
 
 
 ## Identifying gene expression changes
