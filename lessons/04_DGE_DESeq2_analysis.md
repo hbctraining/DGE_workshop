@@ -70,7 +70,7 @@ The design formula would be:
 
 `design <- ~ sex + age + treatment + treat_sex`
 
-
+### Mov10 DE analysis
 
 Now that we know how to specify the model to DESeq2, we can run the differential expression pipeline on the **raw counts**. To do this, we must create a DESeqDataSet as we did in the ['Count normalization'](../02_DGE_count_normalization.md) lesson and specify the location of our raw counts and metadata, and input our design formula:
 
@@ -102,7 +102,7 @@ fitting model and testing
 
 > **NOTE:** There are individual functions available in DESeq2 that would allow us to carry out each step in the workflow in a step-wise manner, rather than a single call. We demonstrated one example when generating size factors to create a normalized matrix. By calling `DESeq()`, the individual functions for each step are run for you.
 
-### DESeq2 differential gene expression analysis workflow
+## DESeq2 differential gene expression analysis workflow
 
 The workflow for the differential gene expression analysis with DESeq2 is output below. We will be taking a detailed look at each of these steps to better understand how DESeq2 is performing the statistical analysis and what metrics we should examine to explore the quality of our analysis.
 
@@ -116,7 +116,11 @@ The first step in the differential expression analysis is to estimate the size f
 
 DESeq2 will automatically estimate the size factors when performing the differential expression analysis. However, if you have already generated the size factors using `estimateSizeFactors()`, as we did earlier, then DESeq2 will use these values.
 
-To normalize the count data, DESeq2 calculates size factors for each sample using the *median of ratios method* discussed previously in the ['Count normalization'](../02_DGE_count_normalization.md) lesson. Let's take a quick look at size factor values we have for each sample:
+To normalize the count data, DESeq2 calculates size factors for each sample using the *median of ratios method* discussed previously in the ['Count normalization'](../02_DGE_count_normalization.md) lesson. 
+
+### Mov10 DE analysis: examining the size factors
+
+Let's take a quick look at size factor values we have for each sample:
 
 ```
 sizeFactors(dds)
@@ -199,6 +203,8 @@ DESeq2 generates more accurate measures of dispersion using the following steps:
 	<img src="../img/deseq_dispersion2.png" width="600">
 
 	**This is a good plot to examine to ensure your data is a good fit for the DESeq2 model.** You expect your data to generally scatter around the curve, with the dispersion decreasing with increasing mean expression levels. If you see a cloud or different shapes, then you might want to explore your data more to see if you have contamination (mitochondrial, etc.) or outlier samples.
+
+### Mov10 DE analysis: exploring the dispersion estimates
 
 Let's take a look at the dispersion estimates for our MOV10 data:
 
