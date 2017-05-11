@@ -151,7 +151,7 @@ The plot of mean versus variance in count data below shows the variance in gene 
 
 <img src="../img/deseq_mean_vs_variance.png" width="600">
 
-**How does the dispersion relate to our model?** To accurately model sequencing counts, we need to generate accurate estimates of within-group variation (variation between replicates of the same samplegroup) for each gene. With only a few (3-6) replicates per group, the estimates of variation for each gene are often unreliable (reason we see the high dispersion for low counts). Therefore, DESeq2 shares information across genes to generate more accurate estimates of variation based on the mean expression level of the gene using a method called 'shrinkage'. DESeq2 assumes that genes with similar expression levels have similar dispersion. 
+**How does the dispersion relate to our model?** To accurately model sequencing counts, we need to generate accurate estimates of within-group variation (variation between replicates of the same sample group) for each gene. With only a few (3-6) replicates per group, the estimates of variation for each gene are often unreliable (reason we see the high dispersion for low counts). Therefore, DESeq2 shares information across genes to generate more accurate estimates of variation based on the mean expression level of the gene using a method called 'shrinkage'. DESeq2 assumes that genes with similar expression levels have similar dispersion. 
 
 DESeq2 generates more accurate measures of dispersion using the following steps:
 
@@ -211,7 +211,7 @@ DESq2 will use this formula to create the model for **each** gene, but what we r
 
  <img src="../img/NB_model_formula_betas.png" width="500">
 
-By fitting the model, DESeq2 will determine the **estimates for the log2 foldchanges and their standard error values for each samplegroup relative to the mean expression of all samples**. However, the log2 foldchanges are adjusted to account for the large variance associated with the estimates for low read counts, so that these genes are not included as false positives.
+By fitting the model, DESeq2 will determine the **estimates for the log2 foldchanges and their standard error values for each sample group relative to the mean expression of all samples**. However, the log2 foldchanges are adjusted to account for the large variance associated with the estimates for low read counts, so that these genes are not included as false positives.
 
 ### Shrunken log2 foldchanges (LFC)
 
