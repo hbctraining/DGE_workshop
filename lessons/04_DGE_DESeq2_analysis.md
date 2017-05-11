@@ -147,7 +147,7 @@ How do the values across samples compare with the total counts taken for each sa
 
 > **NOTE:** It can be advantageous to calculate gene-specific normalization factors (size factors) to account for further sources of technical biases such as differing dependence on GC content, gene length or the like, and these can be supplied to DESeq2 instead of using the median of ratios method.
 
-### Estimate gene-wise dispersion and perform shrinkage
+### Estimate gene-wise dispersion
 
 The next step in the differential expression analysis is the estimation of gene-wise dispersions. Before we get into the details, we should have a good idea about what dispersion is referring to in DESeq2.
 
@@ -171,7 +171,7 @@ To accurately model sequencing counts, we need to generate accurate estimates of
 
 To address this problem, DESeq2 **shares information across genes** to generate more accurate estimates of variation based on the mean expression level of the gene using a method called 'shrinkage'. **DESeq2 assumes that genes with similar expression levels have similar dispersion.** 
 
-DESeq2 generates more accurate measures of dispersion using the following steps:
+DESeq2 estimates more accurate measures of dispersion using the following steps:
 
 1. **Estimating the dispersion for each gene separately**
 
@@ -185,24 +185,24 @@ DESeq2 generates more accurate measures of dispersion using the following steps:
 
 	<img src="../img/deseq_dispersion1.png" width="400">
 
-3. **Shrink gene-wise dispersion estimates toward the values predicted by the curve**
+### Shrink gene-wise dispersion estimates toward the values predicted by the curve
 
-	The next step in the workflow is to shrink the gene-wise dispersion estimates toward the expected dispersion values.
+The next step in the workflow is to shrink the gene-wise dispersion estimates toward the expected dispersion values.
 
-	<img src="../img/deseq2_workflow_separate_shr.png" width="200">
+<img src="../img/deseq2_workflow_separate_shr.png" width="200">
 
-	The curve allows for more accurate identification of differentially expressed genes when sample sizes are small, and the strength of the shrinkage for each gene depends on :
+The curve allows for more accurate identification of differentially expressed genes when sample sizes are small, and the strength of the shrinkage for each gene depends on :
 	
-	- how close gene dispersions are from the curve 
-	- sample size (more samples = less shrinkage)
+- how close gene dispersions are from the curve 
+- sample size (more samples = less shrinkage)
 
-	**This shrinkage method is particularly important to reduce false positives in the differential expression analysis.** Genes with low dispersion estimates are shrunken towards the curve, and the more accurate, higher shrunken values are output for fitting of the model and differential expression testing. 
+**This shrinkage method is particularly important to reduce false positives in the differential expression analysis.** Genes with low dispersion estimates are shrunken towards the curve, and the more accurate, higher shrunken values are output for fitting of the model and differential expression testing. 
 
-	Dispersion estimates that are slightly above the curve are also shrunk toward the curve for better dispersion estimation; however, genes with extremely high dispersion values are not due to the likelihood that the gene does not follow the modeling assumptions and has higher variability than others for biological or technical reasons [[1](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-014-0550-8)]. Shrinking the values toward the curve could result in false positives, so these values are not shrunken. These genes are shown surrounded by blue circles below. 
+Dispersion estimates that are slightly above the curve are also shrunk toward the curve for better dispersion estimation; however, genes with extremely high dispersion values are not due to the likelihood that the gene does not follow the modeling assumptions and has higher variability than others for biological or technical reasons [[1](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-014-0550-8)]. Shrinking the values toward the curve could result in false positives, so these values are not shrunken. These genes are shown surrounded by blue circles below. 
 
-	<img src="../img/deseq_dispersion2.png" width="600">
+<img src="../img/deseq_dispersion2.png" width="600">
 
-	**This is a good plot to examine to ensure your data is a good fit for the DESeq2 model.** You expect your data to generally scatter around the curve, with the dispersion decreasing with increasing mean expression levels. If you see a cloud or different shapes, then you might want to explore your data more to see if you have contamination (mitochondrial, etc.) or outlier samples.
+**This is a good plot to examine to ensure your data is a good fit for the DESeq2 model.** You expect your data to generally scatter around the curve, with the dispersion decreasing with increasing mean expression levels. If you see a cloud or different shapes, then you might want to explore your data more to see if you have contamination (mitochondrial, etc.) or outlier samples.
 
 ### Mov10 DE analysis: exploring the dispersion estimates
 
