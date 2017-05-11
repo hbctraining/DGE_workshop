@@ -70,7 +70,7 @@ The design formula would be:
 
 `design <- ~ sex + age + treatment + treat_sex`
 
-#### Mov10 DE analysis: creating design formula and running DESeq2
+#### MOV10 DE analysis: creating design formula and running DESeq2
 
 Now that we know how to specify the model to DESeq2, we can run the differential expression pipeline on the **raw counts**. To do this, we must create a DESeqDataSet as we did in the ['Count normalization'](../02_DGE_count_normalization.md) lesson and specify the location of our raw counts and metadata, and input our design formula:
 
@@ -118,7 +118,7 @@ DESeq2 will automatically estimate the size factors when performing the differen
 
 To normalize the count data, DESeq2 calculates size factors for each sample using the *median of ratios method* discussed previously in the ['Count normalization'](../02_DGE_count_normalization.md) lesson. 
 
-#### Mov10 DE analysis: examining the size factors
+#### MOV10 DE analysis: examining the size factors
 
 Let's take a quick look at size factor values we have for each sample:
 
@@ -204,7 +204,7 @@ Dispersion estimates that are slightly above the curve are also shrunk toward th
 
 **This is a good plot to examine to ensure your data is a good fit for the DESeq2 model.** You expect your data to generally scatter around the curve, with the dispersion decreasing with increasing mean expression levels. If you see a cloud or different shapes, then you might want to explore your data more to see if you have contamination (mitochondrial, etc.) or outlier samples.
 
-#### Mov10 DE analysis: exploring the dispersion estimates and assessing model fit
+#### MOV10 DE analysis: exploring the dispersion estimates and assessing model fit
 
 Let's take a look at the dispersion estimates for our MOV10 data:
 
