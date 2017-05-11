@@ -48,8 +48,6 @@ For example, in the figure above, the green gene and purple gene have the same m
 
 
 >**NOTE:** If very large expected fold changes for a number of individual genes are expected, but not so many large fold changes that the prior would not include such large fold changes, then you may want to turn off LFC shrinkage.
->
->The reason is that shrinking of fold changes requires that the software can estimate the range of reasonable values for LFC by looking at the distribution of LFCs (particularly the upper quantile of the absolute LFC). But there might be precise fold changes which are above this upper quantile, and so the prior is too narrow for the targeted genes. The prior might then be a bad assumption for this type of dataset, so it's reasonable to turn it off. *(Response from Mike Love, creator of DESeq2 (http://seqanswers.com/forums/showthread.php?t=49101))*
 > 
 >You can turn off the beta prior when calling the `DESeq()` fucntion: `DESeq(dds, betaPrior=FALSE)`. By turning off the prior, the log2 foldchanges would be the same as those calculated by:
 >
