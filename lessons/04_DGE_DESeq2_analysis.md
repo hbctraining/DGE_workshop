@@ -65,7 +65,7 @@ The design formula would be:
 
 ## Running DESeq2
 
-Now that we know how to specify the model to DESeq2, we can run the differential expression pipeline on the **raw counts**. To do this, we must create a DESeqDataSet as we did in the 'Count normalization' lesson and specify the location of our raw counts and metadata, and input our design formula:
+Now that we know how to specify the model to DESeq2, we can run the differential expression pipeline on the **raw counts**. To do this, we must create a DESeqDataSet as we did in the [Count normalization](../02_DGE_count_normalization.md) lesson and specify the location of our raw counts and metadata, and input our design formula:
 
 ```r
 dds <- DESeqDataSetFromMatrix(countData = data, colData = meta, design = ~ sampletype)
@@ -111,7 +111,7 @@ The first step in the differential expression analysis is to estimate the size f
 
 DESeq2 will automatically estimate the size factors when performing the differential expression analysis if you haven't already done so. However, if you have already generated the size factors, then DESeq2 will use these values. 
 
-To normalize the count data DESeq2 calculates size factors for each sample, using the *median of ratios method* discussed previously in the 'Count normalization' lesson. Let's take a quick look at size factor values we have for each sample:
+To normalize the count data DESeq2 calculates size factors for each sample, using the *median of ratios method* discussed previously in the [Count normalization](../02_DGE_count_normalization.md) lesson. Let's take a quick look at size factor values we have for each sample:
 
 ```
 sizeFactors(dds)
