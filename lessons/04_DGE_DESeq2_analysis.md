@@ -10,7 +10,7 @@ Approximate time: 60 minutes
 
 * Understanding the different steps in a differential expression analysis in the context of DESeq2
 * Executing the differential expression analysis workflow with DESeq2
-* Constructing design formulas appropriate for the experimental design
+* Constructing design formulas appropriate for a given experimental design
 * Exploring the importance of dispersion during differential expression analysis, and using the plots of the dispersion values to explore assumptions of the NB model
 
 
