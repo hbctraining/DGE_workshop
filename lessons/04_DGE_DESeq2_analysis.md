@@ -43,7 +43,7 @@ The tilde (`~`) should always proceed your factors and tells DESeq2 to model the
 ***
 **Exercises**
 
-1. Suppose you wanted to study the expression difference between the two age groups in the metadata shown above, and major sources of variation were `sex` and `treatment`, how would the design formula be written?
+1. Suppose you wanted to study the expression differences between the two age groups in the metadata shown above, and major sources of variation were `sex` and `treatment`, how would the design formula be written?
 2. Based on our **Mov10** `metadata` dataframe, which factors could we include in our design formula?
 3. What would you do if you wanted to include a factor in your design formula that is not in your metadata? 
 
