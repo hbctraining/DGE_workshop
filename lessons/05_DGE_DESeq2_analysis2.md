@@ -162,7 +162,7 @@ DESeq2 helps reduce the number of genes tested by removing those genes unlikely 
 
 In DESeq2, the p-values attained by the Wald test are corrected for multiple testing using the Benjamin and Hochberg method. The p-adjusted values should be used to determine significant genes. The significant genes can be output for visualization and/or functional analysis.
 
-#### MOV10 DE analysis: multiple test correction
+#### MOV10 DE analysis: results exploration
 
 The results table looks very much like a dataframe and in many ways it can be treated like one (i.e when accessing/subsetting data). However, it is important to recognize that it is actually stored in a `DESeqResults` object. When we start visualizing our data, this information will be helpful. 
 
