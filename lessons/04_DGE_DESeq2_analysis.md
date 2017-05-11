@@ -70,7 +70,7 @@ The design formula would be:
 
 `design <- ~ sex + age + treatment + treat_sex`
 
-### Mov10 DE analysis
+### Mov10 DE analysis: creating design formula and running DESeq2
 
 Now that we know how to specify the model to DESeq2, we can run the differential expression pipeline on the **raw counts**. To do this, we must create a DESeqDataSet as we did in the ['Count normalization'](../02_DGE_count_normalization.md) lesson and specify the location of our raw counts and metadata, and input our design formula:
 
