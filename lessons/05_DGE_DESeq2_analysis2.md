@@ -64,8 +64,7 @@ However, generally we are interested in the LFC estimates relative to other samp
 To indicate to DESeq2 the two groups we want to compare, we can use **contrasts** to perform differential expression testing using the Wald test. Contrasts can be provided to DESeq2 a few different ways:
 
 1. Automatically DESeq2 will use the base factor level of the condition of interest as the base for statistical testing. 
-2. Using the `results()` function, specify the factor and it's levels you would like to compare: `results(dds, contrast=c("sex", "F", "M"))`. The level given last is the base level for the comparison.
-3. Instead of giving the factor and levels as a vector, you can create a list using the factor levels given in `resultsNames()`. The level given last is the base level for the comparison. For example, if the output of `resultsNames(dds)` is `"sexF", "sexM"`, then you could write the contrast as follows:
+2. You can create a list for your comparison of interest using the factor levels given in `resultsNames()`, which lists all of the levels for all factors in your model design. The level given last is the base level for the comparison. For example, if the output of `resultsNames(dds)` is `"sexF", "sexM"`, then you could write the contrast as follows:
 	
 	```r
 	
@@ -76,24 +75,10 @@ To indicate to DESeq2 the two groups we want to compare, we can use **contrasts*
 	results(dds, contrast=contrast_sex)
 	
 	```
-
+>
 > **NOTE:** The Wald test can also be used with **continuous variables**. If the variable of interest provided in the design formula is continuous-valued, then the reported log2 fold change is per unit of change of that variable.
 
-#### Multiple test correction
-
-If we used the `p-value` directly from the Wald test with a significance cut-off of 0.05 (α = 0.05), then 5% of all genes would be called as differentially expressed (i.e. 5% false positive genes). The more genes we test, the more 'false positives' we discover. For example, if we test 20,000 genes for differential expression, we would expect to find 1,000 false positive genes. 
-
-DESeq2 helps reduce the number of genes tested by removing those genes unlikely to be significantly DE prior to testing, such as those with low number of counts and outlier samples (gene-level QC). However, we still need to correct for multiple testing, and there are a few common approaches:
-
-- **Bonferroni:** The adjusted p-value is calculated by: p-value * m (m = total number of tests). **This is a very conservative approach with a high probability of false negatives.**
-- **FDR / Benjamini-Hochberg:** Rank the genes by p-value, then multiply each ranked p-value by m/rank. This approach is designed to control the proportion of false positives among the set of rejected null hypotheses.
-- **Q-value / Storey method:** The minimum FDR that can be attained when calling that feature significant. For example, if gene X has a q-value of 0.013 it means that 1.3% of genes that show p-values at least as small as gene X are false positives
-
-In DESeq2, the p-values attained by the Wald test are corrected for multiple testing using the Benjamin and Hochberg method. The p-adjusted values should be used to determine significant genes. The significant genes can be output for visualization and/or functional analysis.
-
-
-
-## Identifying gene expression changes
+#### MOV10 DE analysis: contrasts and Wald tests
 
 We have three sample classes so we can make three possible pairwise comparisons:
 
@@ -101,7 +86,7 @@ We have three sample classes so we can make three possible pairwise comparisons:
 2. Control vs. Mov10 knockdown
 3. Mov10 knockdown vs. Mov10 overexpression
 
-**We are really only interested in #1 and #2 from above**. Using the design formula we provided `~sampletype`, DESeq 2 internally created the following design matrix:
+**We are really only interested in #1 and #2 from above**. Using the design formula we provided `~ sampletype`, DESeq2 internally created the following design matrix:
 
 ```
    	      Intercept  sampletypecontrol  sampletypeMOV10_knockdown  sampletypeMOV10_overexpression
@@ -115,42 +100,38 @@ Irrel_kd_2	 1		1		  0				0
 Irrel_kd_3	 1		1		  0				0	
 
 ```
+
 This design matrix is now used to setup the contrasts to request the comparisons we want to make. This information is utilized to inform the model about which replicates should be used to estimate the **log2 foldchanges (LFC)**.
 
-
-
-### Hypothesis testing: Wald test
-
-DESeq2 performs a hypothesis test for all possible pairwise comparisons. In order for us to retrieve the results for a specific pair of sample classes we need to provide this information to DESeq2 in the form of contrasts. While contrasts can be provided a few different ways, we will use the `list()` method:
-
-We need to use the coefficient names to specify our comparisons, these correspond to the headers in your design matrix. To find out how the coefficients are named we can use the resultsNames() function:
-
+We will tell DESeq2 the contrasts we would like to make using the `list()` method. To do this, we need to use the coefficient names to specify our comparisons, these correspond to the headers in your design matrix. To find out how the coefficients are named we can use the `resultsNames()` function:
 
 ```r
 # Find names of coefficients
 resultsNames(dds)
 ```
 
-To specify the specific contrasts, we need to provide the column names from the coefficients table as a list of 2 character vectors:
+To specify the contrasts, we need to provide the column names from the coefficients table as a list of 2 character vectors:
 
 ```r
 ## Define contrasts
 contrast_oe <- list( "sampletypeMOV10_overexpression", "sampletypecontrol")
 ```
 
-**The order of the names, determines the direction of fold change that is reported.** The name provided in the second element is the level that is used to baseline. So for example, if we observe a log2 fold change of -2 this would mean the gene expression is lower in Mov10_oe relative to the control. Pass the contrast vector as an argument to the `results()` function:
+**The order of the names, determines the direction of fold change that is reported.** The name provided in the second element is the level that is used as baseline. So for example, if we observe a log2 fold change of -2 this would mean the gene expression is lower in Mov10_oe relative to the control. Now, pass the contrast vector as an argument to the `results()` function:
 
 ```r
 # Extract results table
 res_tableOE <- results(dds, contrast=contrast_oe)
 ```
 
->**NOTE:** We could have specified the contrast in the `results()` argument:
-`results(dds, contrast = c("sampletype", "MOV10_overexpression", "control	normal"))`.
+>**NOTE:** We could have specified the contrast in the `results()` argument. The syntax is `results(dds, contrast = c("sample_group", "level_to_compare", "base_level")`. Using our data, you could specify the contrast as follows:
+`results(dds, contrast = c("sampletype", "MOV10_overexpression", "control")`
 
 This will build a results table containing Wald test statistics for the comparison we are interested in. Let's take a look at what information is stored in the results:
 
-	head(res_tableOE)
+```r
+head(res_tableOE)
+```
 
 ```
 log2 fold change (MAP): sampletype MOV10_overexpression vs control 
@@ -165,6 +146,23 @@ A1CF          0.2376919     0.02237286 0.04577046  0.4888056 0.6249793         N
 A2LD1        89.6179845     0.34598540 0.15901426  2.1758136 0.0295692 0.06725157
 A2M           5.8600841    -0.27850841 0.18051805 -1.5428286 0.1228724 0.21489067
 ```
+
+
+### Multiple test correction
+
+Note that we have pvalues and p-adjusted values in the output. Which should we use to identify significantly differentially expressed genes?
+
+If we used the `p-value` directly from the Wald test with a significance cut-off of 0.05 (α = 0.05), then 5% of all genes would be called as differentially expressed (i.e. 5% false positive genes). The more genes we test, the more 'false positives' we discover. For example, if we test 20,000 genes for differential expression, we would expect to find 1,000 false positive genes. We would not want to sift through our "significant" genes to identify which ones are true positives.
+
+DESeq2 helps reduce the number of genes tested by removing those genes unlikely to be significantly DE prior to testing, such as those with low number of counts and outlier samples (gene-level QC). However, we still need to correct for multiple testing to reduce the number of false positives, and there are a few common approaches:
+
+- **Bonferroni:** The adjusted p-value is calculated by: p-value * m (m = total number of tests). **This is a very conservative approach with a high probability of false negatives**, so is generally not recommended.
+- **FDR / Benjamini-Hochberg:** Rank the genes by p-value, then multiply each ranked p-value by m/rank. This approach is designed to control the proportion of false positives among the set of rejected null hypotheses.
+- **Q-value / Storey method:** The minimum FDR that can be attained when calling that feature significant. For example, if gene X has a q-value of 0.013 it means that 1.3% of genes that show p-values at least as small as gene X are false positives
+
+In DESeq2, the p-values attained by the Wald test are corrected for multiple testing using the Benjamin and Hochberg method. The p-adjusted values should be used to determine significant genes. The significant genes can be output for visualization and/or functional analysis.
+
+#### MOV10 DE analysis: multiple test correction
 
 The results table looks very much like a dataframe and in many ways it can be treated like one (i.e when accessing/subsetting data). However, it is important to recognize that it is actually stored in a `DESeqResults` object. When we start visualizing our data, this information will be helpful. 
 
