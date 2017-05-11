@@ -51,7 +51,7 @@ The tilde (`~`) should always proceed your factors and tells DESeq2 to model the
 
 ### Complex designs
 
-DESeq2 also allows for the analysis of complex designs. You can explore interactions or difference of differences by specifying for it in the design formula. For example, if you wanted to explore the effect of sex on the treatment effect, you could specify for it in the design formula as follows: 
+DESeq2 also allows for the analysis of complex designs. You can explore interactions or 'the difference of differences' by specifying for it in the design formula. For example, if you wanted to explore the effect of sex on the treatment effect, you could specify for it in the design formula as follows: 
 
 `design <- ~ sex + age + treatment + sex:treatment`
 
