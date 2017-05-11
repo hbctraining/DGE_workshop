@@ -151,7 +151,7 @@ The plot of mean versus variance in count data below shows the variance in gene 
 
 <img src="../img/deseq_mean_vs_variance.png" width="600">
 
-**How does the dispersion relate to our model?** To accurately model sequencing counts, we need to generate accurate estimates of within-group variation (variation between replicates of the same sample group) for each gene. With only a few (3-6) replicates per group, the estimates of variation for each gene are often unreliable, particularly for low count genes (large differences in dispersion for genes with similar means). Therefore, DESeq2 shares information across genes to generate more accurate estimates of variation based on the mean expression level of the gene using a method called 'shrinkage'. DESeq2 assumes that genes with similar expression levels have similar dispersion. 
+**How does the dispersion relate to our model?** To accurately model sequencing counts, we need to **generate accurate estimates of within-group variation** (variation between replicates of the same sample group) for each gene. **With only a few (3-6) replicates per group, the estimates of variation for each gene are often unreliable, particularly for low count genes** (large differences in dispersion for genes with similar means). Therefore, DESeq2 **shares information across genes** to generate more accurate estimates of variation based on the mean expression level of the gene using a method called **'shrinkage'**. DESeq2 assumes that **genes with similar expression levels have similar dispersion.** 
 
 DESeq2 generates more accurate measures of dispersion using the following steps:
 
