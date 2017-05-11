@@ -108,7 +108,7 @@ The workflow for the differential gene expression analysis with DESeq2 is output
 
 <img src="../img/deseq2_workflow_separate.png" width="200">
 
-### Estimate size factors
+### Step 1: Estimate size factors
 
 The first step in the differential expression analysis is to estimate the size factors, which is exactly what we already did to normalize the raw counts. 
 
@@ -147,7 +147,7 @@ How do the values across samples compare with the total counts taken for each sa
 
 > **NOTE:** It can be advantageous to calculate gene-specific normalization factors (size factors) to account for further sources of technical biases such as differing dependence on GC content, gene length or the like, and these can be supplied to DESeq2 instead of using the median of ratios method.
 
-### Estimate gene-wise dispersion
+### Step 2: Estimate gene-wise dispersion
 
 The next step in the differential expression analysis is the estimation of gene-wise dispersions. Before we get into the details, we should have a good idea about what dispersion is referring to in DESeq2.
 
@@ -185,7 +185,7 @@ DESeq2 estimates more accurate measures of dispersion using the following steps:
 
 	<img src="../img/deseq_dispersion1.png" width="400">
 
-### Shrink gene-wise dispersion estimates toward the values predicted by the curve
+### Step 3: Shrink gene-wise dispersion estimates toward the values predicted by the curve
 
 The next step in the workflow is to shrink the gene-wise dispersion estimates toward the expected dispersion values.
 
