@@ -171,7 +171,7 @@ To accurately model sequencing counts, we need to generate accurate estimates of
 
 To address this problem, DESeq2 **shares information across genes** to generate more accurate estimates of variation based on the mean expression level of the gene using a method called 'shrinkage'. **DESeq2 assumes that genes with similar expression levels have similar dispersion.** 
 
-**Estimating the dispersion for each gene separately**
+**Estimating the dispersion for each gene separately:**
 
 To model the dispersion based on expression level (mean counts of replicates), the dispersion for each gene is estimated using maximum likelihood estimation. In other words, **given the count values of the replicates, the most likely estimate of dispersion is calculated**.
 
@@ -183,7 +183,7 @@ The next step in the workflow is to fit a curve to the dispersion estimates for 
 
 This curve is displayed as a red line in the figure below, which plots the estimate for the **expected dispersion value for genes of a given expression strength**. Each black dot is a gene with an associated mean expression level and maximum likelihood estimation (MLE) of the dispersion (Step 1).
 
-	<img src="../img/deseq_dispersion1.png" width="400">
+<img src="../img/deseq_dispersion1.png" width="400">
 
 ### Step 4: Shrink gene-wise dispersion estimates toward the values predicted by the curve
 
