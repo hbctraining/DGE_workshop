@@ -179,7 +179,7 @@ To model the dispersion based on expression level (mean counts of replicates), t
 
 ### Step 3: Fitting a curve to the gene estimates given expression strength
 
-<img src="../img/deseq2_workflow_separate_fit.png" width="400">
+<img src="../img/deseq2_workflow_separate_fit.png" width="200">
 
 The idea behind fitting a curve to the data is that different genes will have different scales of biological variability, but, over all genes, there will be a distribution of reasonable estimates of dispersion. 
 
