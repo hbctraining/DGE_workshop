@@ -18,21 +18,22 @@ The first step in the DE analysis workflow is count normalization, which is nece
 
 <img src="../img/deseq_workflow_normalization.png" width="200">
 
-The raw count data is affected by various factors that need to be accounted for and "normalized". A few of these factors are listed below:
+The counts of mapped reads for each gene is proportional to the expression of RNA ("interesting") in addition to many other factors ("uninteresting"). Some of these factors are listed below:
  
- - **normalization for library size: necessary for comparison of expression of the same gene between samples. In the example below, sample 2 has a higher number of reads associated with it.
+- **library size/sequencing depth:** Each gene appears to have doubled in expression in sample 2, however this is a consequence of sample 2 having double the library size.
  
     <img src="../img/sequencing_depth.png" width="400">
  
- - **normalization for gene length: necessary for comparison of expression of different genes of varying lengths within the same sample.
+- **gene length:** The number of reads mapped to a longer gene can appear to have equal count/expression as a shorter gene that is more highly expressed.
  
     <img src="../img/length_of_gene.png" width="400">
  
- - **normalization for RNA composition:** recommended for comparison of expression between samples (particularly important when performing differential expression analyses)
+- **RNA composition**: particularly important when performing differential expression analyses
+
  
  > "A few highly and differentially expressed genes may have strong influence on the total read count, causing the ratio of total read counts not to be a good estimate for the ratio of expected counts (for all genes)"[[1](https://genomebiology.biomedcentral.com/articles/10.1186/gb-2010-11-10-r106)]
     
-While normalization is essential for differential expression analyses, it is also necessary whenever you are exploring or comparing counts between or within samples, e.g. if you plot the counts for a figure.]
+Normalization is the process of scaling raw count values to account for one or more of the above factors. In this way the expression levels are more comparable between and/or within samples. While normalization is essential for differential expression analyses, it is also necessary for exploratory data analysis and visualization of data.
  
 ### Common normalization methods
 
