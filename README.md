@@ -1,14 +1,14 @@
 ---
 Audience: Biologists
 Computational Skills: Intermediate R
-Prerequisites: 
-Duration: 3-day workshop (~19.5 hours of trainer-led time)
+Prerequisites: Introduction to R
+Duration: 1-day workshop (~6.5 hours of trainer-led time)
 ---
 
-[Working knowledge of R](https://github.com/hbctraining/Intro-to-R)
+
 # Differential gene expression workshop
 
-This repository has teaching materials for a **1-day**, hands-on **Introduction to differential gene expression (DGE) analysis** workshop. The workshop will lead participants through performing a differential gene expression analysis workflow on RNA-seq count data using R/RStudio.
+This repository has teaching materials for a **1-day**, hands-on **Introduction to differential gene expression (DGE) analysis** workshop. The workshop will lead participants through performing a differential gene expression analysis workflow on RNA-seq count data using R/RStudio. Working knowledge of R is required or completion of the [Introduction to R workshop](https://github.com/hbctraining/Intro-to-R).
 
 ### Learning Objectives
 
