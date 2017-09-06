@@ -1,6 +1,6 @@
 # Differential gene expression workshop
 
-This repository has teaching materials for a **1-day**, hands-on **Introduction to differential gene expression (DGE) analysis** workshop. The workshop will introduce participants to performing differential gene expression analysis on RNA-seq count data using R.
+This repository has teaching materials for a **1-day**, hands-on **Introduction to differential gene expression (DGE) analysis** workshop. The workshop will lead participants through performing a differential gene expression analysis workflow on RNA-seq count data using R/RStudio.
 
 ### Learning Objectives
 
