@@ -24,8 +24,8 @@ This repository has teaching materials for a **1-day**, hands-on **Introduction 
 #### Differential Gene Expression (DGE) using RNA-seq raw counts data
 | Lessons            | Duration |
 |:------------------------|:----------|
-|[Setting up and DGE overview](lessons/10_DGE_setup_and_overview.md) | 70 min |
-|[Introduction to count normalization](lessons/11_DGE_count_normalization.md) | 60 min |
+|[Setting up and DGE overview](lessons/01_DGE_setup_and_overview.md) | 70 min |
+|[Introduction to count normalization](lessons/02_DGE_count_normalization.md) | 60 min |
 |[QC using principal component analysis (PCA) and heirarchical clustering](lessons/12_DGE_QC_analysis.md) | 90 min |
 |[Getting started with DESeq2](lessons/13_DGE_DESeq2_analysis.md) | 70 min |
 |[Pairwise comparisons with DEseq2](lessons/14_DGE_DESeq2_analysis2.md) | 45 min |
