@@ -26,14 +26,13 @@ This repository has teaching materials for a **1-day**, hands-on **Introduction 
 |:------------------------|:----------|
 |[Setting up and DGE overview](lessons/01_DGE_setup_and_overview.md) | 70 min |
 |[Introduction to count normalization](lessons/02_DGE_count_normalization.md) | 60 min |
-|[QC using principal component analysis (PCA) and heirarchical clustering](lessons/12_DGE_QC_analysis.md) | 90 min |
-|[Getting started with DESeq2](lessons/13_DGE_DESeq2_analysis.md) | 70 min |
-|[Pairwise comparisons with DEseq2](lessons/14_DGE_DESeq2_analysis2.md) | 45 min |
-|[Visualization of DGE analysis results](lessons/15_DGE_visualizing_results.md) | 45 min |
+|[QC using principal component analysis (PCA) and heirarchical clustering](lessons/03_DGE_QC_analysis.md) | 90 min |
+|[Getting started with DESeq2](lessons/04_DGE_DESeq2_analysis.md) | 70 min |
+|[Pairwise comparisons with DEseq2](lessons/05_DGE_DESeq2_analysis2.md) | 45 min |
+|[Visualization of DGE analysis results](lessons/06_DGE_visualizing_results.md) | 45 min |
 |[Summary of DGE workflow]() | 15 min |
-|[Complex designs with DESeq2 (LRT)](lessons/16_DGE_LRT.md) | 60 min |
-|[BiomaRt and Ensembl](lessons/17_Ensembl_biomart.md) | 30 min |
-|[Functional Analysis](lessons/18_functional_analysis.md) | 85 min |
+|[Complex designs with DESeq2 (LRT)](lessons/07_DGE_LRT.md) | 60 min |
+|[Functional Analysis](lessons/08_functional_analysis.md) | 85 min |
 
 ***
 
