@@ -23,7 +23,7 @@ The final step in the differential expression analysis workflow is fitting the r
 
 The [DESeq2 paper](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-014-0550-8) was published in 2014, but the package is continually updated and available for use in R through Bioconductor. It builds on good ideas for dispersion estimation and use of Generalized Linear Models from the [DSS](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4005660/) and [edgeR](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2796818/) methods. 
 
-Differential expression analysis with DESeq2 involves multiple steps as displayed in the flowchart below in blue. Briefly, DESeq2 will model the raw counts, using normalization factors (size factors) to account for differences in library depth and RNA composition. Then, it will estimate the gene-wise dispersions and shrink these estimates to generate more accurate estimates of dispersion to model the counts. Finally, DESeq2 will fit the negative binomial model and perform hypothesis testing using the Wald test or Likelihood Ratio Test.
+Differential expression analysis with DESeq2 involves multiple steps as displayed in the flowchart below in blue. Briefly, DESeq2 will model the raw counts, using normalization factors (size factors) to account for differences in library depth. Then, it will estimate the gene-wise dispersions and shrink these estimates to generate more accurate estimates of dispersion to model the counts. Finally, DESeq2 will fit the negative binomial model and perform hypothesis testing using the Wald test or Likelihood Ratio Test.
 
 <img src="../img/DESeq2_workflow.png" width="500">
 
@@ -31,7 +31,7 @@ Differential expression analysis with DESeq2 involves multiple steps as displaye
 
 ## Running DESeq2
 
-Prior to performing the differential expression analysis, it is a good idea to know what sources of variation are present in your data, either by exploration during the QC and/or prior knowledge. Once you know the major sources of variation, you can remove them prior to analysis or control for them in the statistical model by including them in your **design formula**. 
+Prior to performing the differential expression analysis, it is a good idea to know what **sources of variation** are present in your data, either by exploration during the QC and/or prior knowledge. Once you know the major sources of variation, you can remove them prior to analysis or control for them in the statistical model by including them in your **design formula**. 
 
 ### Design formula
 
@@ -62,7 +62,7 @@ DESeq2 also allows for the analysis of complex designs. You can explore interact
 
 `design <- ~ sex + age + treatment + sex:treatment`
 
-Since the interaction term `sex:treatment` is last in the formula, the results output from DESeq2 will output results for this term. Alternatively, as recommended in the [DESeq2 vignette](https://www.bioconductor.org/packages/release/bioc/vignettes/DESeq2/inst/doc/DESeq2.pdf), we could create a new factor variable in our metadata based on the two interaction factors as shown in the table below:
+Since the interaction term `sex:treatment` is last in the formula, the results output from DESeq2 will output results for this term. Alternatively, as recommended in the [DESeq2 vignette](https://www.bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html), we could create a new factor variable in our metadata based on the two interaction factors as shown in the table below:
 
 <img src="../img/meta_example2.png" width="300">
 
@@ -70,15 +70,19 @@ The design formula would be:
 
 `design <- ~ sex + age + treatment + treat_sex`
 
-#### MOV10 DE analysis: creating design formula and running DESeq2
+### MOV10 DE analysis 
 
-Now that we know how to specify the model to DESeq2, we can run the differential expression pipeline on the **raw counts**. To do this, we must create a DESeqDataSet as we did in the ['Count normalization'](02_DGE_count_normalization.md) lesson and specify the location of our raw counts and metadata, and input our design formula:
+Now that we know how to specify the model to DESeq2, we can run the differential expression pipeline on the **raw counts**. 
+
+**To get our differential expression results from our raw count data, we only need to run 2 lines of code!**
+
+First we create a DESeqDataSet as we did in the ['Count normalization'](https://github.com/hbctraining/Intro-to-R-with-DGE/blob/master/lessons/11_DGE_count_normalization.md#2-create-deseq2-object) lesson and specify the location of our raw counts and metadata, and input our design formula:
 
 ```r
 dds <- DESeqDataSetFromMatrix(countData = data, colData = meta, design = ~ sampletype)
 ```
 
-To run the actual differential expression analysis, we use a single call to the function `DESeq()`. 
+Then, to run the actual differential expression analysis, we use a single call to the function `DESeq()`. 
 
 ```r
 ##Run analysis
@@ -104,9 +108,11 @@ fitting model and testing
 
 ## DESeq2 differential gene expression analysis workflow
 
-The workflow for the differential gene expression analysis with DESeq2 is output below. We will be taking a detailed look at each of these steps to better understand how DESeq2 is performing the statistical analysis and what metrics we should examine to explore the quality of our analysis.
+With the 2 lines of code above, we just completed the workflow for the differential gene expression analysis with DESeq2. The steps in the analysis are output below:
 
 <img src="../img/deseq2_workflow_separate.png" width="200">
+
+We will be taking a detailed look at each of these steps to better understand how DESeq2 is performing the statistical analysis and what metrics we should examine to explore the quality of our analysis.
 
 ### Step 1: Estimate size factors
 
@@ -116,7 +122,7 @@ The first step in the differential expression analysis is to estimate the size f
 
 DESeq2 will automatically estimate the size factors when performing the differential expression analysis. However, if you have already generated the size factors using `estimateSizeFactors()`, as we did earlier, then DESeq2 will use these values.
 
-To normalize the count data, DESeq2 calculates size factors for each sample using the *median of ratios method* discussed previously in the ['Count normalization'](02_DGE_count_normalization.md) lesson. 
+To normalize the count data, DESeq2 calculates size factors for each sample using the *median of ratios method* discussed previously in the ['Count normalization'](https://github.com/hbctraining/Intro-to-R-with-DGE/blob/master/lessons/11_DGE_count_normalization.md#deseq2-normalized-counts-median-of-ratios-method) lesson. 
 
 #### MOV10 DE analysis: examining the size factors
 

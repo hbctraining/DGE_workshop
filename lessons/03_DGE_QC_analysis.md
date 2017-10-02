@@ -149,13 +149,6 @@ plotPCA(rld, intgroup="sampletype")
 
 > **NOTE:** The `plotPCA()` function will only return the values for PC1 and PC2. If you would like to explore the additional PCs in your data or if you would like to identify genes that contribute most to the PCs, you can use the `prcomp()` function. [Resources](http://www.sthda.com/english/wiki/principal-component-analysis-in-r-prcomp-vs-princomp-r-software-and-data-mining) are available to learn how to do more complex inquiries using the PCs.
 
-***
-
-**Exercise**
-
-Plot the PCA using *all of the genes* in your original count matrix. *Hint: you can use `nrow()` to help get the total number of genes.* Does this plot look different from before, when we considered only the top 500 most variable genes?
-
-***
 
 ### Hierarchical Clustering
 
@@ -169,7 +162,7 @@ rld_mat <- assay(rld)    ## assay() is function from the "SummarizedExperiment" 
 Then we need to compute the pairwise correlation values for samples. We can do this using the `cor()` function:
 
 ```r
-### Compute pairwise corrrelation values
+### Compute pairwise correlation values
 rld_cor <- cor(rld_mat)    ## cor() is a base R function
 
 head(rld_cor)   ## check the output of cor(), make note of the rownames and colnames

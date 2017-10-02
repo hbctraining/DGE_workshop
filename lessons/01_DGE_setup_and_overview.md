@@ -4,38 +4,36 @@ author: "Meeta Mistry, Radhika Khetani, Mary Piper"
 date: "May 12, 2017"
 ---
 
+[GEO]: https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE51443 "Gene Expression Omnibus"
+[SRA]: https://trace.ncbi.nlm.nih.gov/Traces/sra/?study=SRP031507 "Sequence Read Archive"
+
 Approximate time: 60 minutes
 
 ## Learning Objectives 
 
-* Have a general idea of the experiment and its objectives
-* Understand how and why we choose this dataset
-* Getting setup in R (project setup, loading data, loading libraries)
-* Gain a general understanding of the differential gene expression analysis workflow and why the negative binomial distribution is used to model RNA-seq count data
+* Explain the experiment and its objectives
+* Describe how to set up an RNA-seq project in R 
+* Describe the RNA-seq and the differential gene expression analysis workflow
+* Explain why negative binomial distribution is used to model RNA-seq count data
 
 
 # Differential gene expression (DGE) analysis overview 
 
 The goal of RNA-seq is often to perform differential expression testing to determine which genes are expressed at different levels between conditions. These genes can offer biological insight into the processes affected by the condition(s) of interest. 
 
-To determine the expression levels of genes, an RNA-seq workflow is followed with the steps detailed in the image below. All steps are performed on the command line (Linux/Unix) through the generation of the read counts per gene. The differential expression analysis and any downstream functional analysis are generally performed in R using R packages specifically designed for the complex statistical analyses required to determine whether genes are differentially expressed.
+To determine the expression levels of genes, our RNA-seq workflow followed the steps detailed in the image below. All steps were performed on the command line (Linux/Unix) through the generation of the read counts per gene. The differential expression analysis and any downstream functional analysis are generally performed in R using R packages specifically designed for the complex statistical analyses required to determine whether genes are differentially expressed.
 
 
 <img src="../img/rnaseq_full_workflow.png" width="400">
 
-An in-depth explanation of these steps is outside the scope of today's class, but a couple of points:
-
-- Even though this flow diagram only shows 1 tool per step after the sequencing step, there are several tools available.
-- This is the more standard workflow with an alignment + a counting step, but more recently people are moving to an alignment-free counting workflow using tools like [Salmon](https://combine-lab.github.io/salmon/) and [Kallisto](https://pachterlab.github.io/kallisto/about.html). These newer tools will generate an abundance estimate for the genes, instead of "raw" counts, but the downstream steps for statistical analysis are similar. 
-
-In the next few lessons, we will walk you through an **end-to-end gene-level RNA-seq differential expression workflow** using various R packages. We will start with the count matrix, perform exploratory data analysis for quality assessment and to explore the relationship between samples, perform differential expression analysis, and visually explore the results.
+In the next few lessons, we will walk you through an **end-to-end gene-level RNA-seq differential expression workflow** using various R packages. We will start with the count matrix, perform exploratory data analysis for quality assessment and to explore the relationship between samples, perform differential expression analysis, and visually explore the results prior to performing downstream functional analysis.
 
  
-## Understanding the dataset
+## Review of the dataset
 
-To better interpret the results of our differential expression analysis, it is helpful to know about the dataset. We will be using a real RNA-seq dataset that is part of a larger study described in [Kenny PJ et al, Cell Rep 2014](http://www.ncbi.nlm.nih.gov/pubmed/25464849). 
+We will be using the full count matrix from the RNA-Seq dataset we started with in our workflow from the previous session.  It is part of a larger study described in [Kenny PJ et al, Cell Rep 2014](http://www.ncbi.nlm.nih.gov/pubmed/25464849). Although we have gone through this before, we have a brief summary to remind you of the biological relevance and experimental design.
 
-We are only using the [RNA-seq](http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE50499) dataset which is publicly available in the [SRA](http://www.ncbi.nlm.nih.gov/sra). The RNA-seq was performed on HEK293F cells that were either transfected with a MOV10 transgene, or siRNA to knock down Mov10 expression, or non-specific (irrelevant) siRNA. This resulted in 3 conditions **Mov10 oe** (over expression), **Mov10 kd** (knock down) and **Irrelevant kd**, respectively. The number of replicates is as shown below. 
+The RNA-Seq was performed on HEK293F cells that were either transfected with a MOV10 transgene, or siRNA to knock down Mov10 expression, or non-specific (irrelevant) siRNA. This resulted in 3 conditions **Mov10 oe** (over expression), **Mov10 kd** (knock down) and **Irrelevant kd**, respectively. The number of replicates is as shown below. 
 
 Using these data, we will evaluate transcriptional patterns associated with perturbation of MOV10 expression. Please note that the irrelevant siRNA will be treated as our control condition.
 
@@ -59,32 +57,6 @@ The authors are investigating interactions between various genes involved in Fra
 * What patterns of expression can we identify with the loss or gain of MOV10? 
 * Are there any genes shared between the two conditions?
 
-## Metadata
-
-In addition to the raw sequence data that is available in SRA we also need to collect **information about the data**, also known as **metadata**.
-
-Data sharing is important in the biological sciences to promote scientific integrity, and disseminate scientific discovery; but it can be difficult if all of the required information is not provided. From the SRA we can retrieve the sequence data (FASTQ files), but how useful is it if we know nothing about the samples that this sequence data originated from? **Metadata is a broadly used term which encompasses any kind of information that relates to our data, whether it is about the experimental design (i.e genotype) or metrics related to the sequence data (i.e sequencing depth).**
-
-Below is some of the metadata associated with the dataset we are using today.
-
-* The RNA was extracted from treated **HEK293F cells**.  
-* The cDNA libraries for this dataset are **stranded** and were generated using the **TruSeq Stranded mRNA Library Prep Kit** from Illumina. 
-* Sequencing was carried out on the **Illumina HiSeq-2500 for 100bp single end** reads. 
-* **~40 million reads** per sample were generated.
-
-> [Metadata generation/maintenance](http://datamanagement.hms.harvard.edu/metadata-overview) is part of ["Data Management"](http://datamanagement.hms.harvard.edu/biomedical-data-management-planning), which is an important aspect of working with large datasets.
-
-***
-
-**Exercise**
-
-1. What types of metadata are used in your experimental design (any experiment)?
-2. What other kinds of metadata might a sequencing project generate?
-3. Why is this type of information important?
-
-***
-
-
 ## Setting up
 
 Before we get into the details of the analysis, let's get started by opening up RStudio and setting up a new project for this analysis. 
@@ -93,13 +65,13 @@ Before we get into the details of the analysis, let's get started by opening up 
 2. In the `New Project` window, choose `New Directory`. Then, choose `Empty Project`. Name your new directory `DEanalysis` and then "Create the project as subdirectory of:" the Desktop (or location of your choice).
 3. The new project should automatically open in RStudio. 
 
-To check whether or not you are in the correct working directory, use `getwd()`. It shoud return a path similar to `/../../DEanalysis` in the console. Create 3 new folders/directories called `data`, `meta` and `results` using the `New folder` button in the `Files` tab (panel on the right side under the Environment panel). Remember the key to a good analysis is keeping organized from the start!
+To check whether or not you are in the correct working directory, use `getwd()`. The path `Desktop/DEanalysis` should be returned to you in the console. Within your working directory use the `New folder` button in the bottom right panel to create three new directories: `data`, `meta` and `results`. Remember the key to a good analysis is keeping organized from the start!
 
-Go to the `File` menu at the top left, and select `New File` followed by `R Script`. This should open up a script editor in the top left hand corner. This is where we will be typing and saving all commands required for this analysis, just as we did the R course. Let's get started by typing in the following (commented) header lines:
+Go to the `File` menu and select `New File`, then select `R Script`. This should open up a script editor in the top left hand corner. This is where we will be typing and saving all commands required for this analysis. In the script editor type in header lines:
 
 ```
 ## Gene-level differential expression analysis using DESeq2
-## May 18th, 2017
+## June 14th, 2017
 ```
 
 Now save the file as `de_script.R`. When finished your working directory should now look similar to this:
@@ -175,7 +147,9 @@ The "uninteresting" presents as sources of variation in your data, and so even t
 
 <img src="../img/de_norm_counts_var.png" width="400">
 
+
 The goal of differential expression analysis is to determine, for each gene, whether the differences in expression (counts) **between groups** is significant given the amount of variation observed **within groups** (replicates). To test for significance, we need an appropriate statistical model that accurately performs normalization (to account for differences in sequencing depth, etc.) and variance modeling (to account for few numbers of replicates and large dynamic expression range).
+
 
 ### RNA-seq count distribution
 
@@ -208,13 +182,15 @@ These images illustrate some common features of RNA-seq count data, including a 
 
 ### Modeling count data
 
-Count data (discrete) is often modeled using the **binomial distribution**, which can give you the **probability of getting a number of heads upon tossing a coin a number of times**. However, not all count data can be fit with the binomial distribution. 
+Count data is often modeled using the **binomial distribution**, which can give you the **probability of getting a number of heads upon tossing a coin a number of times**. However, not all count data can be fit with the binomial distribution. The binomial is based on discrete events and used in situations when you have a certain number of cases.
 
-With some events, like the lottery, when **the number of cases is very large (people who buy tickets), but the probability of an event is very small (probability of winning)**, the **Poisson distribution** is used to model these types of count data. [Details provided by Rafael Irizarry in the EdX class.](https://youtu.be/fxtB8c3u6l8)
+When **the number of cases is very large (i.e. people who buy lottery tickets), but the probability of an event is very small (probability of winning)**, the **Poisson distribution** is used to model these types of count data. The Poisson is similar to the binomial, but is based on continuous events. [Details provided by Rafael Irizarry in the EdX class.](https://youtu.be/fxtB8c3u6l8)
 
-**With RNA-Seq data, a very large number of RNAs are represented and the probability of pulling out a particular transcript is very small**. Hence, if the proportions of mRNA stayed exactly constant between the biological replicates for each sample class, we could expect Poisson distribution (where mean == variance). [A nice description of this concept is presented by Rafael Irizarry in the EdX class.](https://youtu.be/HK7WKsL3c2w)
+**With RNA-Seq data, a very large number of RNAs are represented and the probability of pulling out a particular transcript is very small**. Thus, it would be an appropriate situation to use the Poisson distribution. However, a unique property of this distribution is that the mean == variance. Realistically, with RNA-Seq data there is always some biological variation present across the replicates (within a sample class). Genes with larger average expression levels will tend to have larger observed variances across replicates. 
 
-Realistically, for RNA-Seq data biological variation across the replicates (within a sample class) is expected, and genes with larger average expression levels tend to have larger observed variances across replicates. The model that fits best, given this type of variability between replicates, is the Negative Binomial (NB) model. Essentially, **the NB model is a good approximation for data where the mean < variance**, as is the case with RNA-Seq count data.
+If the proportions of mRNA stayed exactly constant between the biological replicates for each sample class, we could expect Poisson distribution (where mean == variance). [A nice description of this concept is presented by Rafael Irizarry in the EdX class.](https://youtu.be/HK7WKsL3c2w). But this doesn't happen in practice, and so the Poisson distribution is only  considered appropriate for a single biological sample. 
+
+The model that fits best, given this type of variability between replicates, is the Negative Binomial (NB) model. Essentially, **the NB model is a good approximation for data where the mean < variance**, as is the case with RNA-Seq count data.
 
 <img src="../img/deseq_nb.png" width="400">
 
@@ -233,8 +209,8 @@ If it's count data, it should fit the negative binomial, as discussed previously
 Run the following code to plot the mean versus variance for the 'Mov10 overexpression' replicates:
 
 ```r
-mean_counts <- apply(data[, 1:3], 1, mean)
-variance_counts <- apply(data[, 1:3], 1, var)
+mean_counts <- apply(data[, 3:5], 1, mean)
+variance_counts <- apply(data[, 3:5], 1, var)
 df <- data.frame(mean_counts, variance_counts)
 
 ggplot(df) +
@@ -258,9 +234,9 @@ The figure below illustrates the relationship between sequencing depth and numbe
 
 ### Differential expression analysis workflow
 
-To model counts appropriately when performing a differential expression analysis, there are a number of software packages that have been developed for differential expression analysis of RNA-seq data. Even as new methods are continuously being developed a few  tools are generally recommended as best practice, e.g. **[DESeq2])(https://bioconductor.org/packages/release/bioc/html/DESeq2.html)** and **[EdgeR](https://bioconductor.org/packages/release/bioc/html/edgeR.html)**. Both these tools use the negative binomial model, employ similar methods, and typically, yield similar results. They are pretty stringent, and have a good balance between sensitivity and specificity (reducing both false positives and false negatives).
+To model counts appropriately when performing a differential expression analysis, there are a number of software packages that have been developed for differential expression analysis of RNA-seq data. Even as new methods are continuously being developed a few  tools are generally recommended as best practice, e.g. **[DESeq2](https://bioconductor.org/packages/release/bioc/html/DESeq2.html)** and **[EdgeR](https://bioconductor.org/packages/release/bioc/html/edgeR.html)**. Both these tools use the negative binomial model, employ similar methods, and typically, yield similar results. They are pretty stringent, and have a good balance between sensitivity and specificity (reducing both false positives and false negatives).
 
-**Limma-Voom** is another set of tools often used together for DE analysis, but this method may be less sensitive for small sample sizes. This method is recommended when the number of biological replicates per group grows large (> 20). 
+**[Limma-Voom](https://genomebiology.biomedcentral.com/articles/10.1186/gb-2014-15-2-r29)** is another set of tools often used together for DE analysis, but this method may be less sensitive for small sample sizes. This method is recommended when the number of biological replicates per group grows large (> 20). 
 
 Many studies describing comparisons between these methods show that while there is some agreement, there is also much variability between tools. **Additionally, there is no one method that performs optimally under all conditions ([Soneson and Dleorenzi, 2013](https://bmcbioinformatics.biomedcentral.com/articles/10.1186/1471-2105-14-91)).**
 
