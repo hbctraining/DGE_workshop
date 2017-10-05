@@ -93,6 +93,7 @@ library(ggplot2)
 library(RColorBrewer)
 library(DESeq2)
 library(pheatmap)
+library(DEGreport)
 ```
 
 ### Loading data
