@@ -71,7 +71,6 @@ Go to the `File` menu and select `New File`, then select `R Script`. This should
 
 ```
 ## Gene-level differential expression analysis using DESeq2
-## June 14th, 2017
 ```
 
 Now save the file as `de_script.R`. When finished your working directory should now look similar to this:
