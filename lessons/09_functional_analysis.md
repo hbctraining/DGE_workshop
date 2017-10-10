@@ -509,7 +509,7 @@ SPIA outputs a table showing significantly dysregulated pathways based on over-r
 - `pNDE`: the probability to observe at least NDE genes on the pathway using a hypergeometric model (similar to ORA)
 - `pPERT`: the probability to observe a total accumulation more extreme than tA only by chance
 - `pG`: the p-value obtained by combining pNDE and pPERT
-- `pGFdr` and `pGFWER` are the False Discovery Rate and respectively Bonferroni adjusted global p-values
+- `pGFdr` and `pGFWER` are the False Discovery Rate and Bonferroni adjusted global p-values, respectively
 - `Status`: gives the direction in which the pathway is perturbed (activated or inhibited)
 - `KEGGLINK` gives a web link to the KEGG website that **displays the pathway image** with the differentially expressed genes highlighted in red
 
