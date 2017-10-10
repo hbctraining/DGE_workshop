@@ -318,7 +318,8 @@ treemap(
 
 Over-representation analyses are only a single type of functional analysis method that is available for teasing apart the biological processes important to your condition of interest. Other types of analyses can be equally important or informative, including functional class scoring and pathway topology methods. 
 
-# Functional class scoring tools
+## Functional class scoring tools
+
 Functional class scoring (FCS) tools, such as [GSEA](http://software.broadinstitute.org/gsea/index.jsp), most often use the gene-level statistics or log2 fold changes for all genes from the differential expression results, then look to see whether gene sets for particular biological pathways are enriched among the large positive or negative fold changes. 
 
 <img src="../img/gsea_theory.png" width="600">
@@ -409,6 +410,7 @@ pathview(gene.data = foldchanges,
 ```
 
 >**NOTE:** Printing out Pathview images for all significant pathways can be easily performed as follows:
+>
 > ```r
 >## Output images for all significant KEGG pathways
 > get_kegg_plots <- function(x) {
@@ -453,7 +455,11 @@ msig_df <- data.frame(msig)
 ```
 
 ## Pathway topology tools
+
 The last main type of functional analysis technique is pathway topology analysis. Pathway topology analysis often takes into account gene interaction information along with the fold changes and adjusted p-values from differential expression analysis to identify dysregulated pathways. Depending on the tool, pathway topology tools explore how genes interact with each other (e.g. activation, inhibition, phosphorylation, ubiquitination, etc.) to determine the pathway-level statistics. Pathway topology-based methods utilize the number and type of interactions between gene product (our DE genes) and other gene products to infer gene function or pathway association. 
+
+![Pathway analysis tools](../img/pathway_analysis.png)
+
 
 ### SPIA
 The [SPIA (Signaling Pathway Impact Analysis)](http://bioconductor.org/packages/release/bioc/html/SPIA.html) tool can be used to integrate the lists of differentially expressed genes, their fold changes, and pathway topology to identify affected pathways. The blog post from [Getting Genetics Done](http://www.gettinggeneticsdone.com/2012/03/pathway-analysis-for-high-throughput.html) provides a step-by-step procedure for using and understanding SPIA. 
@@ -496,6 +502,7 @@ head(spia_result, n=20)
 ```
 
 SPIA outputs a table showing significantly dysregulated pathways based on over-representation and signaling perturbations accumulation. The table shows the following information: 
+
 - `pSize`: the number of genes on the pathway
 - `NDE`: the number of DE genes per pathway
 - `tA`: the observed total perturbation accumulation in the pathway
@@ -504,7 +511,7 @@ SPIA outputs a table showing significantly dysregulated pathways based on over-r
 - `pG`: the p-value obtained by combining pNDE and pPERT
 - `pGFdr` and `pGFWER` are the False Discovery Rate and respectively Bonferroni adjusted global p-values
 - `Status`: gives the direction in which the pathway is perturbed (activated or inhibited)
-- `KEGGLINK` gives a web link to the KEGG website that **displays the pathway image with the differentially expressed genes highlighted in red**
+- `KEGGLINK` gives a web link to the KEGG website that **displays the pathway image** with the differentially expressed genes highlighted in red
 
 We can view the significantly dysregulated pathways by viewing the over-representation and perturbations for each pathway.
 
@@ -522,9 +529,9 @@ subset(spia_result, ID == "05222")
 ```
 
 Then, click on the KEGGLINK, we can view the genes within our dataset from these perturbed pathways:
+
 ![perturbed_pathway](../img/hsa05222.png)
 
-Tarca AL, Kathri P and Draghici S (2013). SPIA: Signaling Pathway Impact Analysis (SPIA) using combined evidence of pathway over-representation and unusual signaling perturbations. [http://bioinformatics.oxfordjournals.org/cgi/reprint/btn577v1](http://bioinformatics.oxfordjournals.org/cgi/reprint/btn577v1).
 
 ***
 
@@ -546,9 +553,6 @@ You can visualize co-expression clustering using heatmaps, which should be viewe
 
 The way the tools perform clustering is by taking the entire expression matrix and computing pair-wise co-expression values. A network is then generated from which we explore the topology to make inferences on gene co-regulation. The [WGCNA](http://www.genetics.ucla.edu/labs/horvath/CoexpressionNetwork ) package (in R) is one example of a more sophisticated method for co-expression clustering.
 
-Functional class scoring methods most often take as input the foldchanges for all genes, then look to see whether gene sets for particular biological processes are enriched among the large positive or negative fold changes. This type of analysis can be particularly helpful if differential expression analysis only output a small list of significant DE genes. Finally, pathway topology analysis often takes into account both fold changes and adjusted p-values to identify dysregulated pathways and outputs whether pathways are inhibited/activated. We have [materials](https://github.com/hbctraining/Training-modules/blob/master/DGE-functional-analysis/lessons/02_functional_analysis_other_methods.md) to lead you through these other types of functional analyses, and we encourage you to take the time to work through them.
-
-![Pathway analysis tools](../img/pathway_analysis.png)
 
 ## Resources for functional analysis
 
