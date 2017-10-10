@@ -343,19 +343,19 @@ When performing our analysis, we need to remove the NA values and duplicates (du
 
 ```r
 ## Remove any NA values
-all_results_gsea <- subset(merged_gene_ids, entrezgene != "NA")
+all_results_entrez <- subset(merged_gene_ids, entrezgene != "NA")
 
 ## Remove any duplicates
-all_results_gsea <- all_results_gsea[which(duplicated(all_results_gsea$Row.names) == F), ]
+all_results_entrez <- all_results_entrez[which(duplicated(all_results_entrez$Row.names) == F), ]
 ```
 Finally, extract and name the fold changes:
 
 ```r
 ## Extract the foldchanges
-foldchanges <- all_results_gsea$log2FoldChange
+foldchanges <- all_results_entrez$log2FoldChange
 
 ## Name each fold change with the corresponding Entrez ID
-names(foldchanges) <- all_results_gsea$entrezgene
+names(foldchanges) <- all_results_entrez$entrezgene
 ```
 
 Order the foldchanges in decreasing order:
@@ -471,21 +471,21 @@ The [SPIA (Signaling Pathway Impact Analysis)](http://bioconductor.org/packages/
 
 ## Convert ensembl to entrez ids
 
-sig_genes <- subset(all_results_gsea, padj< 0.05, select = log2FoldChange)
+sig_entrez <- subset(all_results_entrez, padj< 0.05, select = log2FoldChange)
 
-names(sig_genes) <- subset(all_results_gsea, padj< 0.05, select = entrezgene)
+names(sig_entrez) <- subset(all_results_entrez, padj< 0.05, select = entrezgene)
 
 head(sig_genes)
 
 
 ## Remove NA and duplicated values (if not already removed)
-sig_genes <- sig_genes[!is.na(names(sig_genes))] 
+sig_entrez <- sig_entrez[!is.na(names(sig_entrez))] 
 
-sig_genes <- sig_genes[!duplicated(names(sig_genes))]
+sig_entrez <- sig_entrez[!duplicated(names(sig_entrez))]
 
-background_genes <- entrez_results$entrezgene
+background_entrez <- all_results_entrez$entrezgene
 
-background_genes <- background_genes[!duplicated(background_genes)]
+background_entrez <- background_entrez[!duplicated(background_entrez)]
 
 ```
 
@@ -496,7 +496,7 @@ Now that we have our background and significant genes in the appropriate format,
 
 library(SPIA)
 
-spia_result <- spia(de=sig_genes, all=background_genes, organism="hsa")
+spia_result <- spia(de=sig_entrez, all=background_entrez, organism="hsa")
 
 head(spia_result, n=20)
 ```
