@@ -1,1 +1,1 @@
-###All images for Session III of NGS Data Analysis Course
+###All images for DGE functional analysis
