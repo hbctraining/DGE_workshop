@@ -24,7 +24,7 @@ The output of RNA-seq differential expression analysis is a list of significant 
 
 Generally for any differential expression analysis, it is useful to interpret the resulting gene lists using freely available web- and R-based tools.  While tools for functional analysis span a wide variety of techniques, they can loosely be categorized into three main types: over-representation analysis, functional class scoring, and pathway topology [[1](../../resources/pathway_tools.pdf)]. 
 
-***All tools described here are great tools to validate experimental results and to make hypotheses. These tools suggest pathways that may be involved with your condition of interest; you should NOT use these tools to make conclusions about the pathways involved in your experimental process.***
+***All tools described here are great tools to validate experimental results and to make hypotheses. These tools suggest pathways that may be involved with your condition of interest; however, you should NOT use these tools to make conclusions about the pathways involved in your experimental process.***
 
 ![Pathway analysis tools](../img/pathway_analysis.png)
 
