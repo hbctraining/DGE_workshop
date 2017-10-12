@@ -69,7 +69,9 @@ In contrast to RPKM/FPKM, TPM-normalized counts normalize for both sequencing de
 ### DESeq2-normalized counts: Median of ratios method
 Since tools for differential expression analysis are comparing the counts between sample groups for the same gene, gene length does not need to be accounted for by the tool. However, **sequencing depth** and **RNA composition** do need to be taken into account.
 
-To normalize for sequencing depth and RNA composition, DESeq2 uses the median of ratios method, which performs the following steps when you run the tool:
+To normalize for sequencing depth and RNA composition, DESeq2 uses the median of ratios method. On the user-end there is only one step, but on the back-end there are multiple steps involved, as described below.
+
+> **NOTE:**  These steps belows describe what goes on inside the DESeq2 software. For a typical RNA-seq analysis, **you would not normally run these lines of code** as the software is running it for you.
 
 **Step 1: creates a pseudo-reference sample (row-wise geometric mean)**
 
@@ -215,7 +217,7 @@ The next step is to normalize the count data in order to be able to make fair ge
 
 <img src="../img/slide5_DGE.png" width="400">
 
-To perform the **median of ratios method** of normalization, DESeq2 has a single `estimateSizeFactors()` function that will generate size factors for us:
+To perform the **median of ratios method** of normalization, DESeq2 has a single `estimateSizeFactors()` function that will generate size factors for us. We will use the function in the example below, but **in a typical RNA-seq analysis this step is automatically performed by the `DESeq()` function**, which we will see later. 
 
 ```r
 dds <- estimateSizeFactors(dds)
@@ -238,6 +240,8 @@ We can save this normalized data matrix to file for later use:
 ```r
 write.table(normalized_counts, file="data/normalized_counts.txt", sep="\t", quote=F, col.names=NA)
 ```
+
+> **NOTE:** DESeq2 doesn't actually use normalized counts, rather it uses the raw counts and models the normalization inside the Generalized Linear Model (GLM). These normalized counts will be useful for downstream visualization of results, but cannot be used as input to DESeq2 or any other tools that peform differential expression analysis which use the negative binomial model.
 
 ***
 *This lesson has been developed by members of the teaching team at the [Harvard Chan Bioinformatics Core (HBC)](http://bioinformatics.sph.harvard.edu/). These are open access materials distributed under the terms of the [Creative Commons Attribution license](https://creativecommons.org/licenses/by/4.0/) (CC BY 4.0), which permits unrestricted use, distribution, and reproduction in any medium, provided the original author and source are credited.*
