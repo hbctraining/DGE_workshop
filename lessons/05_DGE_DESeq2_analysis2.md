@@ -72,8 +72,8 @@ To indicate to DESeq2 the two groups we want to compare, we can use **contrasts*
 	```r
 	
 	# DO NOT RUN!
-	
-	results(dds, contrast = c("condition", "level_to_compare", "base_level"))
+	contrast <- c("condition", "level_to_compare", "base_level")
+	results(dds, contrast = contrast)
 	
 	```
 >
@@ -108,7 +108,9 @@ We will tell DESeq2 the contrasts we would like to make using the `results()` co
 
 ```r
 ## Define contrasts and extract results table
-res_tableOE <- results(dds, contrast = c("sampletype", "MOV10_overexpression", "control"))
+
+contrast <- c("sampletype", "MOV10_overexpression", "control")
+res_tableOE <- results(dds, contrast=contrast)
 ```
 
 **The order of the names determines the direction of fold change that is reported.** The name provided in the second element is the level that is used as baseline. So for example, if we observe a log2 fold change of -2 this would mean the gene expression is lower in Mov10_oe relative to the control. 
