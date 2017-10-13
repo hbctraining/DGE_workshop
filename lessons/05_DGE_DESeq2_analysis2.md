@@ -47,14 +47,19 @@ Similar to the previous shrinkage of dispersion estimates, **information from al
 
 For example, in the figure above, the green gene and purple gene have the same mean values for the two sample groups (C57BL/6J and DBA/2J), but the green gene has little variation while the purple gene has high levels of variation. For the green gene with low variation, the **unshrunken LFC estimate** (vertex of the green **solid line**) is very similar to the shrunken LFC estimate (vertex of the green dotted line), but the LFC estimates for the purple gene are quite different due to the high dispersion. So even though two genes can have similar normalized count values, they can have differing degrees of LFC shrinkage. Notice the **LFC estimates are shrunken toward the prior (black solid line)**.
 
+In the most recent versions of DESeq2, the shrinkage of LFC estimates is **not performed by default**. This means that the log2 foldchanges would be the same as those calculated by:
 
->**NOTE:** If very large expected fold changes for a number of individual genes are expected, but not enough such that the prior would not include such large fold changes, then you may want to turn off LFC shrinkage.
+```r
+log2 (normalized_counts_group1 / normalized_counts_group2)`
+```
+
+To generate the shrunken log2 fold change estimates, you have to run an additional step on your results object (that we will create below) with the function `lfcShrink()`.
+
+>**NOTE:** Older versions of DESeq2 shrink the fold changes by default, so if you are using an older version of the tool and very large expected fold changes for a number of individual genes are expected, but not enough such that the prior would not include such large fold changes, then you may want to turn off LFC shrinkage.
 > 
->You can turn off the beta prior when calling the `DESeq()` function: `DESeq(dds, betaPrior=FALSE)`. By turning off the prior, the log2 foldchanges would be the same as those calculated by:
+>For these older versions of DESeq2, you can turn off the beta prior when calling the `DESeq()` function: `DESeq(dds, betaPrior=FALSE)`. By turning off the prior, the log2 foldchanges would be the same as those calculated by:
 >
 >`log2 (normalized_counts_group1 / normalized_counts_group2)`
-
->**Addendum to NOTE:** In the most recent version of DESeq2 (that runs with R 3.4), the `betaPrior` argument is set to FALSE and the shrinkage of LFC estimates is **not performed by default**. This means that you have to run an additional step on your result object (that we will create below) with the function `lfcShrink()` to generate the shrunken lfc estimate. [Click here](https://support.bioconductor.org/p/95695/) for more information on how to do this.
 
 ### Hypothesis testing using the Wald test
 
@@ -107,10 +112,13 @@ This design matrix is now used to setup the contrasts to request the comparisons
 We will tell DESeq2 the contrasts we would like to make using the `results()` contrast argument:
 
 ```r
-## Define contrasts and extract results table
+## Define contrasts, extract results table, and shrink the log2 fold changes
 
 contrast <- c("sampletype", "MOV10_overexpression", "control")
+
 res_tableOE <- results(dds, contrast=contrast)
+
+res_tableOE <- lfcShrink(dds, contrast=contrast, res=res_tableOE)
 ```
 
 **The order of the names determines the direction of fold change that is reported.** The name provided in the second element is the level that is used as baseline. So for example, if we observe a log2 fold change of -2 this would mean the gene expression is lower in Mov10_oe relative to the control. 
@@ -174,8 +182,12 @@ mcols(res_tableOE, use.names=T)
 Now that we have results for the overexpression results, let's do the same for the **Control vs. Knockdown samples**. Use contrasts in the `results()` to extract a results table and store that to a variable called `res_tableKD`.  
 
 ```r
-## Define contrasts and extract results table
-res_tableKD <- results(dds, contrast = c("sampletype", "MOV10_knockdown", "control"))
+## Define contrasts, extract results table and shrink log2 fold changes
+contrast <-  c("sampletype", "MOV10_knockdown", "control")
+
+res_tableKD <- results(dds, contrast=contrast)
+
+res_tableKD <- lfcShrink(dds, contrast=contrast, res=res_tableKD)
 ```
 
 Take a quick peek at the results table containing Wald test statistics for the Control-Knockdown comparison we are interested in and make sure that format is similar to what we observed with the OE.
