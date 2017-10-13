@@ -1,7 +1,7 @@
 ---
 title: "Gene-level differential expression analysis with DESeq2"
 author: "Meeta Mistry, Radhika Khetani, Mary Piper"
-date: "May 12, 2017"
+date: "October 13th, 2017"
 ---
 
 Approximate time: 60 minutes
