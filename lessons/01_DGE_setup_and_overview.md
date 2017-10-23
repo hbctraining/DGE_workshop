@@ -31,7 +31,7 @@ In the next few lessons, we will walk you through an **end-to-end gene-level RNA
  
 ## Review of the dataset
 
-We will be using the full count matrix from the RNA-Seq dataset we started with in our workflow from the previous session.  It is part of a larger study described in [Kenny PJ et al, Cell Rep 2014](http://www.ncbi.nlm.nih.gov/pubmed/25464849). Although we have gone through this before, we have a brief summary to remind you of the biological relevance and experimental design.
+We will be using the full count matrix from the RNA-Seq dataset that is part of a larger study described in [Kenny PJ et al, Cell Rep 2014](http://www.ncbi.nlm.nih.gov/pubmed/25464849). 
 
 The RNA-Seq was performed on HEK293F cells that were either transfected with a MOV10 transgene, or siRNA to knock down Mov10 expression, or non-specific (irrelevant) siRNA. This resulted in 3 conditions **Mov10 oe** (over expression), **Mov10 kd** (knock down) and **Irrelevant kd**, respectively. The number of replicates is as shown below. 
 
