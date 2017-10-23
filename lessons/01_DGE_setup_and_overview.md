@@ -206,7 +206,7 @@ The model that fits best, given this type of variability between replicates, is 
 
 If it's count data, it should fit the negative binomial, as discussed previously. However, it can be helpful to plot the *mean versus the variance* of your data. *Remember for the Poisson model, mean = variance, but for NB, mean < variance.*
 
-Run the following code to plot the mean versus variance for the 'Mov10 overexpression' replicates:
+Run the following code to plot the *mean versus variance* for the 'Mov10 overexpression' replicates:
 
 ```r
 mean_counts <- apply(data[, 3:5], 1, mean)
