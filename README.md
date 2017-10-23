@@ -22,6 +22,7 @@ This repository has teaching materials for a **1.5-day**, hands-on **Introductio
 ### Contents
 
 #### Differential Gene Expression (DGE) using RNA-seq raw counts data
+
 | Lessons            | Duration |
 |:------------------------|:----------|
 |[Setting up and DGE overview](lessons/01_DGE_setup_and_overview.md) | 70 min |
