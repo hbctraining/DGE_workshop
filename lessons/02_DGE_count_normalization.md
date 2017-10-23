@@ -71,7 +71,7 @@ Since tools for differential expression analysis are comparing the counts betwee
 
 To normalize for sequencing depth and RNA composition, DESeq2 uses the median of ratios method. On the user-end there is only one step, but on the back-end there are multiple steps involved, as described below.
 
-> **NOTE:**  These steps belows describe what goes on inside the DESeq2 software. For a typical RNA-seq analysis, **you would not normally run these lines of code** as the software is running it for you.
+> **NOTE:**  These steps below describe what goes on inside the DESeq2 software. For a typical RNA-seq analysis, **you would not normally run these lines of code** as the software is running it for you.
 
 **Step 1: creates a pseudo-reference sample (row-wise geometric mean)**
 
