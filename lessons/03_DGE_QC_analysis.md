@@ -128,6 +128,7 @@ Now that we have a good understanding of the QC steps normally employed for RNA-
 ### Transform counts for data visualization
 rld <- rlog(dds, blind=TRUE)
 ```
+The `blind=TRUE` argument results in a transformation unbiased to sample condition information. When performing quality assessment, it is important to include this option. See the [DESeq2 vignette](http://bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html#blind-dispersion-estimation) for when to not use this argument.
 
 The `rlog` function returns a `DESeqTransform` object, another type of DESeq-specific object. The reason you don't just get a matrix of transformed values is because all of the parameters (i.e. size factors) that went into computing the rlog transform are stored in that object. We use this object to plot the PCA and heirarchical clustering figures for quality assessment.
 
