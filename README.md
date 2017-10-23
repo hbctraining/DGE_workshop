@@ -36,4 +36,36 @@ This repository has teaching materials for a **1-day**, hands-on **Introduction 
 
 ***
 
+### Installation Requirements
+
+Download the most recent versions of R and RStudio for your laptop:
+
+ - [R](http://lib.stat.cmu.edu/R/CRAN/) 
+ - [RStudio](https://www.rstudio.com/products/rstudio/download/#download)
+ 
+Install the required R packages by running the following code in RStudio:
+
+```r
+source("http://bioconductor.org/biocLite.R") 
+biocLite(c("RColorBrewer", "pheatmap", "gProfileR", "DESeq2", "clusterProfiler", "DOSE", "org.Hs.eg.db", "pathview", "treemap", "purrr", "SPIA", "DEGreport")
+```
+
+Load the libraries to make sure the packages installed properly:
+
+```r
+library(DESeq2)
+library(ggplot2)
+library(RColorBrewer)
+library(pheatmap)
+library(clusterProfiler)
+library(DEGreport)
+library(org.Hs.eg.db)
+library(DOSE)
+library(pathview)
+library(SPIA)
+library(purrr)
+library(gProfileR)
+library(treemap)
+```
+
 *These materials have been developed by members of the teaching team at the [Harvard Chan Bioinformatics Core (HBC)](http://bioinformatics.sph.harvard.edu/). These are open access materials distributed under the terms of the [Creative Commons Attribution license](https://creativecommons.org/licenses/by/4.0/) (CC BY 4.0), which permits unrestricted use, distribution, and reproduction in any medium, provided the original author and source are credited.*
