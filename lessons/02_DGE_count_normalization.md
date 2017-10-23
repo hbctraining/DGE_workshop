@@ -149,7 +149,7 @@ NOTE: You will need to run the code below to generate the raw counts dataframe (
 
 # Raw counts for PD1
 PD1 <- c(21, 58, 17, 97, 83, 10)
-names(PD1) <- paste("Sample", 1:6)
+names(PD1) <- paste0("Sample", 1:6)
 PD1 <- data.frame(PD1)
 PD1 <- t(PD1)
 
