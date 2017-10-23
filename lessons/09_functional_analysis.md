@@ -16,7 +16,7 @@ Learning Objectives:
 
 # Functional analysis 
 
-The output of RNA-seq differential expression analysis is a list of significant differentially expressed genes (DEGs). To gain greater biological insight on the DEGs there are various analyses that can be done:
+The output of RNA-seq differential expression analysis is a list of significant differentially expressed genes (DEGs). To gain greater biological insight on the differentially expressed genes there are various analyses that can be done:
 
 - determine whether there is enrichment of known biological functions, interactions, or pathways
 - identify genes' involvement in novel pathways or networks by grouping genes together based on similar trends
@@ -26,7 +26,9 @@ Generally for any differential expression analysis, it is useful to interpret th
 
 ![Pathway analysis tools](../img/pathway_analysis.png)
 
-***All tools described below are great tools to validate experimental results and to make hypotheses. These tools suggest pathways that may be involved with your condition of interest; however, you should NOT use these tools to make conclusions about the pathways involved in your experimental process. You will need to perform experimental validation of any suggested pathways.***
+The goal of functional analysis is provide biological insight, so it's necessary to analyze our results in the context of our experimental hypothesis: **FMRP and MOV10 associate and regulate the translation of a subset of RNAs**. If the functional analysis helps to validate our hypothesis, we would expect to return biological processes or pathways that may affect the translation of RNA, which we would need to validate experimentally. The functional analysis may also suggest specific genes to pursue for future experiments.
+
+***Note that all tools described below are great tools to validate experimental results and to make hypotheses. These tools suggest genes/pathways that may be involved with your condition of interest; however, you should NOT use these tools to make conclusions about the pathways involved in your experimental process. You will need to perform experimental validation of any suggested pathways.***
 
 ## Over-representation analysis
 There are a plethora of functional enrichment tools that perform some type of over-representation analysis by querying databases containing information about gene function and interactions. **Querying these databases for gene function requires the use of a _consistent vocabulary_ to describe gene function.** One of the most widely-used vocabularies is the **Gene Ontology (GO)**. This vocabulary was established by the Gene Ontology project, and the words in the vocabulary are referred to as GO terms. 
@@ -83,7 +85,7 @@ The calculation of probability of k successes follows the formula:
 
 ## clusterProfiler
 
-[clusterProfiler](http://bioconductor.org/packages/release/bioc/html/clusterProfiler.html) performs over-representation analysis on GO terms associated with a list of genes. The tool takes as input a significant gene list and a background gene list and performs statistical enrichment analysis using hypergeometric testing. The basic arguments allow the user to select the appropriate organism and GO ontology (BP, CC, MF) to test. 
+We will be using [clusterProfiler](http://bioconductor.org/packages/release/bioc/html/clusterProfiler.html) to perform over-representation analysis on GO terms associated with our list of significant genes. The tool takes as input a significant gene list and a background gene list and performs statistical enrichment analysis using hypergeometric testing. The basic arguments allow the user to select the appropriate organism and GO ontology (BP, CC, MF) to test. 
 
 ### Running clusterProfiler
 
