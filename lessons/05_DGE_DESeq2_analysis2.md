@@ -50,7 +50,7 @@ For example, in the figure above, the green gene and purple gene have the same m
 In the most recent versions of DESeq2, the shrinkage of LFC estimates is **not performed by default**. This means that the log2 foldchanges would be the same as those calculated by:
 
 ```r
-log2 (normalized_counts_group1 / normalized_counts_group2)`
+log2 (normalized_counts_group1 / normalized_counts_group2)
 ```
 
 To generate the shrunken log2 fold change estimates, you have to run an additional step on your results object (that we will create below) with the function `lfcShrink()`.
