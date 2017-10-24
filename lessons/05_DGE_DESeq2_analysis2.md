@@ -34,7 +34,7 @@ By fitting the  data to the model, DESeq2 will determine the estimates for the *
 
 ### Shrunken log2 foldchanges (LFC)
 
-Generally for NGS count data, there is a large dispersion associated with the LFC estimates for genes with low read counts, and these weakly expressed genes would be identified as differentially expressed due solely to this variation. To account for this issue and reduce false positives for lowly expressed genes, DESeq2 **shrinks the LFC estimates toward zero** when the information for a gene is low, which could include:
+Generally for NGS count data, there is a large dispersion associated with the LFC estimates for genes with low read counts, and these weakly expressed genes would be identified as differentially expressed due solely to this variation. To account for this issue and reduce false positives for lowly expressed genes, DESeq2 allows for the **shrinkage of the LFC estimates toward zero** when the information for a gene is low, which could include:
 
 - Low counts
 - High dispersion values
