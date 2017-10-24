@@ -77,11 +77,11 @@ To normalize for sequencing depth and RNA composition, DESeq2 uses the median of
 
 For each gene, a pseudo-reference sample is created that is equal to the geometric mean across all samples.
 
-| gene | sampleA | sampleB || pseudo-reference sample  |
-| ----- |:-----:|:-----:||:-----:|
-| EF2A | 1489 | 906 || sqrt(1489 * 906) = **1161.5** |
-| ABCD1 | 22 | 13 || sqrt(24 * 13) = **17.7** |
-| ... | ... | ... || ... |
+| gene | sampleA | sampleB | pseudo-reference sample  |
+| ----- |:-----:|:-----:|:-----:|
+| EF2A | 1489 | 906 | sqrt(1489 * 906) = **1161.5** |
+| ABCD1 | 22 | 13 | sqrt(24 * 13) = **17.7** |
+| ... | ... | ... | ... |
 
 **Step 2: calculates ratio of each sample to the reference**
 
