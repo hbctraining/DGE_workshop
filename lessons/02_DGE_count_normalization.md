@@ -71,7 +71,7 @@ Since tools for differential expression analysis are comparing the counts betwee
 
 To normalize for sequencing depth and RNA composition, DESeq2 uses the median of ratios method. On the user-end there is only one step, but on the back-end there are multiple steps involved, as described below.
 
-> **NOTE:**  These steps below describe what goes on inside the DESeq2 software. For a typical RNA-seq analysis, **you would not normally run these lines of code** as the software is running it for you.
+> **NOTE:**  The steps below describe in detail some of the steps performed by DESeq2 when you run a single function to get DE genes. Basically, for a typical RNA-seq analysis, **you would not run these steps individually**.
 
 **Step 1: creates a pseudo-reference sample (row-wise geometric mean)**
 
@@ -98,7 +98,7 @@ For every gene in a sample, the ratios (sample/ref) are calculated (as shown bel
 
 **Step 3: calculate the normalization factor for each sample (size factor)**
 
-The median value of all ratios for a given sample is taken as the normalization factor (size factor) for that sample, as calculated below. Notice that the differentially expressed genes should not affect the median value:
+The median value (column-wise for the above table) of all ratios for a given sample is taken as the normalization factor (size factor) for that sample, as calculated below. Notice that the differentially expressed genes should not affect the median value:
 
 `normalization_factor_sampleA <- median(c(1.28, 1.3, 1.39, 1.35, 0.59))`
 
