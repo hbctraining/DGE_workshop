@@ -81,13 +81,14 @@ Now that we know how to specify the model to DESeq2, we can run the differential
 First we create a DESeqDataSet as we did in the ['Count normalization'](https://github.com/hbctraining/Intro-to-R-with-DGE/blob/master/lessons/11_DGE_count_normalization.md#2-create-deseq2-object) lesson and specify the location of our raw counts and metadata, and input our design formula:
 
 ```r
+## Create DESeq object
 dds <- DESeqDataSetFromMatrix(countData = data, colData = meta, design = ~ sampletype)
 ```
 
 Then, to run the actual differential expression analysis, we use a single call to the function `DESeq()`. 
 
 ```r
-##Run analysis
+## Run analysis
 dds <- DESeq(dds)
 ```
 
@@ -131,6 +132,7 @@ To normalize the count data, DESeq2 calculates size factors for each sample usin
 Let's take a quick look at size factor values we have for each sample:
 
 ```
+## Check the size factors
 sizeFactors(dds)
 
 Mov10_kd_2 Mov10_kd_3 Mov10_oe_1 Mov10_oe_2 Mov10_oe_3 Irrel_kd_1 Irrel_kd_2 Irrel_kd_3 
@@ -140,6 +142,7 @@ Mov10_kd_2 Mov10_kd_3 Mov10_oe_1 Mov10_oe_2 Mov10_oe_3 Irrel_kd_1 Irrel_kd_2 Irr
 These numbers should be identical to those we generated initially when we had run the function `estimateSizeFactors(dds)`. Take a look at the total number of reads for each sample:
 
 ```r
+## Total number of raw counts per sample
 colSums(counts(dds))
 ```
 
@@ -148,6 +151,7 @@ colSums(counts(dds))
 Now take a look at the total depth after normalization using:
 
 ```r
+## Total number of normalized counts per sample
 colSums(counts(dds, normalized=T))
 ```
 
@@ -217,7 +221,7 @@ Dispersion estimates that are slightly above the curve are also shrunk toward th
 Let's take a look at the dispersion estimates for our MOV10 data:
 
 ```r
-# Plot dispersion estimates
+## Plot dispersion estimates
 plotDispEsts(dds)
 ```
 
