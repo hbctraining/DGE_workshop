@@ -98,7 +98,7 @@ For every gene in a sample, the ratios (sample/ref) are calculated (as shown bel
 
 **Step 3: calculate the normalization factor for each sample (size factor)**
 
-The median value of all ratios for a given sample is taken as the normalization factor (size factor) for that sample, as calculated below. Notice that the differentially expressed genes should not affect the median value:
+The median value (column-wise for the above table) of all ratios for a given sample is taken as the normalization factor (size factor) for that sample, as calculated below. Notice that the differentially expressed genes should not affect the median value:
 
 `normalization_factor_sampleA <- median(c(1.28, 1.3, 1.39, 1.35, 0.59))`
 
