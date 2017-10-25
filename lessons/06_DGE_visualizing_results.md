@@ -191,6 +191,8 @@ annotation= annotation, border_color=NA, fontsize = 10, scale="row",
 
 ***
 
+>**NOTE:** Additional visualization methods for DE analysis results are [available](https://github.com/hbctraining/Training-modules/blob/master/Visualization_in_R/lessons/03_advanced_visualizations.md).
+
 *This lesson has been developed by members of the teaching team at the [Harvard Chan Bioinformatics Core (HBC)](http://bioinformatics.sph.harvard.edu/). These are open access materials distributed under the terms of the [Creative Commons Attribution license](https://creativecommons.org/licenses/by/4.0/) (CC BY 4.0), which permits unrestricted use, distribution, and reproduction in any medium, provided the original author and source are credited.*
 
 * *Materials and hands-on activities were adapted from [RNA-seq workflow](http://www.bioconductor.org/help/workflows/rnaseqGene/#de) on the Bioconductor website*
