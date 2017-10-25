@@ -42,7 +42,8 @@ date: "October 24th, 2017"
 
 	**g.** Provide the line of code to subset the results to return those genes with adjusted p-value < 0.05 and logFold2Change > 1.
 
-	# Working with the DESeq2 results table
+# Working with the DESeq2 results table
+
 2.  Using the de_script.R that we created in class for the differential expression analysis, change the thresholds for adjusted p-value and log2 fold change to the following values:
  
 	```r
@@ -61,7 +62,7 @@ date: "October 24th, 2017"
 
 	**d.** Write the `sigOE_hw` vector of gene names to a file called `sigOE_hw.txt` using the `write()` function. Ensure the genes are listed in a single column. Write the code below.
 	 
- # Visualizing Results
+# Visualizing Results
 
 3. For the genes that are differentially expressed in the knockdown versus control comparison (`res_tableKD`), plot an expression heatmap using normalized counts and `pheatmap()` following the instructions below. Write the code you would use to create the heatmap.
 
@@ -73,7 +74,7 @@ date: "October 24th, 2017"
 
 	**d.** Scale expression values by row.
 
-	# Use significant gene lists to find overlaps between the two comparisons 
+# Use significant gene lists to find overlaps between the two comparisons 
 
 4. Using the original cutoff values, perform the following steps:
 
