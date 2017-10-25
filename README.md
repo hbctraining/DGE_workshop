@@ -71,7 +71,7 @@ library(treemap)
 ```
 
 ### Practical exercises
-After completion of the workshop, practice of concepts can be explored with [these exercises](https://github.com/hbctraining/DGE_workshop/blob/master/exercises/DGE_analysis_exercises.md). An answer key is [available](https://github.com/hbctraining/DGE_workshop/blob/master/exercises/DGE_analysis_exercises%20answer_key.md) to check answers.
+After completion of the workshop, practice of concepts can be explored with [these exercises](exercises/DGE_analysis_exercises.md). An answer key is [available](https://github.com/hbctraining/DGE_workshop/blob/master/exercises/DGE_analysis_exercises%20answer_key.md) to check answers.
 
 
 
