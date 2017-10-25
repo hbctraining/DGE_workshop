@@ -92,7 +92,7 @@ date: "October 24th, 2017"
 	
 	- How many, and which genes in `up_KD` are also in `down_OE`?
 
-	# Using Salmon abundance estimates with DESeq2
+# Using Salmon abundance estimates with DESeq2
 	
 5. In class, we showed materials for using the 'tximport' package in R to summarize the transcript-level estimates generated from Salmon into pseudocounts. 
 
