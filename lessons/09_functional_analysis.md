@@ -92,6 +92,14 @@ We will be using [clusterProfiler](http://bioconductor.org/packages/release/bioc
 To run clusterProfiler GO over-representation analysis, we will change our gene names into Ensembl IDs, since the tool works a bit easier with the Ensembl IDs. There are a few clusterProfiler functions that allow us to map between gene IDs:
 
 ```r
+library(org.Hs.eg.db)
+library(DOSE)
+library(pathview)
+library(SPIA)
+library(purrr)
+library(gProfileR)
+library(treemap)
+
 ## clusterProfiler does not work as easily using gene names, so we will turn gene names into Ensembl IDs using 
 ## clusterProfiler::bitr and merge the IDs back with the DE results
 keytypes(org.Hs.eg.db)
