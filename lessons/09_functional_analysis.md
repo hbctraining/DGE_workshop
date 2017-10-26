@@ -97,7 +97,7 @@ library(DOSE)
 library(pathview)
 library(SPIA)
 library(purrr)
-library(gProfileR)
+library(clusterProfiler)
 library(treemap)
 
 ## clusterProfiler does not work as easily using gene names, so we will turn gene names into Ensembl IDs using 
