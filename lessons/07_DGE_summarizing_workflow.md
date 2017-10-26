@@ -72,6 +72,7 @@ We have detailed the various steps in a differential expression analysis workflo
 	# Output results of Wald test for constrast
 	contrast <- c("condition", "level_to_compare", "base_level")
 	res <- results(dds, contrast = contrast)
+	res <- lfcShrink(dds, contrast = contrast, res=res)
 	```
 
 6. Output significant results:
