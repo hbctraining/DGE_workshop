@@ -98,6 +98,7 @@ library(pathview)
 library(SPIA)
 library(purrr)
 library(clusterProfiler)
+library(gProfileR)
 library(treemap)
 
 ## clusterProfiler does not work as easily using gene names, so we will turn gene names into Ensembl IDs using 
@@ -116,7 +117,7 @@ non_duplicates <- which(duplicated(ids$SYMBOL) == FALSE)
 ids <- ids[non_duplicates, ] 
 
 ## Merge the Ensembl IDs with the results     
-merged_gene_ids <- merge(x=res_tableOE, y=ids, by.x="row.names", by.y="SYMBOL")             
+merged_gene_ids <- merge(x=data.frame(res_tableOE), y=ids, by.x="row.names", by.y="SYMBOL")             
 
 ## Extract significant results
 sigOE <- subset(merged_gene_ids, padj < 0.05)
