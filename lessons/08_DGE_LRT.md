@@ -56,12 +56,10 @@ sig_res_LRT <- subset(res_LRT, padj < padj.cutoff)
 sigLRT_genes <- rownames(sig_res_LRT)
 length(sigLRT_genes)
 
-# Compare with the sigOE and sigKD gene lists
-sigOE_genes <- rownames(sigOE)
-length(sigOE_genes)
+# Compare to numbers we had from Wald test
+length(sigoE)
+length(sigKD)
 
-sigKD_genes <- rownames(sigKD)
-length(sigKD_genes)
 ```
 
 How many genes from the Mov10 overexpression Wald test are contained in the LRT gene set? And for the Mov10 knockdown? 
