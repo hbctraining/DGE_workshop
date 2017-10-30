@@ -94,7 +94,7 @@ date: "October 24th, 2017"
 
 # Using Salmon abundance estimates with DESeq2
 	
-5. In class, we showed materials for using the 'tximport' package in R to summarize the transcript-level estimates generated from Salmon into pseudocounts. 
+5. We have materials for using counts from quasialignment tools, such as Salmon, to perform the DE analysis. The 'tximport' package in R is needed to summarize the transcript-level estimates generated from Salmon into pseudocounts. 
 
 	Open up RStudio and create a project for using Salmon estimates with DESeq2 (i.e.  ~/Desktop/salmon should be your working directory). 
 	
