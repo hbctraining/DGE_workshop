@@ -6,7 +6,7 @@ date: "October 24th, 2017"
 
 # Using DESeq2 for gene-level differential expression analysis
 
-1.  The metadata below describes an RNA-seq analysis experiment, in which the metadata table below and associated count matrix have been loaded into R as `meta` and `counts`, respectively. Additionally, all of the appropriate libraries have been loaded for you. Use the information in the table to answer the following questions.  
+- The metadata below describes an RNA-seq analysis experiment, in which the metadata table below and associated count matrix have been loaded into R as `meta` and `counts`, respectively. Additionally, all of the appropriate libraries have been loaded for you. Use the information in the table to answer the following questions.  
 
 	**meta**
 	
@@ -44,7 +44,7 @@ date: "October 24th, 2017"
 
 # Working with the DESeq2 results table
 
-2.  Using the de_script.R that we created in class for the differential expression analysis, change the thresholds for adjusted p-value and log2 fold change to the following values:
+- Using the de_script.R that we created in class for the differential expression analysis, change the thresholds for adjusted p-value and log2 fold change to the following values:
  
 	```r
 	padj.cutoff <- 0.01
@@ -64,7 +64,7 @@ date: "October 24th, 2017"
 	 
 # Visualizing Results
 
-3. For the genes that are differentially expressed in the knockdown versus control comparison (`res_tableKD`), plot an expression heatmap using normalized counts and `pheatmap()` following the instructions below. Write the code you would use to create the heatmap.
+- For the genes that are differentially expressed in the knockdown versus control comparison (`res_tableKD`), plot an expression heatmap using normalized counts and `pheatmap()` following the instructions below. Write the code you would use to create the heatmap.
 
 	**a.** The heatmap should only include control and knockdown samples. 
 
@@ -76,7 +76,7 @@ date: "October 24th, 2017"
 
 # Use significant gene lists to find overlaps between the two comparisons 
 
-4. Using the original cutoff values, perform the following steps:
+- Using the original cutoff values, perform the following steps:
 
 	padj.cutoff < 0.05
 
@@ -94,7 +94,7 @@ date: "October 24th, 2017"
 
 # Using Salmon abundance estimates with DESeq2
 	
-5. We have materials for using counts from quasialignment tools, such as Salmon, to perform the DE analysis. The 'tximport' package in R is needed to summarize the transcript-level estimates generated from Salmon into pseudocounts. 
+- We have materials for using counts from quasialignment tools, such as Salmon, to perform the DE analysis. The 'tximport' package in R is needed to summarize the transcript-level estimates generated from Salmon into pseudocounts. 
 
 	Open up RStudio and create a project for using Salmon estimates with DESeq2 (i.e.  ~/Desktop/salmon should be your working directory). 
 	
@@ -141,9 +141,9 @@ date: "October 24th, 2017"
 
 	**l.** Find overlapping OE genes between those that you have identified in your subsetted results table (using the Salmon abundance estimates) to the `star_OE` gene list.
 
- 	- How many genes overlap?
+ 		- How many genes overlap?
 
 	**m.** Find overlapping KD genes between those that you have identified in your subsetted results table (using the Salmon abundance estimates) to the `star_KD` gene list.
 
- 	- How many genes overlap?
+ 		- How many genes overlap?
  
