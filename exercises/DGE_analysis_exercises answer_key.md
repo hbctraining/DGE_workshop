@@ -188,7 +188,7 @@ date: "October 24th, 2017"
 	```r
 	up_KD <- row.names(res_tableKD)[which(res_tableKD$padj < padj.cutoff & res_tableKD$log2FoldChange > lfc.cutoff)]
 	
- 	down_KD <- row.names(res_tableKD)[which(res_tableKD$padj < padj.cutoff & res_tableKD$log2FoldChange < -lfc.cutoff)]
+	down_KD <- row.names(res_tableKD)[which(res_tableKD$padj < padj.cutoff & res_tableKD$log2FoldChange < -lfc.cutoff)]
 	```
 	
 	**c.** Test for overlaps between the lists:
@@ -369,13 +369,13 @@ date: "October 24th, 2017"
 	length(which(row.names(results_OE_sig) %in% old_OE))
 	```
 	
- 	- How many genes overlap? **312**
+	- How many genes overlap? **312**
 
 	**m.** Find overlapping KD genes between those that you have identified in your subsetted results table (using the Salmon abundance estimates) to the `star_KD` gene list.
 	
 	```r
 	length(which(row.names(results_KD_sig) %in% old_KD))
 	```
-	 
- 	- How many genes overlap? **289**
+
+	- How many genes overlap? **289**
  
