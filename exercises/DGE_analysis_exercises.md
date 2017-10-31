@@ -100,7 +100,7 @@ date: "October 24th, 2017"
 
 	Open up RStudio and create a project for using Salmon estimates with DESeq2 (i.e.  ~/Desktop/salmon should be your working directory). 
 	
-	**a.** Follow the [markdown](https://github.com/hbctraining/Intro-to-rnaseq-hpc-orchestra/blob/master/lessons/DE_analysis.md#differential-expression-analysis-using-pseudocounts) for the Salmon section to create the DESeqDataSet object. 
+	**a.** Follow the [markdown](https://github.com/hbctraining/Intro-to-rnaseq-hpc-orchestra/blob/master/lessons/DE_analysis.md#output-from-tximport) for the Salmon section to create the DESeqDataSet object. 
 	
 	**b.** Run DESeq2 on the DESeqDataSet object (`dds`) you created.
 
