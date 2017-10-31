@@ -78,10 +78,12 @@ date: "October 24th, 2017"
 
 - Using the original cutoff values, perform the following steps:
 
+	```r
 	padj.cutoff < 0.05
 
 	lfc.cutoff > 0.58
-
+	```
+	
 	**a.** Create separate vectors with gene names for up-regulated genes and down-regulated genes from `res_tableOE` and save as `up_OE` and `down_OE`, respectively. Write the code below:
 
 	**b.** Create separate vectors with gene names for up-regulated genes and down-regulated genes from `res_tableKD` and save as `up_KD` and `down_KD`, respectively. Write the code below:
