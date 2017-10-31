@@ -49,13 +49,13 @@ date: "October 24th, 2017"
 	**d.** Provide the line of code to return the results of a Wald test comparison for `Celltype` categories `typeA` versus `typeB` (i.e the fold changes reported should reflect gene expression changes relative to `typeB`).
 	 	
 	```r
-	res_tableCelltype <- results(dds, contrast = c("Celltype", “typeA” , “typeB”))
+	res_tableCelltype <- results(dds, contrast = c("Celltype", "typeA" , "typeB"))
 	```
 	
 	**e.** Provide the line of code to return the results with log2 fold change shrinkage performed.
 	
 	```r
-	res_tableCelltype <- lfcShrink(dds, contrast=c("Celltype", “typeA” , “typeB”), res=res_tableCelltype)
+	res_tableCelltype <- lfcShrink(dds, contrast=c("Celltype", "typeA" , "typeB"), res=res_tableCelltype)
 	```
 	
 	**f.** Provide the line of code to write the results of the Wald test with shrunken log2 fold changes to file.
