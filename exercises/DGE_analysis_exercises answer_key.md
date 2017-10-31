@@ -124,7 +124,7 @@ date: "October 24th, 2017"
 	```
 
 	 
- # Visualizing Results
+# Visualizing Results
 
 3. For the genes that are differentially expressed in the knockdown versus control comparison (`res_tableKD`), plot an expression heatmap using normalized counts and `pheatmap()` following the instructions below. Write the code you would use to create the heatmap.
 
@@ -164,7 +164,7 @@ date: "October 24th, 2017"
 				fontsize = 10,  fontsize_row = 10, height=20)
 	```
 	
-	# Use significant gene lists to find overlaps between the two comparisons 
+# Use significant gene lists to find overlaps between the two comparisons 
 
 4. Using the original cutoff values, perform the following steps:
 
