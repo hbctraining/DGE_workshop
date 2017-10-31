@@ -140,10 +140,10 @@ date: "October 24th, 2017"
 	Load these gene lists in as `star_KD` and `star_OE`, using the `scan()` function in R (write your code below):
 
 	**l.** Find overlapping OE genes between those that you have identified in your subsetted results table (using the Salmon abundance estimates) to the `star_OE` gene list.
-
- 		- How many genes overlap?
+	
+	- How many genes overlap?
 
 	**m.** Find overlapping KD genes between those that you have identified in your subsetted results table (using the Salmon abundance estimates) to the `star_KD` gene list.
-
- 		- How many genes overlap?
+	
+	- How many genes overlap?
  
