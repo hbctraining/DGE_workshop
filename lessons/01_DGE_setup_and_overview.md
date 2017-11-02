@@ -201,6 +201,9 @@ The model that fits best, given this type of variability between replicates, is 
 > - **Technical replicates** represent the same sample (i.e. RNA from the same mouse) but with technical steps replicated
 > - Usually biological variance is much greater than technical variance, so we do not need to account for technical variance to identify biological differences in expression
 > - **Don't spend money on technical replicates - biological replicates are much more useful**
+
+>**NOTE:**
+> If you are using **cell lines** and are unsure whether or not you have prepared biological or technical replicates, take a look at [this link](http://www.labstats.net/articles/cell_culture_n.html). This is a useful resource in helping you determine how best to set up your experiment.
  
 #### How do I know if my data should be modeled using the Poisson distribution or Negative Binomial distribution?
 
