@@ -15,5 +15,5 @@ threshold_KD <- res_tableKD$padj < padj.cutoff & abs(res_tableKD$log2FoldChange)
 
 res_tableKD$threshold <- threshold_KD
 
-sigKD <- subset(res_tableKD$threshold, threshold)
+sigKD <- subset(res_tableKD, threshold)
 ```
