@@ -52,7 +52,7 @@ We have detailed the various steps in a differential expression analysis workflo
 3. Run DESeq2:
 
 	```r
-	# Create DESeq2 dataset
+	# Optional step - Re-create DESeq2 dataset if the design formula has changed after QC analysis in include other sources of variation
 	dds <- DESeqDataSetFromMatrix(countData = raw_counts, colData = metadata, design = ~ condition)
 	
 	# Run DESeq2 differential expression analysis
