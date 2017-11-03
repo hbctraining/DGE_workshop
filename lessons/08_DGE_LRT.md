@@ -57,8 +57,8 @@ sigLRT_genes <- rownames(sig_res_LRT)
 length(sigLRT_genes)
 
 # Compare to numbers we had from Wald test
-length(sigoE)
-length(sigKD)
+nrow(sigOE)
+nrow(sigKD)
 
 ```
 
