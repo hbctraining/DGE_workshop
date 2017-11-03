@@ -86,3 +86,9 @@ We have detailed the various steps in a differential expression analysis workflo
 	```
 
 7. Visualize results: volcano plots, heatmaps, normalized counts plots of top genes, etc.
+
+8. Make sure to output the versions of all tools used in the DE analysis:
+
+	```r
+	sessionInfo()
+	```
