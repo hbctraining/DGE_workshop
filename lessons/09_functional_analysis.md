@@ -252,14 +252,7 @@ Using the log2 fold changes obtained from the differential expression analysis f
 
 For gene set or pathway analysis using clusterProfiler, coordinated differential expression over gene sets is tested instead of changes of individual genes. "Gene sets are pre-defined groups of genes, which are functionally related. Commonly used gene sets include those derived from KEGG pathways, Gene Ontology terms, MSigDB, Reactome, or gene groups that share some other functional annotations, etc. Consistent perturbations over such gene sets frequently suggest mechanistic changes" [[1](../../resources/pathway_tools.pdf)]. 
 
-To perform GSEA analysis of KEGG gene sets, clusterProfiler requires the genes to be identified using Entrez IDs for all genes in our results dataset.
-
-```r
-library(pathview)
-## library(clusterProfiler)
-```
-
-When performing our analysis, we need to remove the NA values and duplicates (due to gene ID conversion) prior to the analysis:
+To perform GSEA analysis of KEGG gene sets, clusterProfiler requires the genes to be identified using Entrez IDs for all genes in our results dataset. We also need to remove the NA values and duplicates (due to gene ID conversion) prior to the analysis:
 
 ```r
 ## Remove any NA values
@@ -340,8 +333,7 @@ pathview(gene.data = foldchanges,
 >        limit = list(gene = 2, cpd = 1))
 > }
 >
-> library(purrr)
-> map(1:length(gsea_results$ID), get_kegg_plots)
+> purrr::map(1:length(gsea_results$ID), get_kegg_plots)
 > ```
 
 Instead of exploring enrichment of KEGG gene sets, we can also explore the enrichment of BP Gene Ontology terms using gene set enrichment analysis: 
@@ -412,9 +404,6 @@ background_entrez <- background_entrez[!duplicated(background_entrez)]
 Now that we have our background and significant genes in the appropriate format, we can run SPIA:
 
 ```r
-## Load library and run SPIA.
-
-library(SPIA)
 
 spia_result <- spia(de=sig_entrez, all=background_entrez, organism="hsa")
 
