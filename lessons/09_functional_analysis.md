@@ -200,6 +200,7 @@ cnetplot(ego,
          
 ## If some of the high fold changes are getting drowned out due to a large range, you could set a maximum fold change value
 OE_foldchanges <- ifelse(OE_foldchanges > 2, 2, OE_foldchanges)
+OE_foldchanges <- ifelse(OE_foldchanges < -2, -2, OE_foldchanges)
 
 cnetplot(ego, 
          categorySize="pvalue", 
