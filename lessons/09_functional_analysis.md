@@ -257,7 +257,7 @@ To perform GSEA analysis of KEGG gene sets, clusterProfiler requires the genes t
 
 ```r
 ## Remove any NA values
-all_results_entrez <- subset(merged_gene_ids, entrezgene != "NA")
+all_results_entrez <- subset(merged_gene_ids, ENTREZID != "NA")
 
 ## Remove any duplicates
 all_results_entrez <- all_results_entrez[which(duplicated(all_results_entrez$Row.names) == F), ]
@@ -269,7 +269,7 @@ Finally, extract and name the fold changes:
 foldchanges <- all_results_entrez$log2FoldChange
 
 ## Name each fold change with the corresponding Entrez ID
-names(foldchanges) <- all_results_entrez$entrezgene
+names(foldchanges) <- all_results_entrez$ENTREZID
 ```
 
 Order the fold changes in decreasing order:
