@@ -15,6 +15,8 @@ Approximate time: 60 minutes
 
 ## Hypothesis testing: Likelihood ratio test (LRT)
 
+> **NOTE:** We will need the results from the Mov10 Knockdown versus control comparison. To get these results you will need to copy and paste the [following code](https://github.com/hbctraining/DGE_workshop/blob/master/lessons/mov10_knockdown.md).
+
 An alternative to pair-wise comparisons is to **analyze all levels of a factor at once**. By default the Wald test is used to generate the results table, but DESeq2 also offers the LRT which is used to identify any genes that show change in expression across the different levels. This type of test can be especially useful in analyzing time course experiments. 
 
 To use the LRT, we use the `DESeq()` function but this time adding two arguments: 
