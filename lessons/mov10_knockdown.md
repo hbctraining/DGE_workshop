@@ -11,7 +11,7 @@ res_tableKD <- lfcShrink(dds, contrast=contrast, res=res_tableKD)
 ## Set a threshold and subset the results
 
 ```{r}
-threshold <- res_tableKD$padj < padj.cutoff & abs(res_tableKD$log2FoldChange) > lfc.cutoff
+threshold_KD <- res_tableKD$padj < padj.cutoff & abs(res_tableKD$log2FoldChange) > lfc.cutoff
 
 res_tableKD$threshold <- threshold_KD
 
