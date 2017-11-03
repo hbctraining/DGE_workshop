@@ -26,11 +26,11 @@ As discussed [earlier](https://github.com/hbctraining/In-depth-NGS-Data-Analysis
 
  <img src="../img/NB_model_formula.png" width="600">
  
-Modeling is a mathematically formalized way to approximate how the data behaves given a set of parameters (i.e. size factor, dispersion). DESeq2 will use this formula as our model for each gene, and fit the normalized count data to it. After the model is fit, the log2 fold changes predicted by the model and their standard error (the difference between your data and the model's prediction) can be estimated using the formula:
+Modeling is a mathematically formalized way to approximate how the data behaves given a set of parameters (i.e. size factor, dispersion). DESeq2 will use this formula as our model for each gene, and fit the normalized count data to it. After the model is fit, coefficients are estimated for each sample group along with their standard error using the formula:
 
  <img src="../img/NB_model_formula_betas.png" width="600">
 
-By fitting the  data to the model, DESeq2 will determine the estimates for the **log2 foldchanges** and their standard error values for each sample group **relative to the mean expression of all samples.** However, these estimates do not account for the large dispersion observed with low read counts, and as a consequence these weakly expressed genes would falsely be identified as differentially expressed. To avoid this, the **log2 fold changes calculated by the model need to be adjusted**. 
+The coefficents are the estimates for the **log2 foldchanges** for each sample group **relative to the mean expression of all samples.** However, these estimates do not account for the large dispersion we observe with low read counts, and as a consequence these weakly expressed genes would falsely be identified as differentially expressed. To avoid this, the **log2 fold changes calculated by the model need to be adjusted**. 
 
 ### Shrunken log2 foldchanges (LFC)
 
