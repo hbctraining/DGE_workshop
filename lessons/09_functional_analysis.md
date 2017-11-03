@@ -290,7 +290,7 @@ Perform the GSEA using KEGG gene sets:
 ```r
 ## GSEA using gene sets from KEGG pathways
 gseaKEGG <- gseKEGG(geneList = foldchanges, # ordered named vector of fold changes (Entrez IDs are the associated names)
-              organism = "hsa", # supported organisms listed [here](http://www.genome.jp/kegg/catalog/org_list.html)
+              organism = "hsa", # supported organisms listed below
               nPerm = 1000, # default number permutations
               minGSSize = 120, # minimum gene set size (# genes in set) - change to test more sets or recover sets with fewer # genes
               pvalueCutoff = 0.05, # padj cutoff value
@@ -299,6 +299,8 @@ gseaKEGG <- gseKEGG(geneList = foldchanges, # ordered named vector of fold chang
 ## Extract the GSEA results
 gseaKEGG_results <- gseaKEGG@result
 ```
+
+>**NOTE:** The organisms with KEGG pathway information are listed [here](http://www.genome.jp/kegg/catalog/org_list.html).
 
 View the enriched pathways:
 
@@ -336,7 +338,6 @@ pathview(gene.data = foldchanges,
 >        limit = list(gene = 2, cpd = 1))
 > }
 >
-> biocLite("purrr") # Tidyverse package
 > library(purrr)
 > map(1:length(gsea_results$ID), get_kegg_plots)
 > ```
@@ -371,11 +372,6 @@ msig <- GSEA(foldchanges, TERM2GENE=c2, verbose=FALSE)
 
 msig_df <- data.frame(msig)
 ```
-
-### Gene set enrichment analysis using GAGE and Pathview
-
-Another tool that explores enrichment of genes in gene sets uses a slightly different type of algorithm than the GSEA with clusterProfiler. To explore gene set enrichment analysis using [GAGE (Generally Applicable Gene-set Enrichment for Pathway Analysis)](http://bioconductor.org/packages/release/bioc/html/gage.html) and [Pathview](http://bioconductor.org/packages/release/bioc/html/pathview.html) tools, please see our linked [instructional materials](functional_analysis_other_methods.md).
-
 
 ## Pathway topology tools
 
