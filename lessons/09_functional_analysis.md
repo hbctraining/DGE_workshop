@@ -126,6 +126,8 @@ sigOE_genes <- as.character(sigOE$ENSEMBL)
 
 ```
 
+>**NOTE:** The different organisms with annotation databases available to use with clusterProfiler can be found [here](../img/orgdb_annotation_databases.png)
+
 We will use the Ensembl IDs for all genes as the background dataset:
 
 ```r
