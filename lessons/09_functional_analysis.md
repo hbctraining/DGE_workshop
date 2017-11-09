@@ -384,19 +384,23 @@ The [SPIA (Signaling Pathway Impact Analysis)](http://bioconductor.org/packages/
 
 ## Convert ensembl to entrez ids
 
-sig_entrez <- subset(all_results_entrez, padj< 0.05, select = log2FoldChange)
+sig_genes_entrez <- subset(all_results_gsea, padj< 0.05)
 
-names(sig_entrez) <- subset(all_results_entrez, padj< 0.05, select = entrezgene)
+sig_entrez <- sig_genes_entrez$log2FoldChange
 
-head(sig_genes)
+names(sig_entrez) <- sig_genes_entrez$ENTREZID
+
+head(sig_entrez)
 
 
 ## Remove NA and duplicated values (if not already removed)
 sig_entrez <- sig_entrez[!is.na(names(sig_entrez))] 
 
-sig_entrez <- sig_entrez[!duplicated(names(sig_entrez))]
+sig_entrez <- sig_entrez[!duplicated(names(entrez))]
 
-background_entrez <- all_results_entrez$entrezgene
+background_entrez <- merged_gene_ids$ENTREZID
+
+background_entrez <- background_entrez[!is.na(names(background_entrez))]
 
 background_entrez <- background_entrez[!duplicated(background_entrez)]
 
@@ -434,8 +438,8 @@ In this plot, each pathway is a point and the coordinates are the log of pNDE (u
 If we choose to explore the significant genes from our dataset occurring in these pathways, we can subset our SPIA results:
 
 ```r
-## Look at pathway 05222 and view kegglink
-subset(spia_result, ID == "05222")
+## Look at pathway 03013 and view kegglink
+subset(spia_result, ID == "03013")
 ```
 
 Then, click on the KEGGLINK, we can view the genes within our dataset from these perturbed pathways:
