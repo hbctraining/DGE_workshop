@@ -79,7 +79,7 @@ res_tableOE$threshold <- threshold
 Now we can easily subset the results table to only include those that are significant using the `subset()` function:
 
 ```r
-subset(res_tableOE, threshold == TRUE)
+sigOE <- data.frame(subset(res_tableOE, threshold=TRUE))
 ```
 
 Using the same thresholds as above (`padj.cutoff < 0.05` and `lfc.cutoff = 0.58`), create a threshold vector to report the number of genes that are up- and down-regulated in Mov10_knockdown compared to control.
@@ -88,11 +88,14 @@ Using the same thresholds as above (`padj.cutoff < 0.05` and `lfc.cutoff = 0.58`
 threshold_KD <- res_tableKD$padj < padj.cutoff & abs(res_tableKD$log2FoldChange) > lfc.cutoff
 ```
 
-Take this new threshold vector and add it as a new column called `threshold` to the `res_tableKD` which contains a logical vector denoting genes as being differentially expressed or not. **How many genes are differentially expressed in the Knockdown compared to Control?**
+Take this new threshold vector and add it as a new column called `threshold` to the `res_tableKD` which contains a logical vector denoting genes as being differentially expressed or not. **How many genes are differentially expressed in the Knockdown compared to Control?** Subset the data to keep only the significant genes.
 
 ```r
 res_tableKD$threshold <- threshold_KD
+
+sigKD <- data.frame(subset(res_tableKD, threshold=TRUE))
 ``` 
+
 
 ## Visualizing the results
 
@@ -137,29 +140,11 @@ ggplot(df) +
 
 ### Heatmap
 
-Alternatively, we could extract only the genes that are identified as significant and the plot the expression of those genes using a heatmap.
-
-
-To do this, let's start by sorting the results file by adjusted p-value:
-	
-```r
-### Sort the results tables
-res_tableOE_sorted <- res_tableOE[order(res_tableOE$padj), ]
-res_tableKD_sorted <- res_tableKD[order(res_tableKD$padj), ]
-```	
-Now, let's get the gene names for those significant genes:
-
-```r
-### Get significant genes
-sigOE <- row.names(res_tableOE_sorted)[which(res_tableOE_sorted$threshold)]
-sigKD <- row.names(res_tableKD_sorted)[which(res_tableKD_sorted$threshold)]
-```
-	
-We can then use those genes to select the corresponding rows from the normalized data matrix:
+Alternatively, we could extract only the genes that are identified as significant and the plot the expression of those genes using a heatmap. We can then use the genes from the subsetted data frames to select the corresponding rows from the normalized data matrix:
 
 ```r
 ### Extract normalized expression for significant genes
-norm_OEsig <- normalized_counts[sigOE,]
+norm_OEsig <- normalized_counts[rownames(sigOE),]
 ```
 
 Now let's draw the heatmap using `pheatmap`:
