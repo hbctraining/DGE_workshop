@@ -27,7 +27,7 @@ Differential expression analysis with DESeq2 involves multiple steps as displaye
 
 <img src="../img/DESeq2_workflow.png" width="500">
 
-
+> **NOTE:** DESeq2 is actively maintained by the developers and continuously being updated. As such, it is important that you note the version you are working with. Recently, there have been some rather **big changes implemented** that impact the output. To find out more detail about the specific **modifications made to methods described in the original 2014 paper**, take a look at [this section in the DESeq2 vignette](http://bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html#methods-changes-since-the-2014-deseq2-paper). 
 
 ## Running DESeq2
 
