@@ -63,6 +63,7 @@ To generate the shrunken log2 fold change estimates, you have to run an addition
 >
 >`log2 (normalized_counts_group1 / normalized_counts_group2)`
 
+
 ### Hypothesis testing using the Wald test
 
 The shrunken LFC estimates are output for each sample group relative to the mean expression across groups. These estimates represent the **model coefficients**, and these coefficients are calculated regardless of the comparison of interest.
@@ -124,6 +125,18 @@ res_tableOE <- lfcShrink(dds, contrast=contrast, res=res_tableOE)
 ```
 
 **The order of the names determines the direction of fold change that is reported.** The name provided in the second element is the level that is used as baseline. So for example, if we observe a log2 fold change of -2 this would mean the gene expression is lower in Mov10_oe relative to the control. 
+
+#### MA Plot
+
+A plot that can be useful to exploring our results is the MA plot. The MA plot shows the mean of the normalized counts versus the log2 foldchanges for all genes tested. The genes that are significantly DE are colored to be easily identified. The DESeq2 package also offers a simple function to generate this plot:
+
+```r
+plotMA(res_tableOE, alpha = 0.05, ylim=c(-2,2))
+```
+
+<img src="../img/MA_plot.png" width="600">
+
+This plot allows us to evaluate the magnitude of fold changes and how they are distributed relative to mean expression. aWe would expect to see significant genes across the range of expression levels. Additionally, we could use this plot to compare shrunken and unshrunken fold changes.
 
 
 #### MOV10 DE analysis: results exploration
