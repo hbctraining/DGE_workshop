@@ -203,7 +203,7 @@ The model that fits best, given this type of variability between replicates, is 
 > - **Don't spend money on technical replicates - biological replicates are much more useful**
 
 >**NOTE:**
-> If you are using **cell lines** and are unsure whether or not you have prepared biological or technical replicates, take a look at [this link](http://www.labstats.net/articles/cell_culture_n.html). This is a useful resource in helping you determine how best to set up your experiment.
+> If you are using **cell lines** and are unsure whether or not you have prepared biological or technical replicates, take a look at [this link](https://web.archive.org/web/20170807192514/http://www.labstats.net:80/articles/cell_culture_n.html). This is a useful resource in helping you determine how best to set up your *in-vitro* experiment.
  
 #### How do I know if my data should be modeled using the Poisson distribution or Negative Binomial distribution?
 
