@@ -8,43 +8,11 @@ Approximate time: 75 minutes
 
 ## Learning Objectives 
 
-* Summarizing significant differentially expressed genes for each comparison
 * Exploring our significant genes using data visualization
 * Using volcano plots to evaluate relationships between DEG statistics
 * Plotting expression of significant genes using heatmaps
 
-## Summarizing results and identifying DEGs
-
-To summarize the results table, a handy function in DESeq2 is `summary()`. Confusingly it has the same name as the function used to inspect data frames. This function when called with a DESeq results table as input, will summarize the results using the default threshold: FDR < 0.1 (padj/FDR is used even though the output says `p-value < 0.1`). Let's start with the OE vs control results:
-
-```r
-## Summarize results
-summary(res_tableOE)
-```
-
-```r  
-out of 19748 with nonzero total read count
-adjusted p-value < 0.1
-LFC > 0 (up)     : 3657, 19% 
-LFC < 0 (down)   : 3897, 20% 
-outliers [1]     : 0, 0% 
-low counts [2]   : 3912, 20% 
-(mean count < 4)
-[1] see 'cooksCutoff' argument of ?results
-[2] see 'independentFiltering' argument of ?results
-```
-
-In addition to the number of genes up- and down-regulated at the default threshold, **the function also reports the number of genes that were tested (genes with non-zero total read count), and the number of genes not included in multiple test correction due to a low mean count** (which in our case is < 4 and was determined automatically by DESeq2 based on overall counts).
-
-The default FDR threshold is set using the option `alpha` within `summary()`; 0.1 is quite liberal so let's try changing that to `0.05` -- *how many genes are we left with*?
-
-***
-
-**Exercise**
-
-1. Explore the results table summary for the **Mov10_knockdown comparison to control**. How many genes are differentially expressed at FDR < 0.1? How many fewer genes do we find at FDR < 0.05?
-
-***
+## Extracting significant genes
 
 The FDR threshold on it's own doesn't appear to be reducing the number of significant genes. With large significant gene lists it can be hard to extract meaningful biological relevance. To help increase stringency, one can also **add a fold change threshold**. The `summary()` function doesn't have an argument for fold change threshold,
 
