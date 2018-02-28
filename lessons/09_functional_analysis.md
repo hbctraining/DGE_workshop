@@ -136,7 +136,7 @@ sigOE <- subset(res_ids, padj < 0.05)
 sigOE_genes <- as.character(sigOE$ensgene)
 ```
 
-Now we can perform the GO enrichment analysis:
+Now we can perform the GO enrichment analysis and save the results:
 
 ```r
 ## Run GO enrichment analysis 
@@ -148,26 +148,23 @@ ego <- enrichGO(gene = sigOE_genes,
                 pAdjustMethod = "BH", 
                 qvalueCutoff = 0.05, 
                 readable = TRUE)
-```              
-
->**NOTE:** The different organisms with annotation databases available to use with clusterProfiler can be found [here](../img/orgdb_annotation_databases.png)
-
-
+                
 ## Output results from GO analysis to a table
 cluster_summary <- data.frame(ego)
 
 write.csv(cluster_summary, "results/clusterProfiler_Mov10oe.csv")
 ```
+>**NOTE:** The different organisms with annotation databases available to use with clusterProfiler can be found [here](../img/orgdb_annotation_databases.png)
 
-![cluster_summary](../img/cluster_summary.png)
+![cluster_summary](../img/cluster_summary.png)                
 
 ### Visualizing clusterProfiler results
 clusterProfiler has a variety of options for viewing the over-represented GO terms. We will explore the dotplot, enrichment plot, and the category netplot.
 
-The **dotplot** shows the number of genes associated with the first 50 terms (size) and the p-adjusted values for these terms (color). 
+The **dotplot** shows the number of genes associated with the first 50 terms (size) and the p-adjusted values for these terms (color). This plot displays the top 50 genes by gene ratio (# genes related to GO term / total number of sig genes), not p-adjusted value.
 
 ```r
-## Dotplot gives top 50 genes by gene ratio (# genes related to GO term / total number of sig genes), not padj.
+## Dotplot 
 dotplot(ego, showCategory=50)
 ```
 
@@ -177,7 +174,7 @@ dotplot(ego, showCategory=50)
 
 <img src="../img/mov10oe_dotplot.png" width="600">
 
-The next plot is the **enrichment GO plot**, which shows the relationship between the top 50 most significantly enriched GO terms, by grouping similar terms together. The color represents the p-values relative to the other displayed terms (brighter red is more significant) and the size of the terms represents the number of genes that are significant from our list.
+The next plot is the **enrichment GO plot**, which shows the relationship between the top 50 most significantly enriched GO terms (padj.), by grouping similar terms together. The color represents the p-values relative to the other displayed terms (brighter red is more significant) and the size of the terms represents the number of genes that are significant from our list.
 
 ```r
 ## Enrichmap clusters the 50 most significant (by padj) GO terms to visualize relationships between terms
@@ -262,19 +259,21 @@ To perform GSEA analysis of KEGG gene sets, clusterProfiler requires the genes t
 
 ```r
 ## Remove any NA values
-all_results_entrez <- subset(merged_gene_ids, ENTREZID != "NA")
+res_entrez <- subset(res_ids, entrez != "NA")
 
-## Remove any duplicates
-all_results_entrez <- all_results_entrez[which(duplicated(all_results_entrez$Row.names) == F), ]
+## Remove any Entrez duplicates
+res_entrez <- res_entrez[which(duplicated(res_entrez$entrez) == F), ]
+
 ```
+
 Finally, extract and name the fold changes:
 
 ```r
 ## Extract the foldchanges
-foldchanges <- all_results_entrez$log2FoldChange
+foldchanges <- res_entrez$log2FoldChange
 
 ## Name each fold change with the corresponding Entrez ID
-names(foldchanges) <- all_results_entrez$ENTREZID
+names(foldchanges) <- res_entrez$entrez
 ```
 
 Order the fold changes in decreasing order:
@@ -293,7 +292,7 @@ Perform the GSEA using KEGG gene sets:
 gseaKEGG <- gseKEGG(geneList = foldchanges, # ordered named vector of fold changes (Entrez IDs are the associated names)
               organism = "hsa", # supported organisms listed below
               nPerm = 1000, # default number permutations
-              minGSSize = 120, # minimum gene set size (# genes in set) - change to test more sets or recover sets with fewer # genes
+              minGSSize = 20, # minimum gene set size (# genes in set) - change to test more sets or recover sets with fewer # genes
               pvalueCutoff = 0.05, # padj cutoff value
               verbose = FALSE)
 
@@ -307,9 +306,9 @@ View the enriched pathways:
 
 ```r
 ## Write GSEA results to file
-gseaKEGG_results
+View(gseaKEGG_results)
 
-write.csv(gseaKEGG_results, "results/gseaOE.csv", quote=F)
+write.csv(gseaKEGG_results, "results/gseaOE_kegg.csv", quote=F)
 ```
 
 Explore the GSEA plot of enrichment of the pathway-associated genes in the ranked list:
@@ -350,7 +349,7 @@ gseaGO <- gseGO(geneList = foldchanges,
               OrgDb = org.Hs.eg.db, 
               ont = 'BP', 
               nPerm = 1000, 
-              minGSSize = 120, 
+              minGSSize = 20, 
               pvalueCutoff = 0.05,
               verbose = FALSE) 
 
@@ -387,29 +386,17 @@ The [SPIA (Signaling Pathway Impact Analysis)](http://bioconductor.org/packages/
 
 ## Significant genes is a vector of fold changes where the names are ENTREZ gene IDs. The background set is a vector of all the genes represented on the platform.
 
-## Convert ensembl to entrez ids
+background_entrez <- res_entrez$entrez
 
-sig_genes_entrez <- subset(all_results_gsea, padj< 0.05)
+sig_res_entrez <- res_entrez[which(res_entrez$padj < 0.05), ]
 
-sig_entrez <- sig_genes_entrez$log2FoldChange
+sig_entrez <- sig_res_entrez$log2FoldChange
 
-names(sig_entrez) <- sig_genes_entrez$ENTREZID
+sig_entrez <- sort(sig_entrez, decreasing=TRUE)
 
 head(sig_entrez)
-
-
-## Remove NA and duplicated values (if not already removed)
-sig_entrez <- sig_entrez[!is.na(names(sig_entrez))] 
-
-sig_entrez <- sig_entrez[!duplicated(names(entrez))]
-
-background_entrez <- merged_gene_ids$ENTREZID
-
-background_entrez <- background_entrez[!is.na(names(background_entrez))]
-
-background_entrez <- background_entrez[!duplicated(background_entrez)]
-
 ```
+
 
 Now that we have our background and significant genes in the appropriate format, we can run SPIA:
 
