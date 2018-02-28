@@ -47,7 +47,7 @@ res_tableOE$threshold <- threshold
 Now we can easily subset the results table to only include those that are significant using the `subset()` function:
 
 ```r
-sigOE <- data.frame(subset(res_tableOE, threshold=TRUE))
+sigOE <- data.frame(subset(res_tableOE, threshold == TRUE))
 ```
 
 Using the same thresholds as above (`padj.cutoff < 0.05` and `lfc.cutoff = 0.58`), create a threshold vector to report the number of genes that are up- and down-regulated in Mov10_knockdown compared to control.
@@ -61,7 +61,7 @@ Take this new threshold vector and add it as a new column called `threshold` to 
 ```r
 res_tableKD$threshold <- threshold_KD
 
-sigKD <- data.frame(subset(res_tableKD, threshold=TRUE))
+sigKD <- data.frame(subset(res_tableKD, threshold == TRUE))
 ``` 
 
 
