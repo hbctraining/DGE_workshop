@@ -95,28 +95,7 @@ We have three sample classes so we can make three possible pairwise comparisons:
 2. Control vs. Mov10 knockdown
 3. Mov10 knockdown vs. Mov10 overexpression
 
-**We are really only interested in #1 and #2 from above**. Using the design formula we provided `~ sampletype`, DESeq2 internally creates a design matrix as shown below.
-
-We can look at the design matrix using the `attr` function:
-
-```
-attr(dds, "modelMatrix")
-```
-
-```
-   	      Intercept  sampletypecontrol  sampletypeMOV10_knockdown  sampletypeMOV10_overexpression
-Mov10_kd_2	 1	 	0		  1		 		0 
-Mov10_kd_3	 1		0		  1				0
-Mov10_oe_1   	 1		0		  0				1
-Mov10_oe_2   	 1		0		  0				1
-Mov10_oe_3   	 1		0		  0				1
-Irrel_kd_1	 1		1		  0				0
-Irrel_kd_2	 1		1		  0				0
-Irrel_kd_3	 1		1		  0				0	
-
-```
-
-This design matrix is now used to setup the contrasts to request the comparisons we want to make. This information is utilized to inform the model about which replicates should be used to estimate the **log2 foldchanges (LFC)**.
+**We are really only interested in #1 and #2 from above**. Using the design formula we provided `~ sampletype`, indicating that this is our main factor of interest.
 
 We will tell DESeq2 the contrasts we would like to make using the `results()` contrast argument:
 
