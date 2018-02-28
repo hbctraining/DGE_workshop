@@ -100,39 +100,40 @@ library(purrr)
 library(clusterProfiler)
 library(gProfileR)
 library(treemap)
+library(annotables)
+```
 
-## clusterProfiler does not work as easily using gene names, so we will turn gene names into Ensembl IDs using 
-## clusterProfiler::bitr and merge the IDs back with the DE results
-keytypes(org.Hs.eg.db)
+For the different steps in the functional analysis, we require Ensembl and Entrez IDs. To convert the gene symbols to these IDs, we will use the **annotables** package and merge the IDs with the DE results. 
 
-ids <- bitr(rownames(res_tableOE), 
-            fromType = "SYMBOL", 
-            toType = c("ENSEMBL", "ENTREZID"), 
-            OrgDb = "org.Hs.eg.db")
+```r
+## Explore the grch37 table loaded by the annotables library
+grch37
+
+## Return the IDs for the gene symbols in the DE results
+idx <- grch37$symbol %in% rownames(res_tableOE)
+
+ids <- grch37[idx, ]
 
 ## The gene names can map to more than one Ensembl ID (some genes change ID over time), 
 ## so we need to remove duplicate IDs prior to assessing enriched GO terms
-non_duplicates <- which(duplicated(ids$SYMBOL) == FALSE)
+non_duplicates <- which(duplicated(ids$symbol) == FALSE)
 
 ids <- ids[non_duplicates, ] 
 
-## Merge the Ensembl IDs with the results     
-merged_gene_ids <- merge(x=data.frame(res_tableOE), y=ids, by.x="row.names", by.y="SYMBOL")             
-
-## Extract significant results
-sigOE <- subset(merged_gene_ids, padj < 0.05)
-
-sigOE_genes <- as.character(sigOE$ENSEMBL)
-
+## Merge the IDs with the results 
+res_ids <- merge(data.frame(res_tableOE), ids, by.x=0, by.y="symbol")         
 ```
 
->**NOTE:** The different organisms with annotation databases available to use with clusterProfiler can be found [here](../img/orgdb_annotation_databases.png)
-
-We will use the Ensembl IDs for all genes as the background dataset:
+To perform the over-representation analysis, we need a list of background genes and a list of significant genes. For our background dataset we will use all genes tested for differential expression (all genes in our results table). For our significant gene list we will use genes with p-adjusted values less than 0.05 (we could include a fold change threshold too if we have many DE genes).
 
 ```r
 ## Create background dataset for hypergeometric testing using all genes tested for significance in the results                 
-allOE_genes <- as.character(merged_gene_ids$ENSEMBL)
+allOE_genes <- as.character(res_ids$ensgene)
+
+## Extract significant results
+sigOE <- subset(res_ids, padj < 0.05)
+
+sigOE_genes <- as.character(sigOE$ensgene)
 ```
 
 Now we can perform the GO enrichment analysis:
@@ -140,13 +141,17 @@ Now we can perform the GO enrichment analysis:
 ```r
 ## Run GO enrichment analysis 
 ego <- enrichGO(gene = sigOE_genes, 
-                    universe = allOE_genes, 
-                    keytype = "ENSEMBL", 
-                    OrgDb = org.Hs.eg.db, 
-                    ont = "BP", 
-                    pAdjustMethod = "BH", 
-                    qvalueCutoff = 0.05, 
-                    readable = TRUE)
+                universe = allOE_genes,
+                keyType = "ENSEMBL",
+                OrgDb = org.Hs.eg.db, 
+                ont = "BP", 
+                pAdjustMethod = "BH", 
+                qvalueCutoff = 0.05, 
+                readable = TRUE)
+```              
+
+>**NOTE:** The different organisms with annotation databases available to use with clusterProfiler can be found [here](../img/orgdb_annotation_databases.png)
+
 
 ## Output results from GO analysis to a table
 cluster_summary <- data.frame(ego)
