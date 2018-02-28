@@ -392,6 +392,8 @@ sig_res_entrez <- res_entrez[which(res_entrez$padj < 0.05), ]
 
 sig_entrez <- sig_res_entrez$log2FoldChange
 
+names(sig_entrez) <- sig_res_entrez$entrez
+
 head(sig_entrez)
 ```
 
