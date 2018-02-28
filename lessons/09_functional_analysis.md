@@ -392,8 +392,6 @@ sig_res_entrez <- res_entrez[which(res_entrez$padj < 0.05), ]
 
 sig_entrez <- sig_res_entrez$log2FoldChange
 
-sig_entrez <- sort(sig_entrez, decreasing=TRUE)
-
 head(sig_entrez)
 ```
 
