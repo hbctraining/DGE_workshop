@@ -1,7 +1,7 @@
 ---
 title: "Functional Analysis for RNA-seq"
 author: "Mary Piper"
-date: "Tuesday, October 10th, 2017"
+date: "Tuesday, March 20th, 2018"
 ---
 
 Approximate time: 120 minutes
@@ -95,11 +95,8 @@ To run clusterProfiler GO over-representation analysis, we will change our gene 
 library(org.Hs.eg.db)
 library(DOSE)
 library(pathview)
-library(SPIA)
 library(purrr)
 library(clusterProfiler)
-library(gProfileR)
-library(treemap)
 library(annotables)
 ```
 
@@ -383,6 +380,10 @@ The [SPIA (Signaling Pathway Impact Analysis)](http://bioconductor.org/packages/
 
 ```r
 # Set-up
+
+source("http://bioconductor.org/biocLite.R") 
+biocLite("SPIA")
+library(SPIA)
 
 ## Significant genes is a vector of fold changes where the names are ENTREZ gene IDs. The background set is a vector of all the genes represented on the platform.
 
