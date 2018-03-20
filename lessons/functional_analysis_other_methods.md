@@ -27,6 +27,10 @@ We encourage you to explore gProfiler online, for today's class we will be demon
 We can run gProfileR relatively easily from R, by loading the library and running the  `gprofiler` function.
 
 ```r
+source("http://bioconductor.org/biocLite.R") 
+biocLite(c("gProfiler", "treemap"))
+library(gProfiler)
+library(treemap)
 
 ## Running gprofiler to identify enriched processes among significant genes
 
