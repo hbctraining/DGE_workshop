@@ -30,6 +30,12 @@ Due to the statistical procedure required to assign reads to gene isoforms, in a
 
 Sleuth accounts for this technical variability by using **bootstraps as a proxy for technical replicates**, which are used to model the variability in the abundance estimates. Bootstrapping essentially **calculates the abundance estimates for all genes using a different sub-sample of reads** during each round of bootstrapping. The variation in the abundance estimates output from each round of bootstrapping is used for the estimation of the technical variance for each gene. 
 
+<p align="center">
+  <img src="../img/sleuth_tech_var.png" width="600"/>
+</p>
+
+_Adapted from: Nature Methods **14**, 687–690 (2017)_
+
 Sleuth models the unobserved true abundance (logarithm of true counts) using a general linear model, but includes the technical variance (variance between bootstrapping runs) as error in the response variable. 
 
 <p align="center">
@@ -43,7 +49,7 @@ The observed (log) abundance estimates represent the sum of the true counts and 
   <img src="../img/sleuth_formula2.png" width="425"/>
 </p>
 
-In addition to performing differential expression analysis of transcripts, the sleuth tool also provides an html interface allowing exploration of the data and differential expression results interactively. More information about the theory/process for sleuth is available in [this blogpost](https://liorpachter.wordpress.com/2015/08/17/a-sleuth-for-rna-seq/) and step-by-step instructions are available in [this tutorial](https://rawgit.com/pachterlab/sleuth/master/inst/doc/intro.html).
+In addition to performing differential expression analysis of transcripts, the sleuth tool also provides an html interface allowing exploration of the data and differential expression results interactively. More information about the theory/process for sleuth is available in the [Nature Methods paper](https://www-nature-com.ezp-prod1.hul.harvard.edu/articles/nmeth.4324), this [blogpost](https://liorpachter.wordpress.com/2015/08/17/a-sleuth-for-rna-seq/) and step-by-step tutorials are available on the [sleuth website](https://pachterlab.github.io/sleuth/walkthroughs).
 
 ***NOTE:*** *Kallisto is distributed under a non-commercial license, while Sailfish and Salmon are distributed under the [GNU General Public License, version 3](http://www.gnu.org/licenses/gpl.html).*
 
@@ -59,10 +65,10 @@ Let's get started by setting up our directory. First let's copy over our metadat
 You can download the directory with the quant.sf files for the 8 full datasets using the link below. 
 
 1. Create a new RStudio project entitled `sleuth`.
-2. Create the directory structure inside the project with folders for `data`, `results`, and `figures`.
+2. Create the directory structure inside the project with folders for `data`, `meta`, `results`, and `figures`.
 3. [Download Salmon files](https://www.dropbox.com/sh/cc7oz36fy4zbow0/AACtAZ5Y8ISlIa4uV5UOTNgTa?dl=0) and move the files to the `data` directory.
 4. Decompress (unzip) the zip archive by double-clicking on the file.
-5. [Download the metadata]() associated with the Salmon files to the `data` directory.
+5. Download the **metadata** associated with the Salmon files by **right-clicking [this link](https://github.com/hbctraining/DGE_workshop/blob/master/data/Mov10_full_meta.txt)** and selecting `Download Linked File` or `Save Linked File As` and saving to the `meta` directory.
 6. Open up a new R script ('File' -> 'New File' -> 'Rscript'), and save it as `sleuth_de.R`
 
 The directory structure should now look like:
@@ -74,18 +80,13 @@ The directory structure should now look like:
 
 ### Loading libraries
 
-Before starting, let's set our working directory to the `rnaseq` folder:
-
-```R
-setwd("~/ngs_course/rnaseq")
-```
-and load the libraries for wasabi and sleuth, which is already installed on Orchestra. Sleuth also has a couple of dependencies and requires these other packages be loaded, as well: `biomaRt`, and `dplyr` (automatically available from Orchestra):
+To perform any analysis, we need to load the libraries for wasabi and sleuth. Sleuth also has a dependency for `biomaRt`, so this package will be loaded as well:
 
 ```R
 library(wasabi)
 library(sleuth)
 library(biomaRt)
-library(dplyr)
+library(annotables)
 ```
 
 ## Using Wasabi to convert Salmon output for Sleuth
@@ -97,7 +98,7 @@ First, we create a simple vector containing the paths to the directories contain
 Now, let's use this function to create our list of the paths to our transcript abundance files:
 
 ```R
-sf_dirs <- file.path("salmon", c("Mov10_kd_2.salmon", "Mov10_kd_3.salmon", "Mov10_oe_1.salmon", "Mov10_oe_2.salmon", "Mov10_oe_3.salmon","Irrel_kd_1.salmon", "Irrel_kd_2.salmon", "Irrel_kd_3.salmon"))
+sf_dirs <- file.path("data", "salmon", c("Mov10_kd_2.salmon", "Mov10_kd_3.salmon", "Mov10_oe_1.salmon", "Mov10_oe_2.salmon", "Mov10_oe_3.salmon","Irrel_kd_1.salmon", "Irrel_kd_2.salmon", "Irrel_kd_3.salmon"))
 
 sf_dirs
 ```
@@ -111,6 +112,10 @@ prepare_fish_for_sleuth(sf_dirs)
 Each of the sample directories should now contain the `abundance.h5` files. These 
 files will be used as input to Sleuth.
 
+<p align="center">
+  <img src="../img/sleuth_abund_h5.png" width="600"/>
+</p>
+
 ## Sleuth for estimation of differential expression of transcripts
 
 ![sleuth](../img/sleuth_workflow.png)
@@ -121,9 +126,9 @@ The workflow for Sleuth is similar to the workflow followed for DESeq2, even tho
 
 **Step 2:** Fit the sleuth model
 	
-- Estimation of size (normalization) factors using the median of ratios method, similar to DESeq2 
+- Estimation of size (normalization) factors using the median of ratios method (similar to DESeq2)
 	
-- Normalization of estimated counts using size factors (est. counts / size factors)
+- Normalization of estimated counts using size factors (est. counts / size factors - similar to DESeq2)
 
 - Filtering of low abundance transcripts (< 5 est counts in more than 47% of the samples)
 
@@ -133,7 +138,9 @@ The workflow for Sleuth is similar to the workflow followed for DESeq2, even tho
 	
 - Parameter estimation and estimation of variance using the general linear model.
 
-- Identification of coefficients indicating overall expression strength and Beta values for estimating fold changes	
+- Identification of:
+	- **Coefficients:** indicating overall expression strength
+	- **Beta values:** estimating fold changes	
 
 **Step 3:** Test for significant differences between conditions
 
@@ -176,9 +183,18 @@ summarydata
 Then we make sure the metadata and count estimate sample names match:
 
 ```r
-# Name the directory paths for the abundance files with their corresponding sample IDs
+# Make sure the order of the `sfdirs` created above matches the order of samples in the `summarydata` rownames
 
-## Make sure the order of the `sfdirs` created above matches the order of samples in the `summarydata` rownames
+sf_dirs_samples <- sf_dirs %>%
+  basename %>% 
+  str_replace(pattern = "\\.salmon", "")
+
+all(sf_dirs_samples == rownames(summarydata))
+```
+Now, we can name the vector of directory paths with the corresponding sample names
+
+```r
+# Name the directory paths for the abundance files with their corresponding sample IDs
 
 names(sf_dirs) <- rownames(summarydata)
 
@@ -199,6 +215,7 @@ Sleuth requires a column entitled "sample" containing the sample names:
 
 ```r
 # Adding a column named 'sample'
+
 sfdata$sample <- rownames(sfdata)
 ```
 
@@ -281,7 +298,7 @@ models(so)
 > # DO NOT RUN!
 > summarydata$sampletype <- relevel(summarydata$sampletype, ref = "MOV10_knockdown")
 >```
->***An ordered factor will not give interpretable output, so do not order the factor using the factor() function, use relevel() >instead.***
+>***An ordered factor will not give interpretable output, so do not order the factor using the factor() function, use relevel() instead.***
 
 ### Step 3: Test significant differences between conditions using the Wald test
 
@@ -299,74 +316,10 @@ oe <- sleuth_wt(so, 'sampletypeMOV10_overexpression')
 sleuth_results_oe <- sleuth_results(oe, 'sampletypeMOV10_overexpression', show_all = TRUE)
 ```
 
-### Save R objects to file to transfer to local machine
-
-Now that we have all of the analyses performed, we need to bring the output to our local machines for further exploration. The `save()` function works to write an R object to file, and takes the files to include in the R object as arguments.
-
-```r
-save("oe", "summarydata", "sleuth_results_oe", file="sleuth/oe.RData")
-```
-
-We have completed the generation of the sleuth differential expression results on Orchestra, we can now **quit R (`q()`)** .
-
-You should now be back in the Orchestra shell window. Now copy all of the R library installations from our folder so that you have all packages needed to run Sleuth to your own personal folder.
-
-```bash
-$ cp -r /home/mp298/R/library/* ~/R/library
-```
-
-**The next command is needed to make sure that next time you install packages they are installed to your own home directory.*** 
-
-```bash
-$ echo 'R_LIBS_USER="~/R/library"' >  $HOME/.Renviron
-```
-
-## Exploration of differential expression results
-
-### Set-up for local R session
-
-Before we begin to explore our results, we need to **copy over the `oe.RData` file to our local machine using Filezilla** or `scp`.
-
-If using `scp`, you need to open the Terminal on the local machine and type:
-
-```bash
-$ scp username@transfer.orchestra.med.harvard.edu:/home/username/ngs_course/rnaseq/sleuth/oe.RData Desktop
-```
-
-> **NOTE:** If the oe.RData file didn't write, you can copy over a back-up we have created:
-> ```bash
-> $ scp username@transfer.orchestra.med.harvard.edu:/groups/hbctraining/ngs-data-analysis-longcourse/rnaseq/snapshots/sleuth/oe.RData Desktop
-> ```
-
-**Open up RStudio and create a new project called `sleuth`.**
-
-Within RStudio we need to install and load Sleuth similar to what we did on Orchestra:
-
-```r
-# Install the sleuth package on your local machine
-
-source("http://bioconductor.org/biocLite.R")
-biocLite("devtools")    # only if devtools not yet installed
-biocLite("pachterlab/sleuth")
-install.packages("dplyr") # only if dplyr not yet installed
-
-# Load the sleuth library
-
-library(sleuth)
-library(dplyr)
-```
-
-After the R object has successfully transferred, you can load the object into your new R project using `load()` or by double-clicking on the `oe.RData` object in the RStudio file directory:
-
-```r
-load("~/Desktop/oe.RData")
-```
-
-Move `oe.RData` into the `sleuth` folder.
-
+The output should have the results of the differential expression testing
 ### Exploring transcript-level expression between samples
 
-Now that we have our environment set up, we can perform some exploratory analyses. Sleuth offers us the option to explore the data and results interactively using a web interface. 
+Now we can perform some exploratory analyses. Sleuth offers us the option to explore the data and results interactively using a web interface. 
 
 ```r
 sleuth_live(oe)
