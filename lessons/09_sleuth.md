@@ -26,9 +26,9 @@ Until this point we have focused on looking for expression changes at the gene-l
 
 To analyze the differential expression of gene isoforms, it is expected that RNA-Seq reads will often align to multiple isoforms of the same gene. Therefore, **multimapping reads cannot be ignored** to properly determine abundances of gene isoforms. 
 
-Due to the statistical procedure required to assign reads to gene isoforms, in addition to the random processes underlying RNA-Seq, there will be **technical variability in the abundance estimates** output from the pseudo-alignment tool [[2](https://rawgit.com/pachterlab/sleuth/master/inst/doc/intro.html), [3](http://biorxiv.org/content/biorxiv/early/2016/06/10/058164.full.pdf)]. For example, if we performed multiple technical replicates and estimated abundances for gene isoforms, the abundance estimates for the technical replicates would exhibit variability greater than expected. Therefore, **we would need technical replicates to distinguish technical variability from the biological variability**.
+Due to the statistical procedure required to assign reads to gene isoforms, in addition to the random processes underlying RNA-Seq, there will be **technical variability in the abundance estimates** output from the pseudo-alignment tool [[2](https://rawgit.com/pachterlab/sleuth/master/inst/doc/intro.html), [3](http://biorxiv.org/content/biorxiv/early/2016/06/10/058164.full.pdf)]. For example, if we performed multiple technical replicates and estimated abundances for gene isoforms, the abundance estimates for the technical replicates would exhibit variability greater than expected due to variability in the transcript abundance estimation process. Therefore, **we would need technical replicates to distinguish technical variability from the biological variability**.
 
-Sleuth accounts for this technical variability by using **bootstraps as a proxy for technical replicates**, which are used to model the variability in the abundance estimates. Bootstrapping essentially estimates technical variance by using a different sub-sample of reads during each round of bootstrapping. **The technical variance is the variation in transcript abundance estimates calculated for each of the different sub-samplings (or bootstraps) and it accounts for the technical variation associated with the transcript abundance estimation process**. 
+Sleuth accounts for this technical variability by using **bootstraps as a proxy for technical replicates**, which are used to model the variability in the abundance estimates. Bootstrapping essentially **calculates the abundance estimates for all genes using a different sub-sample of reads** during each round of bootstrapping. The variation in the abundance estimates output from each round of bootstrapping is used for the estimation of the technical variance for each gene. 
 
 Sleuth models the unobserved true abundance (logarithm of true counts) using a general linear model, but includes the technical variance (variance between bootstrapping runs) as error in the response variable. 
 
@@ -50,61 +50,29 @@ In addition to performing differential expression analysis of transcripts, the s
 
 ## Set-up for Running Sleuth on Orchestra
 
-While Salmon and Sleuth are lightweight algorithms that can be quickly run on a laptop computer [[2](https://rawgit.com/pachterlab/sleuth/master/inst/doc/intro.html)], it is more efficient to run Sleuth on Orchestra. 
+Sleuth is a lightweight algorithm that can be quickly run on our personal computers [[2](https://rawgit.com/pachterlab/sleuth/master/inst/doc/intro.html)]
 
 ### Setting up the filesystem
 
 Let's get started by setting up our directory. First let's copy over our metadata and the full Salmon output files. 
 
-```bash
-$ bsub -Is -R "rusage[mem=16000]" -q interactive bash
+You can download the directory with the quant.sf files for the 8 full datasets using the link below. 
 
-$ cd ~/ngs_course/rnaseq
+1. Create a new RStudio project entitled `sleuth`.
+2. Create the directory structure inside the project with folders for `data`, `results`, and `figures`.
+3. [Download Salmon files](https://www.dropbox.com/sh/cc7oz36fy4zbow0/AACtAZ5Y8ISlIa4uV5UOTNgTa?dl=0) and move the files to the `data` directory.
+4. Decompress (unzip) the zip archive by double-clicking on the file.
+5. [Download the metadata]() associated with the Salmon files to the `data` directory.
+6. Open up a new R script ('File' -> 'New File' -> 'Rscript'), and save it as `sleuth_de.R`
 
-$ cp /groups/hbctraining/ngs-data-analysis-longcourse/rnaseq/snapshots/meta/Mov10_full_meta.txt meta/
-
-$ cp -r /groups/hbctraining/ngs-data-analysis-longcourse/rnaseq/snapshots/salmon/* salmon/
-```
-
-Now let's make a folder for our sleuth results and load the R module to run it.
-
-```bash
-$ mkdir sleuth
-
-$ module load stats/R/3.3.1
-```
-
-Sleuth is an R package, and while some R packages are automatically available to us on Orchestra, some of the packages we need to run Sleuth are not. Therefore, to run Sleuth on Orchestra, we need to manually install these programs into our personal R library. If you haven't created a personal R library, you can do so by entering the following code ([Orchestra Wiki](https://wiki.med.harvard.edu/Orchestra/WebHome)):
-
-```bash
-$ mkdir -p ~/R/library
-```
-
-### Installing R packages
-
-Since Sleuth was designed to use the output of Kallisto as input, our Salmon transcript abundance estimates need to be massaged into the format of the Kallisto output. To do this, we are going to use the package [Wasabi](https://github.com/COMBINE-lab/wasabi). 
-
-We have installed all of these packages for you to copy to your personal libraries:
-
-```bash
-
-$ export R_LIBS_USER="/home/mp298/R/library"
-```
-
-Now, start R:
-
-```bash
-$ R
-```
-
-The terminal window should now turn into the R console with the R prompt `>`. 
-
-If you were to manually install a package on Orchestra from CRAN we would have to specify where our library is using the following: `install.packages("name-of-your-package", lib="~/R/library")`. For Bioconductor packages nothing would change since we have already modified the environment variable to point to the library.
-
-***NOTE:*** *Since we are not working in RStudio on Orchestra, we will not be able to readily view our environment or plots.*
+The directory structure should now look like:
 
 
-### Setting up working directory and loading libraries
+<p align="center">
+  <img src="../img/sleuth_dir.png" width="600"/>
+</p>
+
+### Loading libraries
 
 Before starting, let's set our working directory to the `rnaseq` folder:
 
