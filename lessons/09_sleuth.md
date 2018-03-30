@@ -85,7 +85,6 @@ To perform any analysis, we need to load the libraries for wasabi and sleuth. Sl
 ```R
 library(wasabi)
 library(sleuth)
-library(biomaRt)
 library(annotables)
 ```
 
@@ -244,26 +243,16 @@ More complex designs can be analyzed using Sleuth as well by adding additional c
 The last component to include for our analysis is the biomaRt Ensembl genome database to obtain the Ensembl transcript/gene IDs and gene names for annotation of results. BiomaRt allows extensive genome information to be accessible during an analysis.
 
 ```r
-# Using biomaRt, ensure host is the appropriate version since the main portal (www.ensembl.org) is not accessible from Orchestra
+# Using annotables
+t2g <- grch37_tx2gene
 
-## Specify that the database to query is the human gene database
-
-human_37 <- useDataset("hsapiens_gene_ensembl",
-				useMart(biomart = "ENSEMBL_MART_ENSEMBL", 
-					host = "feb2014.archive.ensembl.org")) #feb2014=build 37
-
-## Specify the information to return
-
-t2g <- getBM(attributes = c("ensembl_transcript_id", "ensembl_gene_id", "external_gene_id"), 
-		mart = human_37)
+t2g <- merge(x= grch37[, c("symbol", "ensgene")], y = t2g, by.x="ensgene", by.y= "ensgene")
 
 ## Rename the columns for use in Sleuth
 
-t2g <- dplyr::rename(t2g, target_id = ensembl_transcript_id, 
-			ens_gene = ensembl_gene_id, 
-			ext_gene = external_gene_id)
-
-head(t2g)
+t2g <- dplyr::rename(t2g, target_id = enstxp , 
+                     ens_gene = ensgene, 
+                     ext_gene = symbol)
 ```
 
 ### Step 2: Fit the sleuth model
@@ -275,7 +264,7 @@ head(t2g)
 ```r
 # Create sleuth object for analysis 
 
-so <- sleuth_prep(sfdata, design, target_mapping = t2g) 
+so <- sleuth_prep(sfdata, design, target_mapping = t2g, read_bootstrap_tpm = TRUE, extra_bootstrap_summary = TRUE)  
 
 # Fit the transcript abundance data to the sleuth model
 
@@ -317,9 +306,21 @@ sleuth_results_oe <- sleuth_results(oe, 'sampletypeMOV10_overexpression', show_a
 ```
 
 The output should have the results of the differential expression testing
+
 ### Exploring transcript-level expression between samples
 
-Now we can perform some exploratory analyses. Sleuth offers us the option to explore the data and results interactively using a web interface. 
+Now we can perform some exploratory analyses. Sleuth has some handy functions to plot expression of transcripts with bootstrap variation:
+
+```r
+# Plotting
+
+plot_bootstrap(oe, "ENST00000495374.5", units = "est_counts", color_by = "sample")
+
+plot_bootstrap(oe, "ENST00000367412.1", units = "est_counts", color_by = "sample")
+```
+
+
+Sleuth also offers us the option to explore the data and results interactively using a web interface. 
 
 ```r
 sleuth_live(oe)
