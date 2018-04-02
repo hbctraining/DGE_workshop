@@ -20,7 +20,7 @@ In the standard RNA-seq pipeline, we obtain a matrix of raw counts which represe
 
 These transcript expression estimates, often referred to as **'pseudocounts'**, can be converted for use with DGE tools like DESeq2 or the estimates can be used directly for isoform-level differential expression using a tool like [Sleuth](http://www.biorxiv.org/content/biorxiv/early/2016/06/10/058164.full.pdf). 
 
-<img src="" width="500">
+<img src="../img/alignmentfree_workflow2.png" width="500">
 
 
 ### What is Salmon?
