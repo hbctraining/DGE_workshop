@@ -29,7 +29,7 @@ This repository has teaching materials for a **1.5-day**, hands-on **Introductio
 |[Visualization of DGE analysis results](lessons/06_DGE_visualizing_results.md) | 45 min |
 |[Summary of DGE workflow](lessons/07_DGE_summarizing_workflow.md) | 15 min |
 |[Complex designs with DESeq2 (LRT)](lessons/08_DGE_LRT.md) | 60 min |
-|[Functional Analysis](lessons/09_functional_analysis.md) | 85 min |
+|[Functional Analysis](lessons/10_functional_analysis.md) | 85 min |
 
 ***
 
