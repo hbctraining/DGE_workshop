@@ -112,29 +112,37 @@ Either of these methods will work, or even a combination of the two. The **main 
 
 **Step 4.** Create a dataframe containing Ensembl Transcript IDs and Gene symbols
 
-Our Salmon index was generated with transcript sequences listed by Ensembl IDs, but `tximport` needs to know **which genes these transcripts came from**, so we need to use the `annotables` package to extract this information. This can take awhile, so we have generated a file that you can use for this lesson.
+Our Salmon index was generated with transcript sequences listed by Ensembl IDs, but `tximport` needs to know **which genes these transcripts came from**, so we need to use the [`annotables`](https://github.com/stephenturner/annotables) package to extract this information. This package has basic annotation information from Ensembl Genes 91 for various organisms and is very helpful for mapping between different IDs. It also has `tx2gene` tables that link Ensembl gene IDs to Ensembl transcript IDs.
 
-> *NOTE:* Keep in mind that the Ensembl IDs listed in our Salmon output contained version numbers (i.e ENST00000632684.1). If we query `annotables` with those IDs it will not return anything. Therefore, do not forget to strip the version numbers from the Ensembl IDs as shown in the code below.
+```r
+library(annotables)
+
+grch37_tx2gene
+```
+
+Keep in mind that the Ensembl IDs listed in our Salmon output contained version numbers (i.e ENST00000632684.1). If we query `annotables` with those IDs it will not return anything. Therefore, do not forget to strip the version numbers from the Ensembl IDs as shown in the code below.
 
 
-```R
-## DO NOT RUN
-
+```r
 # Create a character vector of Ensembl IDs		
 ids <- read.delim(files[1], sep="\t", header=T)    # extract the transcript ids from one of the files
 ids <- as.character(ids[,1])
 require(stringr)
-ids.strip <- str_replace(ids, "([.][0-9])", "")
-
-# Use the GrCh37 annotable and subset rows corresponding to our IDs
-     
+ids.strip <- str_replace(ids, "([.][0-9])", "")     
 ```
 
-**We have already run the above code for you and saved the output in a text file which is in the salmon directory.** Load it in using: 
+Now, we can subset the `tx2gene` table to keep only those rows that correspond to our IDs using the `filter()` function:
 
-```R
-tx2gene <- read.delim("tx2gene.txt",sep="\t")
+```r
+tx2gene <- grch37_tx2gene %>%  
+   filter(enstxp %in% ids.strip)
 ```
+
+> **NOTE:** If you have trouble obtaining the txt2gene table, we have already run the above code for you and saved the output in a text file which is in the salmon directory. You can load it in using: 
+> 
+> ```r
+> tx2gene <- read.delim("tx2gene.txt",sep="\t")
+> ```
     
 **Step 5:** Run tximport to summarize gene-level information    
 ```R
