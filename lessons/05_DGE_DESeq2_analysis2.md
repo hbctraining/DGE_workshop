@@ -121,7 +121,7 @@ A plot that can be useful to exploring our results is the MA plot. The MA plot s
 plotMA(res_tableOE_unshrunken, alpha = 0.05, ylim=c(-2,2))
 ```
 
-<img src="">
+<img src="..img/maplot_unshrunken.png" width="600">
 
 **And now the shrunken results:**
 
@@ -244,7 +244,50 @@ Explore the results table summary for the **Mov10_knockdown comparison to contro
 
 ***
 
+## Extracting significant differentially expressed genes
 
+What we noticed is that the FDR threshold on it's own doesn't appear to be reducing the number of significant genes. With large significant gene lists it can be hard to extract meaningful biological relevance. To help increase stringency, one can also **add a fold change threshold**. _The `summary()` function doesn't have an argument for fold change threshold_
+
+> *NOTE:* the `results()` function does have an option to add a fold change threshold and subset the data this way. Take a look at the help manual using `?results` and see what argument would be required. 
+
+Let's first create variables that contain our threshold criteria:
+
+```r
+### Set thresholds
+padj.cutoff <- 0.05
+lfc.cutoff <- 0.58
+```
+
+The `lfc.cutoff` is set to 0.58; remember that we are working with log2 fold changes so this translates to an actual fold change of 1.5 which is pretty reasonable. 
+
+We can easily subset the results table to only include those that are significant using the `filter()` function, but first we need to convert it into a dataframe:
+
+```r
+sigOE <- res_tableOE %>%
+        data.frame() %>% 
+        filter(padj < padj.cutoff & abs(log2FoldChange) > lfc.cutoff)
+```
+
+**How many genes are differentially expressed in the Overexpression compared to Control, given our criteria specified above? Does this reduce our results?**
+
+```r
+nrow(sigOE)
+```
+	
+Using the same thresholds as above (`padj.cutoff < 0.05` and `lfc.cutoff = 0.58`), subset `res_tableKD` to report the number of genes that are up- and down-regulated in Mov10_knockdown compared to control.
+
+```r
+sigKD <- res_tableKD %>%
+        data.frame() %>% 
+        filter(padj < padj.cutoff & abs(log2FoldChange) > lfc.cutoff)
+```
+
+**How many genes are differentially expressed in the Knockdown compared to Control?** 
+```r
+nrow(sigKD)
+``` 
+
+Now that we have subsetted our data, we are ready for visualization!
 
 ---
 *This lesson has been developed by members of the teaching team at the [Harvard Chan Bioinformatics Core (HBC)](http://bioinformatics.sph.harvard.edu/). These are open access materials distributed under the terms of the [Creative Commons Attribution license](https://creativecommons.org/licenses/by/4.0/) (CC BY 4.0), which permits unrestricted use, distribution, and reproduction in any medium, provided the original author and source are credited.*
