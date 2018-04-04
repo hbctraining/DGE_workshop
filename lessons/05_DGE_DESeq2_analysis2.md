@@ -30,7 +30,7 @@ Modeling is a mathematically formalized way to approximate how the data behaves 
 
  <img src="../img/NB_model_formula_betas.png" width="600">
 
-The coefficents are the estimates for the **log2 foldchanges** for each sample group **relative to the mean expression of all samples.** However, these estimates do not account for the large dispersion we observe with low read counts. To avoid this, the **log2 fold changes calculated by the model need to be adjusted**. 
+The coefficents are the estimates for the **log2 foldchanges** for each sample group. However, these estimates do not account for the large dispersion we observe with low read counts. To avoid this, the **log2 fold changes calculated by the model need to be adjusted**. 
 
 ### Shrunken log2 foldchanges (LFC)
 
@@ -39,7 +39,7 @@ To generate more accurate log2 foldchange estimates, DESeq2 allows for the **shr
 - Low counts
 - High dispersion values
 
-Similar to the previous shrinkage of dispersion estimates, **information from all genes** is used to generate more accurate LFC estimates. Specifically, the distribution of LFC estimates for all genes is used (as a prior) to shrink the LFC estimates of genes with little information or high dispersion toward more likely (lower) LFC estimates. 
+As with the shrinkage of dispersion estimates, LFC shrinkage uses **information from all genes** to generate more accurate estimates. Specifically, the distribution of LFC estimates for all genes is used (as a prior) to shrink the LFC estimates of genes with little information or high dispersion toward more likely (lower) LFC estimates. 
 
 <img src="../img/deseq2_shrunken_lfc.png" width="500">
 
@@ -97,23 +97,33 @@ We have three sample classes so we can make three possible pairwise comparisons:
 
 **We are really only interested in #1 and #2 from above**. Using the design formula we provided `~ sampletype`, indicating that this is our main factor of interest.
 
-We will tell DESeq2 the contrasts we would like to make using the `results()` contrast argument:
+We will tell DESeq2 the contrasts we would like to make using the `results()` contrast argument. For this example we will save the unshruken and shrunken versions of results to separate variables:
 
 ```r
 ## Define contrasts, extract results table, and shrink the log2 fold changes
 
-contrast <- c("sampletype", "MOV10_overexpression", "control")
+contrast_oe <- c("sampletype", "MOV10_overexpression", "control")
 
-res_tableOE <- results(dds, contrast=contrast)
+res_tableOE_unshrunken <- results(dds, contrast=contrast_oe)
 
-res_tableOE <- lfcShrink(dds, contrast=contrast, res=res_tableOE)
+res_tableOE <- lfcShrink(dds, contrast=contrast_oe, res=res_tableOE_unshrunken)
 ```
 
 **The order of the names determines the direction of fold change that is reported.** The name provided in the second element is the level that is used as baseline. So for example, if we observe a log2 fold change of -2 this would mean the gene expression is lower in Mov10_oe relative to the control. 
 
 #### MA Plot
 
-A plot that can be useful to exploring our results is the MA plot. The MA plot shows the mean of the normalized counts versus the log2 foldchanges for all genes tested. The genes that are significantly DE are colored to be easily identified. The DESeq2 package also offers a simple function to generate this plot:
+A plot that can be useful to exploring our results is the MA plot. The MA plot shows the mean of the normalized counts versus the log2 foldchanges for all genes tested. The genes that are significantly DE are colored to be easily identified. This is also a great way to illustrate the effect of LFC shrinkage. The DESeq2 package offers a simple function to generate an MA plot. 
+
+**Let's start with the unshrunken results:**
+
+```r
+plotMA(res_tableOE_unshrunken, alpha = 0.05, ylim=c(-2,2))
+```
+
+<img src="">
+
+**And now the shrunken results:**
 
 ```r
 plotMA(res_tableOE, alpha = 0.05, ylim=c(-2,2))
@@ -121,8 +131,7 @@ plotMA(res_tableOE, alpha = 0.05, ylim=c(-2,2))
 
 <img src="../img/MA_plot.png" width="600">
 
-This plot allows us to evaluate the magnitude of fold changes and how they are distributed relative to mean expression. aWe would expect to see significant genes across the range of expression levels. Additionally, we could use this plot to compare shrunken and unshrunken fold changes.
-
+In addition to the comparison described above, this plot allows us to evaluate the magnitude of fold changes and how they are distributed relative to mean expression. Generally, we would expect to see significant genes across the full range of expression levels. 
 
 #### MOV10 DE analysis: results exploration
 
@@ -193,11 +202,11 @@ Now that we have results for the overexpression results, let's do the same for t
 
 ```r
 ## Define contrasts, extract results table and shrink log2 fold changes
-contrast <-  c("sampletype", "MOV10_knockdown", "control")
+contrast_kd <-  c("sampletype", "MOV10_knockdown", "control")
 
-res_tableKD <- results(dds, contrast=contrast)
+res_tableKD <- results(dds, contrast=contrast_kd)
 
-res_tableKD <- lfcShrink(dds, contrast=contrast, res=res_tableKD)
+res_tableKD <- lfcShrink(dds, contrast=contrast_kd, res=res_tableKD)
 ```
 
 Take a quick peek at the results table containing Wald test statistics for the Control-Knockdown comparison we are interested in and make sure that format is similar to what we observed with the OE.
