@@ -13,7 +13,6 @@ Approximate time: 60 minutes
 * Summarizing significant differentially expressed genes for each comparison
 
 
-
 # Differential expression analysis with DESeq2: model fitting and hypothesis testing 
 
 ## Generalized Linear Model fit for each gene
@@ -32,7 +31,7 @@ Modeling is a mathematically formalized way to approximate how the data behaves 
 
 The coefficents are the estimates for the **log2 foldchanges** for each sample group. However, these estimates do not account for the large dispersion we observe with low read counts. To avoid this, the **log2 fold changes calculated by the model need to be adjusted**. 
 
-### Shrunken log2 foldchanges (LFC)
+## Shrunken log2 foldchanges (LFC)
 
 To generate more accurate log2 foldchange estimates, DESeq2 allows for the **shrinkage of the LFC estimates toward zero** when the information for a gene is low, which could include:
 
@@ -64,13 +63,13 @@ To generate the shrunken log2 fold change estimates, you have to run an addition
 >`log2 (normalized_counts_group1 / normalized_counts_group2)`
 
 
-### Hypothesis testing using the Wald test
+## Hypothesis testing using the Wald test
 
 The shrunken LFC estimates are output for each sample group relative to the mean expression across groups. These estimates represent the **model coefficients**, and these coefficients are calculated regardless of the comparison of interest.
 
 However, generally **we are interested in the LFC estimates relative to other sample groups**. To do this, we must test if the difference in the log2 fold changes between groups is zero. To determine whether the difference in shrunken LFC estimates differs significantly from zero, the **Wald test** is used. The Wald test is generally used to make pair-wise comparisons (i.e. compare the LFCs from two different conditions).
 
-#### Creating contrasts
+### Creating contrasts
 
 To indicate to DESeq2 the two groups we want to compare, we can use **contrasts** to perform differential expression testing using the Wald test. Contrasts can be provided to DESeq2 a couple of different ways:
 
@@ -111,7 +110,7 @@ res_tableOE <- lfcShrink(dds, contrast=contrast_oe, res=res_tableOE_unshrunken)
 
 **The order of the names determines the direction of fold change that is reported.** The name provided in the second element is the level that is used as baseline. So for example, if we observe a log2 fold change of -2 this would mean the gene expression is lower in Mov10_oe relative to the control. 
 
-#### MA Plot
+### MA Plot
 
 A plot that can be useful to exploring our results is the MA plot. The MA plot shows the mean of the normalized counts versus the log2 foldchanges for all genes tested. The genes that are significantly DE are colored to be easily identified. This is also a great way to illustrate the effect of LFC shrinkage. The DESeq2 package offers a simple function to generate an MA plot. 
 
@@ -121,7 +120,7 @@ A plot that can be useful to exploring our results is the MA plot. The MA plot s
 plotMA(res_tableOE_unshrunken, alpha = 0.05, ylim=c(-2,2))
 ```
 
-<img src="..img/maplot_unshrunken.png" width="600">
+<img src="../img/maplot_unshrunken.png" width="600">
 
 **And now the shrunken results:**
 
@@ -133,7 +132,7 @@ plotMA(res_tableOE, alpha = 0.05, ylim=c(-2,2))
 
 In addition to the comparison described above, this plot allows us to evaluate the magnitude of fold changes and how they are distributed relative to mean expression. Generally, we would expect to see significant genes across the full range of expression levels. 
 
-#### MOV10 DE analysis: results exploration
+### MOV10 DE analysis: results exploration
 
 The results table looks very much like a dataframe and in many ways it can be treated like one (i.e when accessing/subsetting data). However, it is important to recognize that it is actually stored in a `DESeqResults` object. When we start visualizing our data, this information will be helpful. 
 
@@ -182,7 +181,7 @@ A2M           5.8600841    -0.27850841 0.18051805 -1.5428286 0.1228724 0.2148906
 > 3. If a row is filtered by automatic independent filtering, for having a low mean normalized count, then only the adjusted p-value will be set to NA. 
 
 
-#### Multiple test correction
+### Multiple test correction
 
 Note that we have pvalues and p-adjusted values in the output. Which should we use to identify significantly differentially expressed genes?
 
@@ -196,7 +195,7 @@ DESeq2 helps reduce the number of genes tested by removing those genes unlikely 
 
 In DESeq2, the p-values attained by the Wald test are corrected for multiple testing using the Benjamini and Hochberg method by default. There are options to use other methods in teh `results()` function. The p-adjusted values should be used to determine significant genes. The significant genes can be output for visualization and/or functional analysis.
 
-#### MOV10 DE analysis: Control versus Knockdown
+### MOV10 DE analysis: Control versus Knockdown
 
 Now that we have results for the overexpression results, let's do the same for the **Control vs. Knockdown samples**. Use contrasts in the `results()` to extract a results table and store that to a variable called `res_tableKD`.  
 
@@ -211,7 +210,7 @@ res_tableKD <- lfcShrink(dds, contrast=contrast_kd, res=res_tableKD)
 
 Take a quick peek at the results table containing Wald test statistics for the Control-Knockdown comparison we are interested in and make sure that format is similar to what we observed with the OE.
 
-### Summarizing results
+## Summarizing results
 
 To summarize the results table, a handy function in DESeq2 is `summary()`. Confusingly it has the same name as the function used to inspect data frames. This function when called with a DESeq results table as input, will summarize the results using the default threshold: FDR < 0.1 (padj/FDR is used even though the output says `p-value < 0.1`). Let's start with the OE vs control results:
 
@@ -244,7 +243,7 @@ Explore the results table summary for the **Mov10_knockdown comparison to contro
 
 ***
 
-## Extracting significant differentially expressed genes
+### Extracting significant differentially expressed genes
 
 What we noticed is that the FDR threshold on it's own doesn't appear to be reducing the number of significant genes. With large significant gene lists it can be hard to extract meaningful biological relevance. To help increase stringency, one can also **add a fold change threshold**. _The `summary()` function doesn't have an argument for fold change threshold_
 
