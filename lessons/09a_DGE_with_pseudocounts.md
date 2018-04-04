@@ -70,6 +70,7 @@ library(tximport)
 library(DESeq2)
 library(annotables)
 library(dplyr)
+library(stringr)
 ```
 
 **Step 3:** Load the file paths to the quantification data that was output from Salmon.
@@ -91,7 +92,7 @@ samples <- list.files(path = "./data", full.names = T, pattern="\\.salmon$")
 files <- file.path(samples, "quant.sf")
 
 ## Since all quant files have the same name it is useful to have names for each element
-names(files) <-  samples
+names(files) <-  str_replace(samples, "./data/", "")
 
  ```
     
@@ -128,7 +129,6 @@ Keep in mind that the Ensembl IDs listed in our Salmon output contained version 
 # Create a character vector of Ensembl IDs		
 ids <- read.delim(files[1], sep="\t", header=T)    # extract the transcript ids from one of the files
 ids <- as.character(ids[,1])
-require(stringr)
 ids.strip <- str_replace(ids, "([.][0-9])", "")     
 ```
 
@@ -158,24 +158,20 @@ A final element 'countsFromAbundance' carries through the character argument use
 
 ```R    
 
-## Create a sampletable/metadata
+## Load in sampletable/metadata
+meta <- read.table("meta/Mov10_full_meta.txt")
 
-# Before we create this metadata object, let's see what the sample (column) order of the counts matrix is:
+# Before we create this metadata object, let's see what the sample name and order of the counts matrix is:
 colnames(txi$counts)
 
-condition=factor(c(rep("Ctl",3), rep("KD", 2), rep("OE", 3)))
-sampleTable <- data.frame(condition, row.names = colnames(txi$counts))
+# Change the rownames of the metadata to match our counts matrix
+rownames(meta) <- colnames(txi$counts)
 
 ## Create a DESeqDataSet object
-dds <- DESeqDataSetFromTximport(txi, sampleTable, ~ condition)
+dds <- DESeqDataSetFromTximport(txi, meta, ~ sampletype)
 ```
 
 Now you have created a DESeq object to proceed with DE analysis as we discussed in the earlier lessons!
-
-
-
-
-
 
 
 ***
