@@ -55,7 +55,7 @@ Let's get started by setting up our directory. First let's copy over our metadat
 Your Rstudio interface should look something like the screenshot below:
 
 <p align="center">
-  <img src="../img/sleuth_dir.png" width="600"/>
+  <img src="../img/rstudio_pseudocounts.png"/>
 </p>
 
 ### Generating a pseudocount matrix 
