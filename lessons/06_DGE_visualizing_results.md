@@ -248,19 +248,6 @@ pheatmap(as.data.frame(norm_OEsig),
 >
 > Z-scores are computed on a gene-by-gene basis by subtracting the mean and then dividing by the standard deviation. The Z-scores are computed **after the clustering**, so that it only affects the graphical aesthetics and the color visualization is improved.
 
-### MA Plot
-
-Another plot often useful to exploring our results is the MA plot. The MA plot shows the mean of the normalized counts versus the log2 foldchanges for all genes tested. The genes that are significantly DE are colored to be easily identified. The DESeq2 package also offers a simple function to generate this plot:
-
-```r
-ma <- res_tableOE %>% select(c("baseMean", "log2FoldChange", "threshold_OE"))
-
-plotMA(ma, ylim=c(-2,2))
-```
-<img src="../img/MA_plot.png" width="600">
-
-We would expect to see significant genes across the range of expression levels.
-
 ***
 
 ***NOTE:** If using the DESeq2 tool for differential expression analysis, the package 'DEGreport' can use the DESeq2 results output to make the top20 genes and the volcano plots generated above by writing a few lines of simple code. While you can customize the plots above, you may be interested in using the easier code. Below are examples of the code to create these plots:*
