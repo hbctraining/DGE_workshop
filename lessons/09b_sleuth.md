@@ -12,7 +12,6 @@ Approximate time: 1.25 hours
 
 * Determine differential expression of isoforms and visualization of results using Sleuth
 * Understand how Sleuth determines biological and technical variation
-* Learn how to run R on Orchestra and how to set up personal R libraries
 
 ## Transcript-level differential expression
 
@@ -286,20 +285,58 @@ oe <- sleuth_wt(so, 'sampletypeMOV10_overexpression')
 sleuth_results_oe <- sleuth_results(oe, 'sampletypeMOV10_overexpression', show_all = TRUE)
 ```
 
-The output should have the results of the differential expression testing
+>**NOTE:** There are also methods for performing the LRT test and specifying a full and reduced model, which are described in detail in a [sleuth walk-through](https://pachterlab.github.io/sleuth_walkthroughs/trapnell/analysis.html).
+
+The output represents the results from the differential expression testing.
 
 ### Exploring transcript-level expression between samples
 
-Now we can perform some exploratory analyses. Sleuth has some handy functions to plot expression of transcripts with bootstrap variation:
+Now we can perform some exploratory analyses, such as PCA and heatmap:
+
+```r
+plot_pca(oe, color_by = "sampletype")
+
+plot_sample_heatmap(oe)
+```
+
+![mov_plot_pca_heatmap](../img/mov10_pca_heatmap.png)
+
+In addition to a plot to look at count densities between sample groups, which should be similar for DE testing:
+
+```r
+plot_group_density(oe, use_filtered = TRUE, units = "est_counts",
+                   trans = "log", grouping = "sampletype")
+```
+
+![mov_plot_density](../img/mov10_density.png)
+
+There are also functions to explore the results, such as the MA plot:
+
+```r
+# Try the plot_ma() function
+plot_ma(oe) # shows that we need to specify the 'test'
+?plot_ma
+
+# Check for possible tests
+tests(oe)
+
+# Try the plot_ma() function again
+plot_ma(oe, test="sampletypeMOV10_overexpression", sig_level = 0.05)
+```
+
+![mov_plot_ma](../img/mov10_ma.png)
+
+Sleuth also has some handy functions to plot expression of transcripts with bootstrap variation:
 
 ```r
 # Plotting
 
-plot_bootstrap(oe, "ENST00000495374.5", units = "est_counts", color_by = "sample")
+plot_bootstrap(oe, "ENST00000495374.5", units = "est_counts", color_by = "sampletype")
 
-plot_bootstrap(oe, "ENST00000367412.1", units = "est_counts", color_by = "sample")
+plot_bootstrap(oe, "ENST00000367412.1", units = "est_counts", color_by = "sampletype")
 ```
 
+![mov_bootstraps](../img/mov10_bootstraps.png)
 
 Sleuth also offers us the option to explore the data and results interactively using a web interface. 
 
