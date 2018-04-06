@@ -336,6 +336,7 @@ There are also functions to explore the results, such as the MA plot:
 ```r
 # Try the plot_ma() function
 plot_ma(oe) # shows that we need to specify the 'test'
+
 ?plot_ma
 
 # Check for possible tests
@@ -345,7 +346,9 @@ tests(oe)
 plot_ma(oe, test="sampletypeMOV10_overexpression", sig_level = 0.05)
 ```
 
-![mov_plot_ma](../img/sleuth_mov10_ma.png)
+<p align="center">
+  <img src="../img/sleuth_mov10_ma.png" width="400"/>
+</p>
 
 Sleuth also has some handy functions to plot expression of transcripts with bootstrap variation:
 
@@ -357,7 +360,13 @@ plot_bootstrap(oe, "ENST00000495374.5", units = "est_counts", color_by = "sample
 plot_bootstrap(oe, "ENST00000367412.1", units = "est_counts", color_by = "sampletype")
 ```
 
-![mov_bootstraps](../img/mov10_bootstraps.png)
+<p align="center">
+  <img src="../img/mov10_bootstraps.png" width="400"/>
+</p>
+
+<p align="center">
+  <img src="../img/mov10_bootstraps2.png" width="400"/>
+</p>
 
 Sleuth also offers us the option to explore the data and results interactively using a web interface. 
 
