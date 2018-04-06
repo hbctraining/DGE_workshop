@@ -54,33 +54,14 @@ In addition to performing differential expression analysis of transcripts, the s
 ***NOTE:*** *Kallisto is distributed under a non-commercial license, while Sailfish and Salmon are distributed under the [GNU General Public License, version 3](http://www.gnu.org/licenses/gpl.html).*
 
 
-## Set-up for Running Sleuth on Orchestra
+## Set-up for Running Sleuth
 
-Sleuth is a lightweight algorithm that can be quickly run on our personal computers [[2](https://rawgit.com/pachterlab/sleuth/master/inst/doc/intro.html)]
+Sleuth is a lightweight algorithm that can be quickly run on our personal computers [[2](https://rawgit.com/pachterlab/sleuth/master/inst/doc/intro.html)]. We can use the previous `DE_pseudocounts` project we created previously.
 
-### Setting up the filesystem
+1. Open the RStudio project entitled `DE_pseudocounts`.
+2. Create a new R script ('File' -> 'New File' -> 'Rscript'), and save it as `sleuth_de.R`
 
-Let's get started by setting up our directory. First let's copy over our metadata and the full Salmon output files. 
-
-You can download the directory with the quant.sf files for the 8 full datasets using the link below. 
-
-1. Create a new RStudio project entitled `sleuth`.
-2. Create the directory structure inside the project with folders for `data`, `meta`, `results`, and `figures`.
-3. [Download Salmon files](https://www.dropbox.com/sh/cc7oz36fy4zbow0/AACtAZ5Y8ISlIa4uV5UOTNgTa?dl=0) and move the files to the `data` directory.
-4. Decompress (unzip) the zip archive by double-clicking on the file.
-5. Download the **metadata** associated with the Salmon files by **right-clicking [this link](https://github.com/hbctraining/DGE_workshop/blob/master/data/Mov10_full_meta.txt)** and selecting `Download Linked File` or `Save Linked File As` and saving to the `meta` directory.
-6. Open up a new R script ('File' -> 'New File' -> 'Rscript'), and save it as `sleuth_de.R`
-
-The directory structure should now look like:
-
-
-<p align="center">
-  <img src="../img/sleuth_dir.png" width="600"/>
-</p>
-
-### Loading libraries
-
-To perform any analysis, we need to load the libraries for wasabi and sleuth. Sleuth also has a dependency for `biomaRt`, so this package will be loaded as well:
+To perform any analysis, we need to load the libraries for `wasabi` and `sleuth`. Sleuth also requires `annotables`, so this package will be loaded as well:
 
 ```R
 library(wasabi)
