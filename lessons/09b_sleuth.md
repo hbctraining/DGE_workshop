@@ -289,6 +289,7 @@ sleuth_results_oe <- sleuth_results(oe, 'sampletypeMOV10_overexpression', show_a
 >**NOTE:** There are also methods for performing the LRT test and specifying a full and reduced model, which are described in detail in a [sleuth walk-through](https://pachterlab.github.io/sleuth_walkthroughs/trapnell/analysis.html).
 
 The output represents the results from the differential expression testing.
+
 ![sleuth_results](../img/sleuth_mov10_results.png)
 
 ### Exploring transcript-level expression between samples
