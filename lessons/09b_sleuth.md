@@ -302,14 +302,25 @@ plot_pca(oe, color_by = "sampletype")
 plot_sample_heatmap(oe)
 ```
 <p align="center">
-  <img src="../img/sleuth_mov10_pca.png" width="600"/>
+  <img src="../img/sleuth_mov10_pca.png" width="400"/>
 </p>
 
 <p align="center">
-  <img src="../img/sleuth_mov10_heatmap.png" width="600"/>
+  <img src="../img/sleuth_mov10_heatmap.png" width="400"/>
 </p>
 
-In addition there is a histogram plot to explore count densities between sample groups, which should be similar for DE testing. The count densities represent the proportion of genes (on the y-axis) associated with the number of counts (designated on the x-axis):
+In addition there is a histogram plot to explore count distributions between sample groups, which should be similar for DE testing. The count distributions represent the proportion of genes (on the y-axis) associated with the number of counts (designated on the x-axis):
+
+```r
+plot_group_density(oe, use_filtered = FALSE, units = "est_counts",
+                   trans = "log", grouping = "sampletype")
+```
+
+<p align="center">
+  <img src="../img/sleuth_mov10_density_no_filter.png" width="400"/>
+</p>
+
+As we know, most genes have few counts, but we filter these genes prior to performing DE analysis. If we want to look at the distributions of the filtered genes used for DE analysis, we could change the `use_filtered` argument to `TRUE`.
 
 ```r
 plot_group_density(oe, use_filtered = TRUE, units = "est_counts",
@@ -317,7 +328,7 @@ plot_group_density(oe, use_filtered = TRUE, units = "est_counts",
 ```
 
 <p align="center">
-  <img src="../img/sleuth_mov10_density.png" width="600"/>
+  <img src="../img/sleuth_mov10_density.png" width="400"/>
 </p>
 
 There are also functions to explore the results, such as the MA plot:
