@@ -66,6 +66,7 @@ To perform any analysis, we need to load the libraries for `wasabi` and `sleuth`
 library(wasabi)
 library(sleuth)
 library(annotables)
+library(tidyverse)
 ```
 
 ## Using Wasabi to convert Salmon output for Sleuth
