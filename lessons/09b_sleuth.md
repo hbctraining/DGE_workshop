@@ -301,10 +301,13 @@ plot_pca(oe, color_by = "sampletype")
 
 plot_sample_heatmap(oe)
 ```
+<p align="center">
+  <img src="../img/sleuth_mov10_pca.png" width="600"/>
+</p>
 
-![mov_plot_pca](../img/sleuth_mov10_pca.png)
-
-![mov_plot_heatmap](../img/sleuth_mov10_heatmap.png)
+<p align="center">
+  <img src="../img/sleuth_mov10_heatmap.png" width="600"/>
+</p>
 
 In addition to a plot to look at count densities between sample groups, which should be similar for DE testing:
 
@@ -313,7 +316,9 @@ plot_group_density(oe, use_filtered = TRUE, units = "est_counts",
                    trans = "log", grouping = "sampletype")
 ```
 
-![mov_plot_density](../img/sleuth_mov10_density.png)
+<p align="center">
+  <img src="../img/sleuth_mov10_density.png" width="600"/>
+</p>
 
 There are also functions to explore the results, such as the MA plot:
 
