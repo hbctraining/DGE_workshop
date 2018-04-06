@@ -289,6 +289,7 @@ sleuth_results_oe <- sleuth_results(oe, 'sampletypeMOV10_overexpression', show_a
 >**NOTE:** There are also methods for performing the LRT test and specifying a full and reduced model, which are described in detail in a [sleuth walk-through](https://pachterlab.github.io/sleuth_walkthroughs/trapnell/analysis.html).
 
 The output represents the results from the differential expression testing.
+![sleuth_results](../img/sleuth_mov10_results.png)
 
 ### Exploring transcript-level expression between samples
 
@@ -300,7 +301,9 @@ plot_pca(oe, color_by = "sampletype")
 plot_sample_heatmap(oe)
 ```
 
-![mov_plot_pca_heatmap](../img/mov10_pca_heatmap.png)
+![mov_plot_pca](../img/sleuth_mov10_pca.png)
+
+![mov_plot_heatmap](../img/sleuth_mov10_heatmap.png)
 
 In addition to a plot to look at count densities between sample groups, which should be similar for DE testing:
 
@@ -309,7 +312,7 @@ plot_group_density(oe, use_filtered = TRUE, units = "est_counts",
                    trans = "log", grouping = "sampletype")
 ```
 
-![mov_plot_density](../img/mov10_density.png)
+![mov_plot_density](../img/sleuth_mov10_density.png)
 
 There are also functions to explore the results, such as the MA plot:
 
@@ -325,7 +328,7 @@ tests(oe)
 plot_ma(oe, test="sampletypeMOV10_overexpression", sig_level = 0.05)
 ```
 
-![mov_plot_ma](../img/mov10_ma.png)
+![mov_plot_ma](../img/sleuth_mov10_ma.png)
 
 Sleuth also has some handy functions to plot expression of transcripts with bootstrap variation:
 
