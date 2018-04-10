@@ -317,11 +317,11 @@ plot_loadings(oe)
 </p>
 
 <p align="center">
-  <img src="../img/sleuth_pca_loadings.png" width="500"/>
+  <img src="../img/sleuth_pca_variance.png" width="500"/>
 </p>
 
 <p align="center">
-  <img src="../img/sleuth_pca_variance.png" width="500"/>
+  <img src="../img/sleuth_pca_loadings.png" width="500"/>
 </p>
 
 **Heatmap:** The heatmap plot is shaded with the Jensen-Shannon divergence values. Therefore, **lower divergence values represent samples that are more similar to each other**.
@@ -388,12 +388,18 @@ plot_ma(oe,
 Also, we can perform an expression heatmap for select transcripts:
 
 ```r
-sleuth_results %>% filter(
+sig_transcripts <- sleuth_results_oe %>% 
+  filter(qval < 0.05)
+  
 plot_transcript_heatmap(oe, 
-                        transcripts = sleuth_results_oe$target_id[1:10])
+                        transcripts = sig_transcripts$target_id[1:20])
 ```
 
-Sleuth also has some handy functions to plot expression of transcripts with bootstrap variation:
+<p align="center">
+  <img src="../img/sleuth_transcripts_heatmap.png" width="400"/>
+</p>
+
+Sleuth also has some handy functions to plot expression of transcripts with bootstrap variation to **visualize both biological and technical variation** for selected transcripts:
 
 ```r
 # Plotting
