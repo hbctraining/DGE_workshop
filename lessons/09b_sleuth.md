@@ -307,15 +307,15 @@ plot_loadings(oe)
 ```
 
 <p align="center">
-  <img src="../img/sleuth_plot_pca.png" width="400"/>
+  <img src="../img/sleuth_plot_pca.png" width="600"/>
 </p>
 
 <p align="center">
-  <img src="../img/sleuth_pca_loadings.png" width="400"/>
+  <img src="../img/sleuth_pca_loadings.png" width="500"/>
 </p>
 
 <p align="center">
-  <img src="../img/sleuth_pca_variance.png" width="400"/>
+  <img src="../img/sleuth_pca_variance.png" width="500"/>
 </p>
 
 The heatmap plot is shaded with the Jensen-Shannon divergence values. Therefore, lower divergence values represent samples that are more similar to each other.
