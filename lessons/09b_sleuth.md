@@ -309,7 +309,7 @@ sleuth_results_oe <- sleuth_results(oe, 'sampletypeMOV10_overexpression', show_a
 
 The output represents the results from the differential expression testing with the following columns:
 
-- **target_id:** the Ensembl transcript ID
+- **`target_id`:** the Ensembl transcript ID
 - **pval:** the Wald test FDR adjusted pvalue using Benjamini-Hochberg
 - **qval:** the p-value adjusted for multiple test correction
 - **b:** beta value, which is the log2 fold changes between conditions (These are log2 b/c we specified log2 transformation in the `sleuth_prep()` step. By default, these would have been natural log fold changes).
