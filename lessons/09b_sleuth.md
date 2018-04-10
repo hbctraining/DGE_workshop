@@ -266,6 +266,7 @@ so <- sleuth_fit(so)
 ```
 
 > **NOTE:** alternatively the two prior steps could have been run as: 
+> ```r
 > so <- sleuth_prep(sfdata, 
 >                  full_model = design, 
 >                  target_mapping = t2g, 
@@ -273,6 +274,7 @@ so <- sleuth_fit(so)
 >                  extra_bootstrap_summary = TRUE,
 >                  transformation_function = function(x) log2(x + 0.5)) %>%
 >	sleuth_fit()
+> ```
 
 #### Check which models have been fit and which coefficients can be tested
 
