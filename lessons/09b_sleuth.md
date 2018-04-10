@@ -358,19 +358,23 @@ Now that we have our results, we can perform some exploratory analyses, such as 
 plot_pca(oe, 
          color_by = 'sampletype',
          text_labels = TRUE)
-
-plot_pc_variance(oe)
-
-plot_loadings(oe)
 ```
 
 <p align="center">
   <img src="../img/sleuth_plot_pca.png" width="700"/>
 </p>
 
+```r
+plot_pc_variance(oe)
+```
+
 <p align="center">
   <img src="../img/sleuth_pca_variance.png" width="500"/>
 </p>
+
+```r
+plot_loadings(oe)
+```
 
 <p align="center">
   <img src="../img/sleuth_pca_loadings.png" width="500"/>
@@ -386,7 +390,7 @@ plot_sample_heatmap(oe)
   <img src="../img/sleuth_mov10_heatmap.png" width="400"/>
 </p>
 
-In addition there is a histogram plot to explore count distributions between sample groups, which should be similar for DE testing. The count distributions represent the proportion of genes (on the y-axis) associated with the number of counts (designated on the x-axis):
+In addition, there is a histogram plot to explore count distributions between sample groups, which should be similar for DE testing. The count distributions represent the proportion of genes (on the y-axis) associated with the number of counts (designated on the x-axis):
 
 ```r
 plot_group_density(oe, 
