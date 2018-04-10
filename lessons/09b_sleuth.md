@@ -309,10 +309,6 @@ models(so)
 
 ### Step 3: Test significant differences between conditions using the Wald test
 
-<p align="center">
-<img src="../img/sleuth_workflow3.png" width="600"/>
-</p>
-
 At this step in the workflow, we need to specify which level we want to compare against the base level (use the name given for the coefficients from `models(so)`):
 
 ```r
