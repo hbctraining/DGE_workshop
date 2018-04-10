@@ -102,7 +102,7 @@ files will be used as input to Sleuth.
 
 The workflow for Sleuth is similar to the workflow followed for DESeq2, even though, the models for estimating differential expression are very different. 
 
-**Step 1:** Creation of Sleuth object to provide metadata, estimated counts, and design formula for the analysis, in addition to a biomaRt database to switch between transcript IDs and associated gene names.
+**Step 1:** Creation of Sleuth object to provide metadata, estimated counts, and design formula for the analysis, in addition to a `annotables` database to switch between transcript IDs and associated gene names.
 
 **Step 2:** Fit the sleuth model
 	
@@ -120,11 +120,11 @@ The workflow for Sleuth is similar to the workflow followed for DESeq2, even tho
 
 - Identification of:
 	- **Coefficients:** indicating overall expression strength
-	- **Beta values:** estimating fold changes	
+	- **Beta values:** estimates of fold changes	
 
 **Step 3:** Test for significant differences between conditions
 
-After performing all analysis steps, we will explore our results by transferring the results to our local machine, and we will use the html interface available through the sleuth package.
+After performing all analysis steps, we will explore the sample QC plots and plotting of results. In addition, we will use the html interface available through the sleuth package.
 
 ## Sleuth workflow
 
@@ -242,18 +242,37 @@ t2g <- dplyr::rename(t2g, target_id = enstxp ,
 
 #### Fit the transcript abundance data to the Sleuth model
 
+Using the `sleuth_prep()` function, the counts are normalized and filtered, then merged with the metadata. In addition, the bootstraps for each transcript are summarized. This function can take a bit of time, but there is an option (`ncores`) to split across multiple processors.
+
 ```r
 # Create sleuth object for analysis 
 
-so <- sleuth_prep(sfdata, design, target_mapping = t2g, read_bootstrap_tpm = TRUE, extra_bootstrap_summary = TRUE)  
+so <- sleuth_prep(sfdata, 
+                  full_model = design, 
+                  target_mapping = t2g, 
+                  read_bootstrap_tpm = TRUE,
+                  extra_bootstrap_summary = TRUE,
+                  transformation_function = function(x) log2(x + 0.5))  
+```
+
+>**NOTE:** By default the transformation of counts is natural log, which would make the output fold changes somewhat more difficult to interpret. By specifying the `transformation_function` to be `log2(x + 0.5)` we are ensuring our output fold changes are log2.
 
 # Fit the transcript abundance data to the sleuth model
 
+In fitting the sleuth model, sleuth performs shrinkage of variance, parameter estimation and estimation of variance using the general linear model:
+
+```r
 so <- sleuth_fit(so)
-
-# NOTE: alternatively the two prior steps could have been run as: "so <- sleuth_prep(sfdata, design, target_mapping = t2g) %>% sleuth_fit()
-
 ```
+
+> **NOTE:** alternatively the two prior steps could have been run as: 
+> so <- sleuth_prep(sfdata, 
+>                  full_model = design, 
+>                  target_mapping = t2g, 
+>                  read_bootstrap_tpm = TRUE,
+>                  extra_bootstrap_summary = TRUE,
+>                  transformation_function = function(x) log2(x + 0.5)) %>%
+>	sleuth_fit()
 
 #### Check which models have been fit and which coefficients can be tested
 
@@ -262,13 +281,13 @@ Ensure the design model and coefficients are correct for your analysis. The leve
 ```r
 models(so)
 ```
-> **NOTE:** Sleuth will automatically use the first level (alphabetically) in the factor variable being tested to compare all other conditions against (in our metadata, this is 'control'). If you want to use a different condition to be the base level, then you would need to use the relevel() function to change the base level of the variable in step 1 above. For example, if we wanted the base level of `sampletype` to be "MOV10_knockdown", we could use the following code:
+> **NOTE:** Sleuth will automatically use the first level (alphabetically by default) in the factor variable being tested to compare all other conditions against (in our metadata, this is 'control'). If you want to use a different condition to be the base level, then you would need to use the relevel() function to change the base level of the variable in step 1 above. For example, if we wanted the base level of `sampletype` to be "MOV10_knockdown", we could use the following code:
 >
 >```r
 > # DO NOT RUN!
 > summarydata$sampletype <- relevel(summarydata$sampletype, ref = "MOV10_knockdown")
 >```
->***An ordered factor will not give interpretable output, so do not order the factor using the factor() function, use relevel() instead.***
+>***An ordered factor will not give interpretable output, so do NOT order the factor using the factor() function with `ordered = TRUE`, use factor() specifying the levels or relevel() instead.***
 
 ### Step 3: Test significant differences between conditions using the Wald test
 
@@ -288,17 +307,29 @@ sleuth_results_oe <- sleuth_results(oe, 'sampletypeMOV10_overexpression', show_a
 
 >**NOTE:** There are also methods for performing the LRT test and specifying a full and reduced model, which are described in detail in a [sleuth walk-through](https://pachterlab.github.io/sleuth_walkthroughs/trapnell/analysis.html).
 
-The output represents the results from the differential expression testing.
+The output represents the results from the differential expression testing with the following columns:
+
+- **target_id:** the Ensembl transcript ID
+- **pval:** the Wald test FDR adjusted pvalue using Benjamini-Hochberg
+- **qval:** the p-value adjusted for multiple test correction
+- **b:** beta value, which is the log2 fold changes between conditions (These are log2 b/c we specified log2 transformation in the `sleuth_prep()` step. By default, these would have been natural log fold changes).
+- **se_b:** standard error of the beta value
+- **mean_obs:** mean expression of the transcript across all samples
+- **var_obs:** biological variance of the expression
+- **tech_var:** technical variance of expression (derived from the bootstraps)
+- **sigma_sq:** raw estimator of the variance once the technical variance has been removed
+- **smooth_sigma_sq:** the smooth regression fit for the shrinkage estimation
+- **final_sigma_sq:** max(sigma_sq, smooth_sigma_sq). this is the one used for covariance estimation of beta (in addition to tech_var)
+- **ens_gene:** associated Ensembl gene ID
+- **ext_gene:** associated gene symbol
 
 ![sleuth_results](../img/sleuth_mov10_results.png)
 
 ### Exploring transcript-level expression between samples
 
-Within sleuth, there are multiple functions for exploring the sample QC and results.
+#### Exploratory analyses:
 
-#### Exploratory analyses: PCA, heatmap, and count distributions
-
-Now we can perform some exploratory analyses, such as PCA and heatmap. 
+Now that we have our results, we can perform some exploratory analyses, such as PCA, heatmap, and distributions of counts between conditions. 
 
 **PCA:** There are multiple functions to explore the variation in the dataset explained by the different PCs.
 
@@ -348,7 +379,7 @@ plot_group_density(oe,
   <img src="../img/sleuth_mov10_density_no_filter.png" width="400"/>
 </p>
 
-As we know, most genes have few counts, but we filter these genes prior to performing DE analysis. If we want to look at the distributions of the filtered genes used for DE analysis, we could change the `use_filtered` argument to `TRUE`.
+**Count distributions:** As we know, most genes have few counts, but we filter these genes prior to performing DE analysis. If we want to look at the distributions of the filtered genes used for DE analysis, we could change the `use_filtered` argument to `TRUE`.
 
 ```r
 plot_group_density(oe, 
@@ -362,7 +393,7 @@ plot_group_density(oe,
   <img src="../img/sleuth_mov10_density.png" width="400"/>
 </p>
 
-#### Results analyses: MA plot, 
+#### Results analyses: 
 
 There are also functions to explore the results, such as the MA plot:
 
