@@ -99,7 +99,7 @@ files will be used as input to Sleuth.
 ## Sleuth for estimation of differential expression of transcripts
 
 <p align="center">
-  <img src="../img/sleuth_workflow.png" width="800"/>
+  <img src="../img/sleuth_workflow.png" width="700"/>
 </p>
 
 The workflow for Sleuth is similar to the workflow followed for DESeq2, even though, the models for estimating differential expression are very different. 
