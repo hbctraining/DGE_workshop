@@ -307,7 +307,7 @@ plot_loadings(oe)
 ```
 
 <p align="center">
-  <img src="../img/sleuth_plot_pca.png" width="600"/>
+  <img src="../img/sleuth_plot_pca.png" width="500"/>
 </p>
 
 <p align="center">
