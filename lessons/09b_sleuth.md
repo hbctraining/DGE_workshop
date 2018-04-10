@@ -310,18 +310,18 @@ sleuth_results_oe <- sleuth_results(oe, 'sampletypeMOV10_overexpression', show_a
 The output represents the results from the differential expression testing with the following columns:
 
 - **`target_id`:** the Ensembl transcript ID
-- **pval:** the Wald test FDR adjusted pvalue using Benjamini-Hochberg
-- **qval:** the p-value adjusted for multiple test correction
-- **b:** beta value, which is the log2 fold changes between conditions (These are log2 b/c we specified log2 transformation in the `sleuth_prep()` step. By default, these would have been natural log fold changes).
-- **se_b:** standard error of the beta value
-- **mean_obs:** mean expression of the transcript across all samples
-- **var_obs:** biological variance of the expression
-- **tech_var:** technical variance of expression (derived from the bootstraps)
-- **sigma_sq:** raw estimator of the variance once the technical variance has been removed
-- **smooth_sigma_sq:** the smooth regression fit for the shrinkage estimation
-- **final_sigma_sq:** max(sigma_sq, smooth_sigma_sq). this is the one used for covariance estimation of beta (in addition to tech_var)
-- **ens_gene:** associated Ensembl gene ID
-- **ext_gene:** associated gene symbol
+- **`pval`:** the Wald test FDR adjusted pvalue using Benjamini-Hochberg
+- **`qval`:** the p-value adjusted for multiple test correction
+- **`b`:** beta value, which is the log2 fold changes between conditions (These are log2 b/c we specified log2 transformation in the `sleuth_prep()` step. By default, these would have been natural log fold changes).
+- **`se_b`:** standard error of the beta value
+- **`mean_obs`:** mean expression of the transcript across all samples
+- **`var_obs`:** biological variance of the expression
+- **`tech_var`:** technical variance of expression (derived from the bootstraps)
+- **`sigma_sq`:** raw estimator of the variance once the technical variance has been removed
+- **`smooth_sigma_sq`:** the smooth regression fit for the shrinkage estimation
+- **`final_sigma_sq`:** max(sigma_sq, smooth_sigma_sq). this is the one used for covariance estimation of beta (in addition to tech_var)
+- **`ens_gene`:** associated Ensembl gene ID
+- **`ext_gene`:** associated gene symbol
 
 ![sleuth_results](../img/sleuth_mov10_results.png)
 
