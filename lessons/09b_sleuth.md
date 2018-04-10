@@ -350,7 +350,7 @@ The output represents the results from the differential expression testing with 
 
 #### Exploratory analyses:
 
-Now that we have our results, we can perform some exploratory analyses, such as PCA, heatmap, and distributions of counts between conditions. 
+Now that we have our results, we can perform some exploratory analyses, such as PCA, heatmap, and distributions of counts between conditions. By default, these plots will use the sleuth-normalized `est_counts`.
 
 **PCA:** There are multiple functions to explore the variation in the dataset explained by the different PCs.
 
