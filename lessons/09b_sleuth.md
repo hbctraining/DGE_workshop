@@ -252,7 +252,7 @@ t2g <- dplyr::rename(t2g, target_id = enstxp ,
 ### Step 2: Fit the sleuth model
 
 <p align="center">
-<img src="../img/sleuth_workflow2.png" width="600"/>
+<img src="../img/sleuth_workflow2_updated.png" width="600"/>
 </p>
 
 #### Fit the transcript abundance data to the Sleuth model
