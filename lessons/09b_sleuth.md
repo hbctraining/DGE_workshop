@@ -390,7 +390,7 @@ plot_sample_heatmap(oe)
   <img src="../img/sleuth_mov10_heatmap.png" width="400"/>
 </p>
 
-In addition, there is a histogram plot to explore count distributions between sample groups, which should be similar for DE testing. The count distributions represent the proportion of genes (on the y-axis) associated with the number of counts (designated on the x-axis):
+**Count distributions:** There is a histogram plot to explore count distributions between sample groups, which should be similar to each other when performing DE testing. The count distributions represent the proportion of genes (on the y-axis) associated with the number of counts (designated on the x-axis):
 
 ```r
 plot_group_density(oe, 
@@ -404,7 +404,7 @@ plot_group_density(oe,
   <img src="../img/sleuth_mov10_density_no_filter.png" width="400"/>
 </p>
 
-**Count distributions:** As we know, most genes have few counts, but we filter these genes prior to performing DE analysis. If we want to look at the distributions of the filtered genes used for DE analysis, we could change the `use_filtered` argument to `TRUE`.
+As we know, most genes have few counts, but we filter these genes prior to performing DE analysis. If we want to look at the distributions of the filtered genes used for DE analysis, we could change the `use_filtered` argument to `TRUE`.
 
 ```r
 plot_group_density(oe, 
