@@ -294,7 +294,13 @@ The output represents the results from the differential expression testing.
 
 ### Exploring transcript-level expression between samples
 
-Now we can perform some exploratory analyses, such as PCA and heatmap. There are multiple functions to explore the variation in the dataset explained by the different PCs.
+Within sleuth, there are multiple functions for exploring the sample QC and results.
+
+#### Exploratory analyses: PCA, heatmap, and count distributions
+
+Now we can perform some exploratory analyses, such as PCA and heatmap. 
+
+**PCA:** There are multiple functions to explore the variation in the dataset explained by the different PCs.
 
 ```r
 plot_pca(oe, 
@@ -318,7 +324,7 @@ plot_loadings(oe)
   <img src="../img/sleuth_pca_variance.png" width="500"/>
 </p>
 
-The heatmap plot is shaded with the Jensen-Shannon divergence values. Therefore, lower divergence values represent samples that are more similar to each other.
+**Heatmap:** The heatmap plot is shaded with the Jensen-Shannon divergence values. Therefore, **lower divergence values represent samples that are more similar to each other**.
 
 ```r
 plot_sample_heatmap(oe)
@@ -356,6 +362,8 @@ plot_group_density(oe,
   <img src="../img/sleuth_mov10_density.png" width="400"/>
 </p>
 
+#### Results analyses: MA plot, 
+
 There are also functions to explore the results, such as the MA plot:
 
 ```r
@@ -376,6 +384,14 @@ plot_ma(oe,
 <p align="center">
   <img src="../img/sleuth_mov10_ma.png" width="400"/>
 </p>
+
+Also, we can perform an expression heatmap for select transcripts:
+
+```r
+sleuth_results %>% filter(
+plot_transcript_heatmap(oe, 
+                        transcripts = sleuth_results_oe$target_id[1:10])
+```
 
 Sleuth also has some handy functions to plot expression of transcripts with bootstrap variation:
 
