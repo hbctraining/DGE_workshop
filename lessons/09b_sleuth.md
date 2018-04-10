@@ -294,16 +294,35 @@ The output represents the results from the differential expression testing.
 
 ### Exploring transcript-level expression between samples
 
-Now we can perform some exploratory analyses, such as PCA and heatmap:
+Now we can perform some exploratory analyses, such as PCA and heatmap. There are multiple functions to explore the variation in the dataset explained by the different PCs.
 
 ```r
-plot_pca(oe, color_by = "sampletype")
+plot_pca(oe, 
+         color_by = 'sampletype',
+         text_labels = TRUE)
 
+plot_pc_variance(oe)
+
+plot_loadings(oe)
+```
+
+<p align="center">
+  <img src="../img/sleuth_plot_pca.png" width="400"/>
+</p>
+
+<p align="center">
+  <img src="../img/sleuth_pca_loadings.png" width="400"/>
+</p>
+
+<p align="center">
+  <img src="../img/sleuth_pca_variance.png" width="400"/>
+</p>
+
+The heatmap plot is shaded with the Jensen-Shannon divergence values. Therefore, lower divergence values represent samples that are more similar to each other.
+
+```r
 plot_sample_heatmap(oe)
 ```
-<p align="center">
-  <img src="../img/sleuth_mov10_pca.png" width="400"/>
-</p>
 
 <p align="center">
   <img src="../img/sleuth_mov10_heatmap.png" width="400"/>
@@ -312,8 +331,11 @@ plot_sample_heatmap(oe)
 In addition there is a histogram plot to explore count distributions between sample groups, which should be similar for DE testing. The count distributions represent the proportion of genes (on the y-axis) associated with the number of counts (designated on the x-axis):
 
 ```r
-plot_group_density(oe, use_filtered = FALSE, units = "est_counts",
-                   trans = "log", grouping = "sampletype")
+plot_group_density(oe, 
+                   use_filtered = FALSE, 
+                   units = "est_counts",
+                   trans = "log", 
+                   grouping = "sampletype")
 ```
 
 <p align="center">
@@ -323,8 +345,11 @@ plot_group_density(oe, use_filtered = FALSE, units = "est_counts",
 As we know, most genes have few counts, but we filter these genes prior to performing DE analysis. If we want to look at the distributions of the filtered genes used for DE analysis, we could change the `use_filtered` argument to `TRUE`.
 
 ```r
-plot_group_density(oe, use_filtered = TRUE, units = "est_counts",
-                   trans = "log", grouping = "sampletype")
+plot_group_density(oe, 
+                   use_filtered = TRUE, 
+                   units = "est_counts",
+                   trans = "log", 
+                   grouping = "sampletype")
 ```
 
 <p align="center">
@@ -343,7 +368,9 @@ plot_ma(oe) # shows that we need to specify the 'test'
 tests(oe)
 
 # Try the plot_ma() function again
-plot_ma(oe, test="sampletypeMOV10_overexpression", sig_level = 0.05)
+plot_ma(oe, 
+        test="sampletypeMOV10_overexpression", 
+        sig_level = 0.05)
 ```
 
 <p align="center">
@@ -355,9 +382,15 @@ Sleuth also has some handy functions to plot expression of transcripts with boot
 ```r
 # Plotting
 
-plot_bootstrap(oe, "ENST00000495374.5", units = "est_counts", color_by = "sampletype")
+plot_bootstrap(oe, 
+               target_id = "ENST00000495374.5", 
+               units = "est_counts", 
+               color_by = "sampletype")
 
-plot_bootstrap(oe, "ENST00000367412.1", units = "est_counts", color_by = "sampletype")
+plot_bootstrap(oe, 
+               target_id = "ENST00000367412.1", 
+               units = "est_counts", 
+               color_by = "sampletype")
 ```
 
 <p align="center">
