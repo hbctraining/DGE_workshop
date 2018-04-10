@@ -342,6 +342,8 @@ The output represents the results from the differential expression testing with 
 - **`ens_gene`:** associated Ensembl gene ID
 - **`ext_gene`:** associated gene symbol
 
+* Adapted from the results table description in Harold Pimental's [post](https://groups.google.com/forum/#!searchin/kallisto-sleuth-users/mean_obs%7Csort:date/kallisto-sleuth-users/kWodd7CQejE/nzr6hEOKAAAJ) to the kallisto-sleuth-users google groups. Harold Pimental is an author of sleuth.*
+
 ![sleuth_results](../img/sleuth_mov10_results.png)
 
 ### Exploring transcript-level expression between samples
