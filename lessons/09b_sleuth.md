@@ -384,28 +384,5 @@ Look at the expression levels of Mov10 for three different isoforms using the `a
 
 ![mov_isoforms](../img/mov10_isoform_expression.png)
 
-> **NOTE:** The expression levels can be explored manually as well. For example, to plot the transcript expression values for Mov10 transcript "ENST00000357443" we would need technical variation estimates for each sample. To attain the expression estimates for each bootstrap sampling for every sample using the `get_bootstraps()` function in sleuth:
->
->```r
-> boot_mov10_443 <- get_bootstraps(oe, "ENST00000357443")
->
-> boot_mov10_443
->```
->
->If we view `boot_mov10_443`, we will see the estimated counts (est_counts) and Transcripts Per Million (tpm) values for each bootstrap of every sample. We can visualize the estimates and distributions:
->
->```r
->ggplot(boot_mov10_443, aes(sample, est_counts + 1, fill = sampletype)) + 
->        geom_boxplot() + 
->        facet_wrap(~target_id, ncol = 1) + 
->        theme_bw() + 
->        scale_y_log10() + 
->        theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
->        ylab("estimated counts") + 
->        xlab("")
->```
->
->The technical variation associated with the transcript abundance estimates for each sample is represented by the box plots. The biological variation is observed by viewing across biological replicates. This isoform of Mov10 shows the expected pattern of expression, with high expression in the Mov10 over-expressed samples and lower expression in the Mov10 knockdown samples.
-
 ***
 *This lesson has been developed by members of the teaching team at the [Harvard Chan Bioinformatics Core (HBC)](http://bioinformatics.sph.harvard.edu/). These are open access materials distributed under the terms of the [Creative Commons Attribution license](https://creativecommons.org/licenses/by/4.0/) (CC BY 4.0), which permits unrestricted use, distribution, and reproduction in any medium, provided the original author and source are credited.*
