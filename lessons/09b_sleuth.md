@@ -219,12 +219,21 @@ design <- ~ sampletype
 
 More complex designs can be analyzed using Sleuth as well by adding additional covariates (i.e `design <- ~ sex + treatment`). Interaction terms can also be added to the design formula to test if the effect attributable to a given condition is different based on another factor, for example, if the treatment effect differs between sexes. To learn more about setting up design formulas for more complex designs, see the [DESeq2 tutorial](https://www.bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.pdf) (chapter 3 discusses complex experimental designs). There is also a [recent post](http://nxn.se/post/134227694720/timecourse-analysis-with-sleuth) describing the use of Sleuth to perform time course analyses. While Sleuth has much flexiblity in design models, it is unable to support some complex designs, such as nested models.
 
-#### Create Biomart dataset to query
+#### Query annotables dataset to obtain the corresponding Ensembl transcript/gene IDs
 
-The last component to include for our analysis is the biomaRt Ensembl genome database to obtain the Ensembl transcript/gene IDs and gene names for annotation of results. BiomaRt allows extensive genome information to be accessible during an analysis.
+The last component to include for our analysis is the annotables Ensembl genome dataset to obtain the Ensembl transcript/gene IDs and gene names for annotation of results. There are conversion objects available to us by just loading the annotables library:
+
+```r
+grch37 %>% head()
+
+grch37_tx2gene %>% head()
+```
+
+We can use the `grch37_tx2gene` dataset for our conversion purposes:
 
 ```r
 # Using annotables
+
 t2g <- grch37_tx2gene
 
 t2g <- merge(x= grch37[, c("symbol", "ensgene")], y = t2g, by.x="ensgene", by.y= "ensgene")
@@ -283,6 +292,7 @@ Ensure the design model and coefficients are correct for your analysis. The leve
 ```r
 models(so)
 ```
+
 > **NOTE:** Sleuth will automatically use the first level (alphabetically by default) in the factor variable being tested to compare all other conditions against (in our metadata, this is 'control'). If you want to use a different condition to be the base level, then you would need to use the relevel() function to change the base level of the variable in step 1 above. For example, if we wanted the base level of `sampletype` to be "MOV10_knockdown", we could use the following code:
 >
 >```r
@@ -300,11 +310,14 @@ At this step in the workflow, we need to specify which level we want to compare 
 ```r
 # Wald test for differential expression of isoforms
 
-oe <- sleuth_wt(so, 'sampletypeMOV10_overexpression')
+oe <- sleuth_wt(so, 
+                which_beta = 'sampletypeMOV10_overexpression')
 
 # output results
 
-sleuth_results_oe <- sleuth_results(oe, 'sampletypeMOV10_overexpression', show_all = TRUE)
+sleuth_results_oe <- sleuth_results(oe, 
+                                    test = 'sampletypeMOV10_overexpression', 
+                                    show_all = TRUE)
 ```
 
 >**NOTE:** There are also methods for performing the LRT test and specifying a full and reduced model, which are described in detail in a [sleuth walk-through](https://pachterlab.github.io/sleuth_walkthroughs/trapnell/analysis.html).
