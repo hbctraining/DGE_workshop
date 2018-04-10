@@ -132,9 +132,8 @@ After performing all analysis steps, we will explore the sample QC plots and plo
 
 ### Step 1: Create Sleuth object for analysis
 
-<p align="center">
-  <img src="../img/sleuth_workflow1.png" width="600"/>
-</p>
+<img src="../img/sleuth_workflow1.png" width="500"/>
+
 
 Similar to DESeq2, we need to tell Sleuth where to find the **metadata** (specifying which samplegroups the samples belong to, and any other metadata we want included in the analysis), **estimated counts** (output from Salmon) and the **design formula**. In addition, we also need a **biomaRt database** to easily convert between transcript IDs and associated gene names. To create this object there is no simple function like in DESeq2 (e.g. DESeqDataSetFromMatrix(countData = data, colData = meta, design = ~ sampletype)). 
 
@@ -251,9 +250,7 @@ t2g <- dplyr::rename(t2g, target_id = enstxp ,
 
 ### Step 2: Fit the sleuth model
 
-<p align="center">
-  <img src="../img/sleuth_workflow2.png" width="600"/>
-</p>
+<img src="../img/sleuth_workflow2.png" width="500"/>
 
 #### Fit the transcript abundance data to the Sleuth model
 
@@ -309,9 +306,7 @@ models(so)
 
 ### Step 3: Test significant differences between conditions using the Wald test
 
-<p align="center">
-  <img src="../img/sleuth_workflow3.png" width="600"/>
-</p>
+<img src="../img/sleuth_workflow3.png" width="500"/>
 
 At this step in the workflow, we need to specify which level we want to compare against the base level (use the name given for the coefficients from `models(so)`):
 
