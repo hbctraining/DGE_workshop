@@ -361,11 +361,11 @@ plot_bootstrap(oe, "ENST00000367412.1", units = "est_counts", color_by = "sample
 ```
 
 <p align="center">
-  <img src="../img/mov10_bootstraps.png" width="400"/>
+  <img src="../img/sleuth_mov10_bootstraps.png" width="400"/>
 </p>
 
 <p align="center">
-  <img src="../img/mov10_bootstraps2.png" width="400"/>
+  <img src="../img/sleuth_mov10_bootstraps2.png" width="400"/>
 </p>
 
 Sleuth also offers us the option to explore the data and results interactively using a web interface. 
