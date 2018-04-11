@@ -20,7 +20,7 @@ Let's start by loading a few libraries (if not already loaded):
 
 ```r
 # load libraries
-library(reshape)
+library(tidyverse)
 library(ggplot2)
 library(ggrepel)
 library(DEGreport)
@@ -28,6 +28,7 @@ library(RColorBrewer)
 library(DESeq2)
 library(pheatmap)
 ```
+
 We will be working with three different files generally created or obtained during a differential expression analysis:
 
 - Metadata for our samples: `mov10_meta`
