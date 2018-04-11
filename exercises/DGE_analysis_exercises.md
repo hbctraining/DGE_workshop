@@ -28,19 +28,21 @@ date: "October 24th, 2017"
 
 	**NOTE: This is an exercise in thinking about running DESeq2. You do not need to run any code in R/RStudio. Refer to the materials/lessons from class to answer the following questions.**
 
-	**a.** Provide the line of code used to create a DESeqDataSet object called `dds` in which `Genotype` is the factor of interest and `Celltype` and `Batch` are other contributing sources of variation in your data.
+	**a.** Reorder the columns of the `counts` dataset such that `rownames(meta) == colnames(counts)`.
+	
+	**b.** Provide the line of code used to create a DESeqDataSet object called `dds` in which `Genotype` is the factor of interest and `Celltype` and `Batch` are other contributing sources of variation in your data.
 
-	**b.** Provide the line of code required to run DESeq2 on `dds`.
+	**c.** Provide the line of code required to run DESeq2 on `dds`.
 
-	**c.** Provide the line of code to create a dispersion plot.
+	**d.** Provide the line of code to create a dispersion plot.
 
-	**d.** Provide the line of code to return the results of a Wald test comparison for `Celltype` categories `typeA` versus `typeB` (i.e the fold changes reported should reflect gene expression changes relative to `typeB`).
+	**e.** Provide the line of code to return the results of a Wald test comparison for `Celltype` categories `typeA` versus `typeB` (i.e the fold changes reported should reflect gene expression changes relative to `typeB`).
 	 
-	**e.** Provide the line of code to return the results with log2 fold change shrinkage performed.
+	**f.** Provide the line of code to return the results with log2 fold change shrinkage performed.
 
-	**f.** Provide the line of code to write the results of the Wald test with shrunken log2 fold changes to file.
+	**g.** Provide the line of code to write the results of the Wald test with shrunken log2 fold changes to file.
 
-	**g.** Provide the line of code to subset the results to return those genes with adjusted p-value < 0.05 and logFold2Change > 1.
+	**h.** Provide the line of code to subset the results to return those genes with adjusted p-value < 0.05 and logFold2Change > 1.
 
 # Working with the DESeq2 results table
 
