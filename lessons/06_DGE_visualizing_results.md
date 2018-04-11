@@ -29,13 +29,13 @@ library(DESeq2)
 library(pheatmap)
 ```
 
-We will be working with three different files generally created or obtained during a differential expression analysis:
+We will be working with three different data objects we have already created in earlier lessons:
 
-- Metadata for our samples: `mov10_meta`
-- Expression data for every gene in each of our samples: `normalized_counts`
-- Differential expression results: `res_tableOE`
+- Metadata for our samples (a dataframe): `meta`
+- Normalized expression data for every gene in each of our samples (a matrix): `normalized_counts`
+- Differential expression results (DESeqResults object): `res_tableOE`
 
-Let's take a look at each of these files before we start plotting.
+Let's create tibble objects from all of these before we start plotting. This will enable us to use the `tidyverse` functionality more easily.
 
 ```r
 # Create tibbles including row names
