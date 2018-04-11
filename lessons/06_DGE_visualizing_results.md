@@ -39,20 +39,18 @@ Let's take a look at each of these files before we start plotting.
 
 ```r
 # Create tibbles including row names
-mov10_meta <- mov10_meta %>% 
-        rownames_to_column() %>% 
-        as_tibble() %>%
-        rename(samplename = rowname))
+mov10_meta <- meta %>% 
+  rownames_to_column(var="samplename") %>% 
+  as_tibble()
         
-normalized_counts <- normalized_counts %>%
-        rownames_to_column() %>% 
-        as_tibble() %>%
-        rename(gene = rowname)
+normalized_counts <- normalized_counts %>% 
+  as.data.frame() %>%
+  rownames_to_column(var="gene") %>% 
+  as_tibble()
 
 res_tableOE <- res_tableOE %>% 
-        rownames_to_column() %>% 
-        as_tibble() %>%
-        rename(gene = rowname)
+  rownames_to_column(var="gene") %>% 
+  as_tibble()
 ```
 
 ### Plotting signicant DE genes
@@ -127,10 +125,10 @@ The `gather()` function in the **tidyr** package will perform this operation and
 
 ```r
 # Gathering the columns to have normalized counts to a single column
-gathered_top20_sigOE <- normalized_counts %>%
-        gather(colnames(normalized_counts)[2:9],
-               key =  "samplename",
-               value = "normalized_counts")
+gathered_top20_sigOE <- top20_sigOE_norm %>%
+  gather(colnames(top20_sigOE_norm)[2:9],
+         key =  "samplename",
+         value = "normalized_counts")
 
 ## check the column header in the "gathered" data frame
 View(gathered_top20_sigOE)
@@ -149,7 +147,7 @@ Now that we have a data frame in a format that can be utilised by ggplot easily,
 ```r
 ## plot using ggplot2
 ggplot(gathered_top20_sigOE) +
-        geom_point(aes(x = gene, y = normalized_counts, color = sampletype), position=position_jitter(w=0.1,h=0)) +
+        geom_point(aes(x = gene, y = normalized_counts, color = sampletype)) +
         scale_y_log10() +
         xlab("Genes") +
         ylab("Normalized Counts") +
