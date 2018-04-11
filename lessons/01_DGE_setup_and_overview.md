@@ -89,7 +89,7 @@ For this analysis we will be using several R packages, some which have been inst
 ```r
 ## Setup
 ### Bioconductor and CRAN libraries used
-library(ggplot2)
+library(tidyverse)
 library(RColorBrewer)
 library(DESeq2)
 library(pheatmap)
