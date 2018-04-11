@@ -28,46 +28,54 @@ date: "October 24th, 2017"
 
 	**NOTE: This is an exercise in thinking about running DESeq2. You do not need to run any code in R/RStudio. Refer to the materials/lessons from class to answer the following questions.**
 
-	**a.** Provide the line of code used to create a DESeqDataSet object called `dds` in which `Genotype` is the factor of interest and `Celltype` and `Batch` are other contributing sources of variation in your data.
+	**a.** Reorder the columns of the `counts` dataset such that `rownames(meta) == colnames(counts)`.
+	
+	```
+	idx <- match(rownames(meta), colnames(counts))
+	
+	counts <- counts[ , idx]
+	```
+	
+	**b.** Provide the line of code used to create a DESeqDataSet object called `dds` in which `Genotype` is the factor of interest and `Celltype` and `Batch` are other contributing sources of variation in your data.
 	
 	```r
 	dds <- DESeqDataSetFromMatrix(countData = data, colData = meta, design = ~ Celltype + Batch + Genotype)
 	```
 
-	**b.** Provide the line of code required to run DESeq2 on `dds`.
+	**c.** Provide the line of code required to run DESeq2 on `dds`.
 	
 	```r
 	dds <- DESeq(dds)
 	```
 	
-	**c.** Provide the line of code to create a dispersion plot.
+	**d.** Provide the line of code to create a dispersion plot.
 	
 	```r
 	plotDispEsts(dds)
 	```
 	
-	**d.** Provide the line of code to return the results of a Wald test comparison for `Celltype` categories `typeA` versus `typeB` (i.e the fold changes reported should reflect gene expression changes relative to `typeB`).
+	**e.** Provide the line of code to return the results of a Wald test comparison for `Celltype` categories `typeA` versus `typeB` (i.e the fold changes reported should reflect gene expression changes relative to `typeB`).
 	 	
 	```r
 	res_tableCelltype <- results(dds, contrast = c("Celltype", "typeA" , "typeB"))
 	```
 	
-	**e.** Provide the line of code to return the results with log2 fold change shrinkage performed.
+	**f.** Provide the line of code to return the results with log2 fold change shrinkage performed.
 	
 	```r
 	res_tableCelltype <- lfcShrink(dds, contrast=c("Celltype", "typeA" , "typeB"), res=res_tableCelltype)
 	```
 	
-	**f.** Provide the line of code to write the results of the Wald test with shrunken log2 fold changes to file.
+	**g.** Provide the line of code to write the results of the Wald test with shrunken log2 fold changes to file.
 	
 	```r
 	write.table(res_tableCelltype, file="res_Celltype.txt", sep="\t", quote=F, col.names=NA)
 	```
 	
-	**g.** Provide the line of code to subset the results to return those genes with adjusted p-value < 0.05 and logFold2Change > 1.
+	**h.** Provide the line of code to subset the results to return those genes with adjusted p-value < 0.05 and logFold2Change > 1.
 	
 	```r
-	subset(res_tableCelltype, padj < 0.05 & abs(log2FoldChange) > 1)
+	filter(res_tableCelltype, padj < 0.05 & abs(log2FoldChange) > 1)
 	```
 	
 # Working with the DESeq2 results table
@@ -85,7 +93,7 @@ date: "October 24th, 2017"
 	**a.** Subset `res_tableOE` to only return those rows that meet the criteria we specified above (adjusted p-values < 0.01 and log fold changes >1.5). Save the subsetted table to a data frame called `sig_table_hw_oe`. Write the code below:
 	
 	```r
-	sig_table_hw_oe <- subset(res_tableOE, padj < 0.01 & abs(log2FoldChange) > 1.5)
+	sig_table_hw_oe <- filter(res_tableOE, padj < 0.01 & abs(log2FoldChange) > 1.5)
 	```
 	
 	**b.** There is a a DESeq2 function that summarizes how many genes are up- and down-regulated using our criteria for `alpha=0.01`. Use this on the `sig_table_hw_oe`. Write the code you would use, and also, list how many genes are up- and down- regulated.
