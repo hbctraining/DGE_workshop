@@ -91,7 +91,7 @@ ggplot(d, aes(x=sampletype, y=count, color=sampletype)) +
   theme(plot.title=element_text(hjust=0.5))
 ```
 
-> Note that in the plot below (code above), we are using `geom_text_repel()` from the 'ggrepel' R package to label our individual points on the plot.
+> Note that in the plot below (code above), we are using `geom_text_repel()` from the `ggrepel` package to label our individual points on the plot.
 
 <img src="../img/plotCounts_ggrepel.png" width="600">
 
