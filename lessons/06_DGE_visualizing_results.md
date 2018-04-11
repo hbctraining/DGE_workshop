@@ -56,9 +56,45 @@ res_tableOE <- res_tableOE %>%
 
 ### Plotting signicant DE genes
 
-One way to visualize results would be to simply plot the expression data for a handful of genes. We could do that by picking out specific genes of interest or selecting a range of genes:
+One way to visualize results would be to simply plot the expression data for a handful of genes. We could do that by picking out specific genes of interest or selecting a range of genes.
 
-#### Using `ggplot2` to plot one or more genes (e.g. top 20)
+#### **Using DESeq2 `plotCounts()` to plot expression of a single gene**
+
+To pick out a specific gene of interest to plot, for example Mov10, we can use the `plotCounts()` from DESeq2:
+
+```r
+# Plot expression for single gene
+plotCounts(dds, gene="MOV10", intgroup="sampletype") 
+```
+![topgene](../img/topgen_plot.png)
+
+**This function only allows for plotting the counts of a single gene at a time.** 
+
+#### **Using ggplot2 to plot expression of a single gene**
+
+If you wish to change the appearance of this plot, we can save the output of `plotCounts()` to a variable specifying the `returnData=TRUE` argument, then use `ggplot()`:
+
+```r
+# Save plotcounts to variable
+d <- plotCounts(dds, gene="MOV10", intgroup="sampletype", returnData=TRUE)
+
+# Adding samplenames to data frame
+d$name <- rownames(d)
+
+# Plotting the MOV10 normalized counts
+ggplot(d, aes(x=sampletype, y=count, color=sampletype)) + 
+  geom_point(position=position_jitter(w=0.1,h=0)) +
+  geom_text_repel(aes(label = name)) + 
+  theme_bw() +
+  ggtitle("MOV10") +
+  theme(plot.title=element_text(hjust=0.5))
+```
+
+> Note that in the plot below (code above), we are using `geom_text_repel()` from the 'ggrepel' R package to label our individual points on the plot.
+
+<img src="../img/plotCounts_ggrepel.png" width="600">
+
+#### Using `ggplot2` to plot multiple genes (e.g. top 20)
 
 Often it is helpful to check the expression of multiple genes of interest at the same time. This often first requires some data wrangling.
 
@@ -72,7 +108,6 @@ top20_sigOE_genes <- res_tableOE %>%
         arrange(padj) %>% #Arrange rows by padj values
         pull(gene) %>% #Extract character vector of ordered genes
         .[1:20] #Extract the first 20 genes
-
 ```
 
 Then, we can extract the normalized count values for these top 20 genes:
@@ -85,7 +120,7 @@ top20_sigOE_norm <- normalized_counts %>%
 
 Now that we have the normalized counts for each of the top 20 genes for all 8 samples, to plot using `ggplot()`, we need to gather the counts for all samples into a single column to allow us to give ggplot the one column with the values we want it to plot.
 
-The `gather()` function in the **tidyr** R package will perform this operation and will output the normalized counts for all genes for *Mov10_oe_1* listed in the first 20 rows, followed by the normalized counts for *Mov10_oe_2* in the next 20 rows, so on and so forth.
+The `gather()` function in the **tidyr** package will perform this operation and will output the normalized counts for all genes for *Mov10_oe_1* listed in the first 20 rows, followed by the normalized counts for *Mov10_oe_2* in the next 20 rows, so on and so forth.
 
 <img src="../img/melt_wide_to_long_format.png" width="800">
 
@@ -125,24 +160,44 @@ ggplot(gathered_top20_sigOE) +
 
 <img src="../img/sig_genes_melt.png" width="600">
 
-If we only wanted to look at a single gene, we could extract that gene for plotting with ggplot. **Within `ggplot()` we can use the `geom_text_repel()` from the 'ggrepel' R package to label our individual points on the plot.** The vignette for 'ggrepel' package is quite nice and details the different options available in the ggrepel package is [available](https://cran.r-project.org/web/packages/ggrepel/vignettes/ggrepel.html).
+### Heatmap
+
+In addition to plotting subsets, we could also extract the normalized values of *all* the significant genes and plot a heatmap of their expression using `pheatmap()`.
 
 ```r
-## plot using ggplot2 for a single gene
-mov10 <- filter(gathered_top20_sigOE, gene == "MOV10")
-
-ggplot(mov10, aes(x = sampletype, y=normalized_counts,  color = sampletype)) +
-        geom_point(position=position_jitter(w=0.1,h=0)) +
-	geom_text_repel(aes(label = samplename)) +
-        scale_y_log10() +
-        xlab("Samples") +
-        ylab("Normalized Counts") +
-        ggtitle("MOV10") +
-        theme_bw() +
-        theme(plot.title=element_text(hjust=0.5))
+### Extract normalized expression for significant genes and set the gene column to row names
+norm_OEsig <- normalized_counts %>% 
+              filter(gene %in% rownames(sigOE)) %>% 
+	      column_to_rownames(var = "gene")
 ```
 
-<img src="../img/plotCounts_ggrepel.png" width="600">
+Now let's draw the heatmap using `pheatmap`:
+
+```r
+### Annotate our heatmap (optional)
+annotation <- mov10_meta %>% select(samplename, sampletype) %>% column_to_rownames(var = "samplename")
+
+### Set a color palette
+heat_colors <- brewer.pal(6, "YlOrRd")
+
+### Run pheatmap
+pheatmap(as.data.frame(norm_OEsig), 
+         color = heat_colors, 
+         cluster_rows = T, 
+         show_rownames=F,
+         annotation= as.data.frame(annotation), 
+         border_color=NA, 
+         fontsize = 10, 
+         scale="row", 
+         fontsize_row = 10, 
+         height=20)
+```
+         
+![sigOE_heatmap](../img/sigOE_heatmap.png)       
+
+> *NOTE:* There are several additional arguments we have included in the function for aesthetics. One important one is `scale="row"`, in which Z-scores are plotted, rather than the actual normalized count value. 
+>
+> Z-scores are computed on a gene-by-gene basis by subtracting the mean and then dividing by the standard deviation. The Z-scores are computed **after the clustering**, so that it only affects the graphical aesthetics and the color visualization is improved.
 
 ### Volcano plot
 
@@ -207,61 +262,20 @@ ggplot(res_tableOE) +
 
 <img src="../img/volcanoplot-2.png" width=500> 
 
-
-### Heatmap
-
-Alternatively, we could extract only the genes that are identified as significant and the plot the expression of those genes using a heatmap:
-
-```r
-
-### Extract normalized expression for significant genes and set the gene column to row names
-norm_OEsig <- normalized_counts %>% 
-              filter(gene %in% rownames(sigOE)) %>% 
-	      column_to_rownames(var = "gene")
-```
-
-Now let's draw the heatmap using `pheatmap`:
-
-```r
-### Annotate our heatmap (optional)
-annotation <- mov10_meta %>% select(samplename, sampletype) %>% column_to_rownames(var = "samplename")
-
-### Set a color palette
-heat_colors <- brewer.pal(6, "YlOrRd")
-
-### Run pheatmap
-pheatmap(as.data.frame(norm_OEsig), 
-         color = heat_colors, 
-         cluster_rows = T, 
-         show_rownames=F,
-         annotation= as.data.frame(annotation), 
-         border_color=NA, 
-         fontsize = 10, 
-         scale="row", 
-         fontsize_row = 10, 
-         height=20)
-```
-         
-![sigOE_heatmap](../img/sigOE_heatmap.png)       
-
-> *NOTE:* There are several additional arguments we have included in the function for aesthetics. One important one is `scale="row"`, in which Z-scores are plotted, rather than the actual normalized count value. 
->
-> Z-scores are computed on a gene-by-gene basis by subtracting the mean and then dividing by the standard deviation. The Z-scores are computed **after the clustering**, so that it only affects the graphical aesthetics and the color visualization is improved.
-
 ***
 
-***NOTE:** If using the DESeq2 tool for differential expression analysis, the package 'DEGreport' can use the DESeq2 results output to make the top20 genes and the volcano plots generated above by writing a few lines of simple code. While you can customize the plots above, you may be interested in using the easier code. Below are examples of the code to create these plots:*
+> ***NOTE:** If using the DESeq2 tool for differential expression analysis, the package 'DEGreport' can use the DESeq2 results output to make the top20 genes and the volcano plots generated above by writing a few lines of simple code. While you can customize the plots above, you may be interested in using the easier code. Below are examples of the code to create these plots:*
 
->```r
->DEGreport::degPlot(dds = dds, res = res, n=20, xs="type", group = "condition") # dds object is output from DESeq2
->
->DEGreport::degVolcano(
->    as.data.frame(res[,c("log2FoldChange","padj")]), # table - 2 columns
->    plot_text=as.data.frame(res[1:10,c("log2FoldChange","padj","id")])) # table to add names
->    
-># Available in the newer version for R 3.4
->DEGreport::degPlotWide(dds = dds, genes = row.names(res)[1:5], group = "condition")
->```
+> ```r
+> DEGreport::degPlot(dds = dds, res = res, n=20, xs="type", group = "condition") # dds object is output from DESeq2
+> 
+> DEGreport::degVolcano(
+>     as.data.frame(res[,c("log2FoldChange","padj")]), # table - 2 columns
+>     plot_text=as.data.frame(res[1:10,c("log2FoldChange","padj","id")])) # table to add names
+>     
+> # Available in the newer version for R 3.4
+> DEGreport::degPlotWide(dds = dds, genes = row.names(res)[1:5], group = "condition")
+> ```
 ***
 
 *This lesson has been developed by members of the teaching team at the [Harvard Chan Bioinformatics Core (HBC)](http://bioinformatics.sph.harvard.edu/). These are open access materials distributed under the terms of the [Creative Commons Attribution license](https://creativecommons.org/licenses/by/4.0/) (CC BY 4.0), which permits unrestricted use, distribution, and reproduction in any medium, provided the original author and source are credited.*
