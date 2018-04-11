@@ -56,7 +56,7 @@ To generate the shrunken log2 fold change estimates, you have to run an addition
 
 > **NOTE: Shrinking the log2 fold changes will not change the total number of genes that are identified as significantly differentially expressed.** The shrinkage of fold change is to help with downstream assessment of results. For example, if you wanted to subset your significant genes based on fold change for further evaluation, you may want to use shruken values. Additionally, for functional analysis tools such as GSEA which require fold change values as input you would want to provide shrunken values.
 
->**NOTE:** Older versions of DESeq2 shrink the fold changes by default, so if you are using an older version of the tool and very large expected fold changes for a number of individual genes are expected, but not enough such that the prior would not include such large fold changes, then you may want to turn off LFC shrinkage.
+>**NOTE:** Older versions of DESeq2 (< 1.16.0) shrink the fold changes by default, so if you are using an older version of the tool and very large expected fold changes for a number of individual genes are expected, but not enough such that the prior would not include such large fold changes, then you may want to turn off LFC shrinkage.
 > 
 >For these older versions of DESeq2, you can turn off the beta prior when calling the `DESeq()` function: `DESeq(dds, betaPrior=FALSE)`. By turning off the prior, the log2 foldchanges would be the same as those calculated by:
 >
