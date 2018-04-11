@@ -50,7 +50,9 @@ You will find that similar columns are reported for the LRT test. One thing to n
 
 ```r
 # Subset the LRT results to return genes with padj < 0.05
-sig_res_LRT <- subset(res_LRT, padj < padj.cutoff)
+sig_res_LRT <- res_LRT %>%
+               data.frame() %>%
+               filter(padj < padj.cutoff)
 
 # Get sig gene lists
 sigLRT_genes <- rownames(sig_res_LRT)
@@ -83,10 +85,11 @@ First we will subset our rlog transformed normalized counts to contain only the 
 
 ```r
 # Subset results for faster cluster finding (for classroom demo purposes)
-ordered_sig_res_LRT <- sig_res_LRT[order(sig_res_LRT$padj), ]
-clustering_sig_genes <- data.frame(ordered_sig_res_LRT[1:1000, ])
+clustering_sig_genes <- sig_res_LRT %>%
+                        arrange(padj) %>%
+                        head(n=1000)
 
-# Use the rlog values for the normalized counts for plotting purposes and only return those significant genes
+# Obtain rlog values for those significant genes
 cluster_rlog <- rld_mat[rownames(clustering_sig_genes), ]
 ```
 
@@ -116,10 +119,8 @@ Let's explore the set of genes in Group 1 in more detail:
 ```r
 # Extract the Group 1 genes
 cluster_groups <- clusters$df
-group1 <- cluster_groups[cluster_groups$cluster == 1, ]
-
-# or you could use subset(): 
-# group1 <- subset(cluster_groups, cluster == 1)
+group1 <- clusters$df %>%
+          filter(cluster == 1)
 ```
 
 After extracting a group of genes, we can perform functional analysis to explore associated functions. We can repeat this extraction and functional analysis for any of the groups of interest.
