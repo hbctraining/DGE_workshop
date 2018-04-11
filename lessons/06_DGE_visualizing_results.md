@@ -48,7 +48,8 @@ normalized_counts <- normalized_counts %>%
   rownames_to_column(var="gene") %>% 
   as_tibble()
 
-res_tableOE <- res_tableOE %>% 
+res_tableOE <- res_tableOE %>%
+  data.frame() %>%
   rownames_to_column(var="gene") %>% 
   as_tibble()
 ```
@@ -206,7 +207,7 @@ To generate a volcano plot, we first need to have a column in our results data i
 
 ```r
 ## Obtain logical vector regarding whether padj values are less than 0.05
-res_tableOE <- res_tableOE %>% mutate(threshold_OE = padj < 0.05)
+res_tableOE <- res_tableOE %>% mutate(threshold_OE = padj < 0.05 & abs(log2FoldChange) >= 0.58)
 ```
 
 Now we can start plotting. The `geom_point` object is most applicable, as this is essentially a scatter plot:
