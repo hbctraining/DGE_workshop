@@ -174,7 +174,7 @@ Now let's draw the heatmap using `pheatmap`:
 
 ```r
 ### Annotate our heatmap (optional)
-annotation <- mov10_meta %>% select(samplename, sampletype) %>% column_to_rownames(var = "samplename")
+annotation <- mov10_meta %>% select(samplename, sampletype) %>% data.frame(row.names = "samplename")
 
 ### Set a color palette
 heat_colors <- brewer.pal(6, "YlOrRd")
