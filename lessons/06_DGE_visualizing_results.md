@@ -48,7 +48,7 @@ normalized_counts <- normalized_counts %>%
   rownames_to_column(var="gene") %>% 
   as_tibble()
 
-res_tableOE <- res_tableOE %>%
+res_tableOE_tb <- res_tableOE %>%
   data.frame() %>%
   rownames_to_column(var="gene") %>% 
   as_tibble()
@@ -104,7 +104,7 @@ To do this, we first need to determine the gene names of our top 20 genes by ord
 
 ```r
 ## Order results by padj values
-top20_sigOE_genes <- res_tableOE %>% 
+top20_sigOE_genes <- res_tableOE_tb %>% 
         arrange(padj) %>% #Arrange rows by padj values
         pull(gene) %>% #Extract character vector of ordered genes
         .[1:20] #Extract the first 20 genes
@@ -207,14 +207,14 @@ To generate a volcano plot, we first need to have a column in our results data i
 
 ```r
 ## Obtain logical vector regarding whether padj values are less than 0.05
-res_tableOE <- res_tableOE %>% mutate(threshold_OE = padj < 0.05 & abs(log2FoldChange) >= 0.58)
+res_tableOE_tb <- res_tableOE_tb %>% mutate(threshold_OE = padj < 0.05 & abs(log2FoldChange) >= 0.58)
 ```
 
 Now we can start plotting. The `geom_point` object is most applicable, as this is essentially a scatter plot:
 
 ```r
 ## Volcano plot
-ggplot(res_tableOE) +
+ggplot(res_tableOE_tb) +
         geom_point(aes(x=log2FoldChange, y=-log10(padj), colour=threshold_OE)) +
         ggtitle("Mov10 overexpression") +
         xlab("log2 fold change") + 
@@ -235,17 +235,17 @@ To make this work we have to take the following 3 steps:
  
 ```r
 ## Create a column to indicate which genes to label
-res_tableOE <- res_tableOE %>% arrange(padj) %>% mutate(genelabels = "")
+res_tableOE_tb <- res_tableOE_tb %>% arrange(padj) %>% mutate(genelabels = "")
 
-res_tableOE$genelabels[1:10] <- res_tableOE$gene[1:10]
+res_tableOE_tb$genelabels[1:10] <- res_tableOE_tb$gene[1:10]
 
-View(res_tableOE)
+View(res_tableOE_tb)
 ```
 
 (Step 3) Finally, we need to add the `geom_text_repel()` layer to the ggplot code we used before, and let it know which genes we want labelled. 
 
 ```r
-ggplot(res_tableOE) +
+ggplot(res_tableOE_tb) +
         geom_point(aes(x = log2FoldChange, 
                        y = -log10(padj),
                        colour = threshold_OE)) +
