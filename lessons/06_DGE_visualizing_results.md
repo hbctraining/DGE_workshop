@@ -75,16 +75,13 @@ plotCounts(dds, gene="MOV10", intgroup="sampletype")
 If you wish to change the appearance of this plot, we can save the output of `plotCounts()` to a variable specifying the `returnData=TRUE` argument, then use `ggplot()`:
 
 ```r
-# Save plotcounts to variable
+# Save plotcounts to a data frame object
 d <- plotCounts(dds, gene="MOV10", intgroup="sampletype", returnData=TRUE)
 
-# Adding samplenames to data frame
-d$name <- rownames(d)
-
-# Plotting the MOV10 normalized counts
+# Plotting the MOV10 normalized counts, using the samplenames (rownames of d as labels)
 ggplot(d, aes(x=sampletype, y=count, color=sampletype)) + 
   geom_point(position=position_jitter(w=0.1,h=0)) +
-  geom_text_repel(aes(label = name)) + 
+  geom_text_repel(aes(label = rownames(d))) + 
   theme_bw() +
   ggtitle("MOV10") +
   theme(plot.title=element_text(hjust=0.5))
