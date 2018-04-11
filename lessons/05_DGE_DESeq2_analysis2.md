@@ -65,15 +65,13 @@ To generate the shrunken log2 fold change estimates, you have to run an addition
 
 ## Hypothesis testing using the Wald test
 
-The shrunken LFC estimates are output for each sample group relative to the mean expression across groups. These estimates represent the **model coefficients**, and these coefficients are calculated regardless of the comparison of interest.
-
-However, generally **we are interested in the LFC estimates relative to other sample groups**. To do this, we must test if the difference in the log2 fold changes between groups is zero. To determine whether the difference in shrunken LFC estimates differs significantly from zero, the **Wald test** is used. The Wald test is generally used to make pair-wise comparisons (i.e. compare the LFCs from two different conditions).
+Generally, **we are interested in the LFC estimates relative to other sample groups**. To determine whether the difference in shrunken LFC estimates differs significantly from zero, the **Wald test** is used. The Wald test is used to make **pair-wise comparisons**.
 
 ### Creating contrasts
 
-To indicate to DESeq2 the two groups we want to compare, we can use **contrasts** to perform differential expression testing using the Wald test. Contrasts can be provided to DESeq2 a couple of different ways:
+To indicate to DESeq2 the two groups we want to compare, we can use **contrasts**. Contrasts are then provided to DESeq2 to perform differential expression testing using the Wald test. Contrasts can be provided to DESeq2 a couple of different ways:
 
-1. Automatically DESeq2 will use the base factor level of the condition of interest as the base for statistical testing. 
+1. Do nothing. Automatically DESeq2 will use the base factor level of the condition of interest as the base for statistical testing. The base level is chosen based on alphabetical order of the levels.
 2. In the `results()` function you can specify the comparison of interest, and the levels to compare. The level given last is the base level for the comparison. The syntax is given below:
 	
 	```r
