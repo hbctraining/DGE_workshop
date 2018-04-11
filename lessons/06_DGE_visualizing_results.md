@@ -213,11 +213,11 @@ ggplot(res_tableOE) +
 Alternatively, we could extract only the genes that are identified as significant and the plot the expression of those genes using a heatmap:
 
 ```r
-## Extract significant genes
-sigOE <- res_tableOE %>% filter(padj < 0.05) %>% pull(gene)
 
 ### Extract normalized expression for significant genes and set the gene column to row names
-norm_OEsig <- normalized_counts %>% filter(gene %in% sigOE) %>% column_to_rownames(var = "gene")
+norm_OEsig <- normalized_counts %>% 
+              filter(gene %in% rownames(sigOE)) %>% 
+	      column_to_rownames(var = "gene")
 ```
 
 Now let's draw the heatmap using `pheatmap`:
