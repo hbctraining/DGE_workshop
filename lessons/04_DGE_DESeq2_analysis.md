@@ -71,6 +71,8 @@ The design formula would be:
 `design <- ~ age + treat_sex`
 
 > **NOTE:** The design `~ sex + age + treatment + treat_sex` won't work (because the model can't be fit) because `treatment` and `treat_sex` are confounded (same goes for `sex`). Therefore, we drop the terms that went into `treat_sex` from the design formula.
+>
+> The testing method for using the combined `treat_sex` factor column will be slightly different, using the LRT method, which we will discuss later.
 
 ### MOV10 DE analysis 
 
