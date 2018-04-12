@@ -80,7 +80,7 @@ Now that we know how to specify the model to DESeq2, we can run the differential
 
 **To get our differential expression results from our raw count data, we only need to run 2 lines of code!**
 
-First we create a DESeqDataSet as we did in the ['Count normalization'](https://github.com/hbctraining/Intro-to-R-with-DGE/blob/master/lessons/11_DGE_count_normalization.md#2-create-deseq2-object) lesson and specify the location of our raw counts and metadata, and input our design formula:
+First we create a DESeqDataSet as we did in the ['Count normalization'](https://hbctraining.github.io/DGE_workshop/lessons/02_DGE_count_normalization.html#2-create-deseq2-object) lesson and specify the location of our raw counts and metadata, and input our design formula:
 
 ```r
 ## Create DESeq object
