@@ -257,31 +257,44 @@ lfc.cutoff <- 0.58
 
 The `lfc.cutoff` is set to 0.58; remember that we are working with log2 fold changes so this translates to an actual fold change of 1.5 which is pretty reasonable. 
 
-We can easily subset the results table to only include those that are significant using the `filter()` function, but first we need to convert it into a dataframe:
+We can easily subset the results table to only include those that are significant using the `filter()` function, but first we will convert the results table into a tibble:
 
 ```r
-sigOE <- res_tableOE %>%
-        data.frame() %>% 
+res_tableOE_tb <- res_tableOE %>%
+  data.frame() %>%
+  rownames_to_column(var="gene") %>% 
+  as_tibble()
+```
+
+Now we can subset that table to only keep the significant genes using our pre-defined thresholds:
+
+```r
+sigOE <- res_tableOE_tb %>%
         filter(padj < padj.cutoff & abs(log2FoldChange) > lfc.cutoff)
 ```
 
 **How many genes are differentially expressed in the Overexpression compared to Control, given our criteria specified above? Does this reduce our results?**
 
 ```r
-nrow(sigOE)
+sigOE
 ```
 	
 Using the same thresholds as above (`padj.cutoff < 0.05` and `lfc.cutoff = 0.58`), subset `res_tableKD` to report the number of genes that are up- and down-regulated in Mov10_knockdown compared to control.
 
 ```r
-sigKD <- res_tableKD %>%
-        data.frame() %>% 
+
+res_tableKD_tb <- res_tableKD %>%
+  data.frame() %>%
+  rownames_to_column(var="gene") %>% 
+  as_tibble()
+  
+sigKD <- res_tableKD_tb
         filter(padj < padj.cutoff & abs(log2FoldChange) > lfc.cutoff)
 ```
 
 **How many genes are differentially expressed in the Knockdown compared to Control?** 
 ```r
-nrow(sigKD)
+sigKD
 ``` 
 
 Now that we have subsetted our data, we are ready for visualization!
