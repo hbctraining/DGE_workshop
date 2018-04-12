@@ -33,7 +33,6 @@ We will be working with three different data objects we have already created in 
 
 - Metadata for our samples (a dataframe): `meta`
 - Normalized expression data for every gene in each of our samples (a matrix): `normalized_counts`
-- Differential expression results (DESeqResults object): `res_tableOE`
 
 Let's create tibble objects from all of these before we start plotting. This will enable us to use the `tidyverse` functionality more easily.
 
@@ -45,11 +44,6 @@ mov10_meta <- meta %>%
         
 normalized_counts <- normalized_counts %>% 
   as.data.frame() %>%
-  rownames_to_column(var="gene") %>% 
-  as_tibble()
-
-res_tableOE_tb <- res_tableOE %>%
-  data.frame() %>%
   rownames_to_column(var="gene") %>% 
   as_tibble()
 ```
@@ -102,9 +96,9 @@ To do this, we first need to determine the gene names of our top 20 genes by ord
 ```r
 ## Order results by padj values
 top20_sigOE_genes <- res_tableOE_tb %>% 
-        arrange(padj) %>% #Arrange rows by padj values
-        pull(gene) %>% #Extract character vector of ordered genes
-        .[1:20] #Extract the first 20 genes
+        arrange(padj) %>% 	#Arrange rows by padj values
+        pull(gene) %>% 		#Extract character vector of ordered genes
+        .[1:20] 		#Extract the first 20 genes
 ```
 
 Then, we can extract the normalized count values for these top 20 genes:
@@ -124,9 +118,7 @@ The `gather()` function in the **tidyr** package will perform this operation and
 ```r
 # Gathering the columns to have normalized counts to a single column
 gathered_top20_sigOE <- top20_sigOE_norm %>%
-  gather(colnames(top20_sigOE_norm)[2:9],
-         key =  "samplename",
-         value = "normalized_counts")
+  gather(colnames(top20_sigOE_norm)[2:9], key =  "samplename", value = "normalized_counts")
 
 ## check the column header in the "gathered" data frame
 View(gathered_top20_sigOE)
@@ -164,7 +156,7 @@ In addition to plotting subsets, we could also extract the normalized values of 
 ```r
 ### Extract normalized expression for significant genes and set the gene column to row names
 norm_OEsig <- normalized_counts %>% 
-              filter(gene %in% rownames(sigOE)) %>% 
+              filter(gene %in% sigOE$gene) %>% 
 	      column_to_rownames(var = "gene")
 ```
 
@@ -172,13 +164,15 @@ Now let's draw the heatmap using `pheatmap`:
 
 ```r
 ### Annotate our heatmap (optional)
-annotation <- mov10_meta %>% select(samplename, sampletype) %>% data.frame(row.names = "samplename")
+annotation <- mov10_meta %>% 
+	select(samplename, sampletype) %>% 
+	data.frame(row.names = "samplename")
 
 ### Set a color palette
 heat_colors <- brewer.pal(6, "YlOrRd")
 
 ### Run pheatmap
-pheatmap(as.data.frame(norm_OEsig), 
+pheatmap(data.frame(norm_OEsig), 
          color = heat_colors, 
          cluster_rows = T, 
          show_rownames=F,
