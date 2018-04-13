@@ -49,8 +49,7 @@ Let's get started by setting up our directory. First let's copy over our metadat
 2. Download the [Salmon files using this link](https://www.dropbox.com/s/sqeyxkbt4ij0j72/data.zip?dl=1) and move the zip archive (`data.zip`) into your working directory. _These are the full dataset Salmon files that contain transcript abundances for each sample._
 3. Decompress (unzip) the zip archive by double-clicking on the file. You should now see a `data` folder in your working directory.
 4. Create additional directories inside the project for `meta`, `results`, and `figures`.
-5. Download the **metadata** associated with the Salmon files by **right-clicking [this link](https://github.com/hbctraining/DGE_workshop/raw/master/data/Mov10_full_meta.txt)** and selecting `Download Linked File` or `Save Linked File As` and saving to the `meta` directory.
-6. Open up a new R script ('File' -> 'New File' -> 'Rscript'), and save it as `salmon_deseq2.R`
+5. Open up a new R script ('File' -> 'New File' -> 'Rscript'), and save it as `salmon_deseq2.R`
 
 Your Rstudio interface should look something like the screenshot below:
 
@@ -163,13 +162,13 @@ colnames(txi$counts)
 
 ## Create a sampletable/metadata
 condition=factor(c(rep("Ctl",3), rep("KD", 2), rep("OE", 3)))
-meta <- data.frame(condition, row.names = colnames(txi$counts))
+meta_salmon <- data.frame(condition, row.names = colnames(txi$counts))
 
 # Change the rownames of the metadata to match our counts matrix
-rownames(meta) <- colnames(txi$counts)
+rownames(meta_salmon) <- colnames(txi$counts)
 
 ## Create a DESeqDataSet object
-dds <- DESeqDataSetFromTximport(txi, meta, ~ sampletype)
+dds <- DESeqDataSetFromTximport(txi, meta_salmon, ~ sampletype)
 ```
 
 Now you have created a DESeq object to proceed with DE analysis as we discussed in the earlier lessons!
