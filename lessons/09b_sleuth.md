@@ -168,7 +168,7 @@ Then we make sure the metadata and count estimate sample names match:
 # Make sure the order of the `sfdirs` created above matches the order of samples in the `summarydata` rownames
 
 sf_dirs_samples <- sf_dirs %>%
-  basename %>% 
+  basename() %>% 
   str_replace(pattern = "\\.salmon", "")
 
 all(sf_dirs_samples == rownames(summarydata))
