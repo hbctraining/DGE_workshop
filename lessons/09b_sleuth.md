@@ -19,11 +19,11 @@ Until this point we have focused on looking for expression changes at the gene-l
 
 ## What is Sleuth?
 
-[Sleuth](http://pachterlab.github.io/sleuth/) is a fast, lightweight tool that uses transcript abundance estimates output from pseudo-alignment algorithms that use bootstrap sampling, such as Sailfish, Salmon, and Kallisto, to perform differential expression analysis of gene isoforms. 
+[Sleuth](http://pachterlab.github.io/sleuth/) is a fast, lightweight tool that uses transcript abundance estimates output from **pseudo-alignment** algorithms that use **bootstrap sampling**, such as Sailfish, Salmon, and Kallisto, to perform differential expression analysis of gene isoforms. 
 
 To analyze the differential expression of gene isoforms, it is expected that RNA-Seq reads will often align to multiple isoforms of the same gene. Therefore, **multimapping reads cannot be ignored** to properly determine abundances of gene isoforms. 
 
-Due to the statistical procedure required to assign reads to gene isoforms, in addition to the random processes underlying RNA-Seq, there will be **technical variability in the abundance estimates** output from the pseudo-alignment tool [[2](https://rawgit.com/pachterlab/sleuth/master/inst/doc/intro.html), [3](http://biorxiv.org/content/biorxiv/early/2016/06/10/058164.full.pdf)]. For example, if we performed multiple technical replicates and estimated abundances for gene isoforms, the abundance estimates for the technical replicates would exhibit variability greater than expected due to variability in the transcript abundance estimation process. Therefore, **we would need technical replicates to distinguish technical variability from the biological variability**.
+Due to the statistical procedure required to assign reads to gene isoforms, in addition to the random processes underlying RNA-Seq, there will be **technical variability in the abundance estimates** output from the pseudo-alignment tool [[2](https://rawgit.com/pachterlab/sleuth/master/inst/doc/intro.html), [3](https://www.nature.com/articles/nmeth.4324)]. For example, if we performed multiple technical replicates and estimated abundances for gene isoforms, the abundance estimates for the technical replicates would exhibit variability greater than expected due to variability in the transcript abundance estimation process. Therefore, **we would need technical replicates to distinguish technical variability from the biological variability**.
 
 Sleuth accounts for this technical variability by using **bootstraps as a proxy for technical replicates**, which are used to model the variability in the abundance estimates. Bootstrapping essentially **calculates the abundance estimates for all genes using a different sub-sample of reads** during each round of bootstrapping. The variation in the abundance estimates output from each round of bootstrapping is used for the estimation of the technical variance for each gene. 
 
@@ -46,14 +46,14 @@ The observed (log) abundance estimates represent the sum of the true counts and 
   <img src="../img/sleuth_formula2.png" width="425"/>
 </p>
 
-In addition to performing differential expression analysis of transcripts, the sleuth tool also provides an html interface allowing exploration of the data and differential expression results interactively. More information about the theory/process for sleuth is available in the [Nature Methods paper](https://www-nature-com.ezp-prod1.hul.harvard.edu/articles/nmeth.4324), this [blogpost](https://liorpachter.wordpress.com/2015/08/17/a-sleuth-for-rna-seq/) and step-by-step tutorials are available on the [sleuth website](https://pachterlab.github.io/sleuth/walkthroughs).
+In addition to performing differential expression analysis of transcripts, the sleuth tool also provides an html interface allowing exploration of the data and differential expression results interactively. More information about the theory/process for sleuth is available in the [Nature Methods paper](https://www.nature.com/articles/nmeth.4324), this [blogpost](https://liorpachter.wordpress.com/2015/08/17/a-sleuth-for-rna-seq/) and step-by-step tutorials are available on the [sleuth website](https://pachterlab.github.io/sleuth/walkthroughs).
 
 ***NOTE:*** *Kallisto is distributed under a non-commercial license, while Sailfish and Salmon are distributed under the [GNU General Public License, version 3](http://www.gnu.org/licenses/gpl.html).*
 
 
 ## Set-up for Running Sleuth
 
-Sleuth is a lightweight algorithm that can be quickly run on our personal computers [[2](https://rawgit.com/pachterlab/sleuth/master/inst/doc/intro.html)]. We can use the previous `DE_pseudocounts` project we created previously.
+Sleuth is a lightweight algorithm that can be quickly run on our personal computers. We can open the `DE_pseudocounts` project we created previously, since we will be using the salmon output files.
 
 1. Open the RStudio project entitled `DE_pseudocounts`.
 2. Create a new R script ('File' -> 'New File' -> 'Rscript'), and save it as `sleuth_de.R`
