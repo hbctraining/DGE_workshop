@@ -4,8 +4,6 @@ author: "Mary Piper"
 date: "Tuesday, April 10th, 2018"
 ---
 
-Contributors: Mary Piper
-
 Approximate time: 1.5 hours
 
 ## Learning Objectives
