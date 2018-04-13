@@ -86,11 +86,15 @@ First we will subset our rlog transformed normalized counts to contain only the 
 ```r
 # Subset results for faster cluster finding (for classroom demo purposes)
 clustering_sig_genes <- sig_res_LRT %>%
-                        arrange(padj) %>%
-                        head(n=1000)
+        data.frame() %>%
+        rownames_to_column(var="gene") %>% 
+        as_tibble()
+        arrange(padj) %>%
+        head(n=1000)
+
 
 # Obtain rlog values for those significant genes
-cluster_rlog <- rld_mat[rownames(clustering_sig_genes), ]
+cluster_rlog <- rld_mat[clustering_sig_genes$gene, ]
 ```
 
 Then we can use the `degPatterns` function from the 'DEGreport' package to determine sets of genes that exhibit similar expression patterns across sample groups. The `degPatterns` tool uses a hierarchical clustering approach based on pair-wise correlations, then cuts the hierarchical tree to generate groups of genes with similar expression profiles. The tool cuts the tree in a way to optimize the diversity of the clusters, such that the variability inter-cluster > the variability intra-cluster.
