@@ -288,7 +288,7 @@ res_tableKD_tb <- res_tableKD %>%
   rownames_to_column(var="gene") %>% 
   as_tibble()
   
-sigKD <- res_tableKD_tb
+sigKD <- res_tableKD_tb %>%
         filter(padj < padj.cutoff & abs(log2FoldChange) > lfc.cutoff)
 ```
 
