@@ -219,7 +219,9 @@ Within Sleuth, models are written similar to DESeq2. Since the only condition we
 design <- ~ sampletype
 ```
 
-More complex designs can be analyzed using Sleuth as well by adding additional covariates (i.e `design <- ~ sex + treatment`). Interaction terms can also be added to the design formula to test if the effect attributable to a given condition is different based on another factor, for example, if the treatment effect differs between sexes. To learn more about setting up design formulas for more complex designs, see the [DESeq2 tutorial](https://www.bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.pdf) (chapter 3 discusses complex experimental designs). There is also a [recent post](http://nxn.se/post/134227694720/timecourse-analysis-with-sleuth) describing the use of Sleuth to perform time course analyses. While Sleuth has much flexiblity in design models, it is unable to support some complex designs, such as nested models.
+More complex designs can be analyzed using Sleuth as well by adding additional covariates (i.e `design <- ~ sex + treatment`). Interaction terms can also be added to the design formula to test if the effect attributable to a given condition is different based on another factor, for example, if the treatment effect differs between sexes. To learn more about setting up design formulas for more complex designs, the [DESeq2 vignette](http://bioconductor.org/packages/devel/bioc/vignettes/DESeq2/inst/doc/DESeq2.html) has detailed documentation that should work for sleuth too. 
+
+In addition, [one of the sleuth walk-throughs](https://pachterlab.github.io/sleuth_walkthroughs/trapnell/analysis.html) describes in detail how to perform the LRT test with specification of the full and reduced models.
 
 #### Query annotables dataset to obtain the corresponding Ensembl transcript/gene IDs
 
@@ -322,7 +324,7 @@ sleuth_results_oe <- sleuth_results(oe,
                                     show_all = TRUE)
 ```
 
->**NOTE:** There are also methods for performing the LRT test and specifying a full and reduced model, which are described in detail in a [sleuth walk-through](https://pachterlab.github.io/sleuth_walkthroughs/trapnell/analysis.html).
+>**NOTE:** 
 
 The output represents the results from the differential expression testing with the following columns:
 
