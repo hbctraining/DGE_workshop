@@ -134,7 +134,7 @@ After performing all analysis steps, we will explore the sample QC plots and plo
 <img src="../img/sleuth_workflow1.png" width="600"/>
 </p>
 
-Similar to DESeq2, we need to tell Sleuth where to find the **metadata** (specifying which samplegroups the samples belong to, and any other metadata we want included in the analysis), **estimated counts** (output from Salmon) and the **design formula**. In addition, we also need a **biomaRt database** to easily convert between transcript IDs and associated gene names. To create this object there is no simple function like in DESeq2 (e.g. DESeqDataSetFromMatrix(countData = data, colData = meta, design = ~ sampletype)). 
+Similar to DESeq2, we need to tell Sleuth where to find the **metadata** (specifying which samplegroups the samples belong to, and any other metadata we want included in the analysis), **estimated counts** (output from Salmon) and the **design formula**. In addition, we also need a **annotables** to easily convert between transcript IDs and associated gene names. To create this object there is no simple function like in DESeq2 (e.g. DESeqDataSetFromMatrix(countData = data, colData = meta, design = ~ sampletype)). 
 
 To create this Sleuth object, we need to perform the following steps:
 
@@ -146,7 +146,7 @@ To create this Sleuth object, we need to perform the following steps:
         
 2. Create a variable containing the model design 
 
-3. Use biomaRt to create a dataset for Sleuth to query for Ensembl IDs and associated gene names
+3. Use annotables to create a dataset for Sleuth to query for Ensembl IDs and associated gene names
 
 #### Create a dataframe needed to generate Sleuth analysis object
 
