@@ -157,8 +157,9 @@ In addition to plotting subsets, we could also extract the normalized values of 
 ### Extract normalized expression for significant genes and set the gene column to row names
 norm_OEsig <- normalized_counts %>% 
               filter(gene %in% sigOE$gene) %>% 
-	      column_to_rownames(var = "gene") %>%
-	      data.frame()
+	      data.frame() %>%
+	      column_to_rownames(var = "gene") 
+
 ```
 
 Now let's draw the heatmap using `pheatmap`:
