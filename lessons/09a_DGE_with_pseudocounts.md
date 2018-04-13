@@ -158,11 +158,12 @@ A final element 'countsFromAbundance' carries through the character argument use
 
 ```R    
 
-## Load in sampletable/metadata
-meta <- read.table("meta/Mov10_full_meta.txt")
-
-# Before we create this metadata object, let's see what the sample name and order of the counts matrix is:
+# Before we create this metadata object, let's see what the sample (column) order of the counts matrix is:
 colnames(txi$counts)
+
+## Create a sampletable/metadata
+condition=factor(c(rep("Ctl",3), rep("KD", 2), rep("OE", 3)))
+meta <- data.frame(condition, row.names = colnames(txi$counts))
 
 # Change the rownames of the metadata to match our counts matrix
 rownames(meta) <- colnames(txi$counts)
