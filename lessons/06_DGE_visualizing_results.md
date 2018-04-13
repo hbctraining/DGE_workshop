@@ -218,7 +218,7 @@ ggplot(res_tableOE_tb) +
               axis.title = element_text(size = rel(1.25)))  
 ```
 
-<img src="../img/volcanoplot-1.png" width=500> 
+<img src="../img/volcanoplot-1.png" width="500"> 
 
 This is a great way to get an overall picture of what is going on, but what if we also wanted to know where the top 10 genes (lowest padj) in our DE list are located on this plot? We could label those dots with the gene name on the Volcano plot using `geom_text_repel()`.
 
@@ -253,7 +253,7 @@ ggplot(res_tableOE_tb) +
               axis.title = element_text(size = rel(1.25))) 
 ```
 
-<img src="../img/volcanoplot-2.png" width=500> 
+<img src="../img/volcanoplot-2.png" width="500"> 
 
 ***
 
