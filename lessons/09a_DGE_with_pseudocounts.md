@@ -14,7 +14,7 @@ Approximate time: 30 minutes
 
 ## Lightweight alignment and quantification of gene expression into pseudocounts
 
-From the standard RNA-seq pipeline, we obtained a matrix of raw counts which represent the total number of reads that map to a gene in a particular sample. **Another strategy for quantification which has more recently been introduced involves transcriptome mapping**. Tools that fall in this category include [Kallisto](https://pachterlab.github.io/kallisto/about), [Sailfish](http://www.nature.com/nbt/journal/v32/n5/full/nbt.2862.html) and [Salmon](https://combine-lab.github.io/salmon/); each working slightly different from one another. (For this workshop we will explore Salmon pseudocounts in more detail.) Common to all of these tools is that **base-to-base alignment of the reads is avoided**, which is a time-consuming step, and these tools **provide quantification estimates much faster than do standard approaches** (typically more than 20 times faster) with **improvements in accuracy** at **the transcript level**. 
+From the standard RNA-seq pipeline, we obtained a matrix of raw counts which represent the total number of reads that map to a gene in a particular sample. **Another strategy for quantification which has more recently been introduced involves transcriptome mapping**. Tools that fall in this category include [Kallisto](https://pachterlab.github.io/kallisto/about), [Sailfish](http://www.nature.com/nbt/journal/v32/n5/full/nbt.2862.html) and [Salmon](https://combine-lab.github.io/salmon/); each working slightly different from one another. (For this workshop we will explore Salmon pseudocounts in more detail.) Common to all of these tools is that **base-to-base alignment of the reads is avoided**, which is a time-consuming step, and these tools **provide quantification estimates much faster than do standard approaches** (typically more than 20 times faster) with **improvements in accuracy** at **the transcript level** [[2](http://salmon.readthedocs.io/en/latest/salmon.html#quasi-mapping-based-mode-including-lightweight-alignment)]. 
 
 These transcript expression estimates, often referred to as **'pseudocounts'**, can be converted for use with DGE tools like DESeq2 or the estimates can be used directly for isoform-level differential expression using a tool like [Sleuth](http://www.biorxiv.org/content/biorxiv/early/2016/06/10/058164.full.pdf). 
 
@@ -33,6 +33,8 @@ These transcript expression estimates, often referred to as **'pseudocounts'**, 
 
 If not accounted for, these biases can lead to unacceptable false positive rates in differential expression studies [[2](http://salmon.readthedocs.io/en/latest/salmon.html#quasi-mapping-based-mode-including-lightweight-alignment)]. The **Salmon algorithm can learn these sample-specific biases and account for them in the transcript abundance estimates**. Salmon is extremely fast at "mapping" reads to the transcriptome and often more accurate than standard approaches [[2](http://salmon.readthedocs.io/en/latest/salmon.html#quasi-mapping-based-mode-including-lightweight-alignment)]. 
 
+> #### How does Salmon work?
+> If you are interested in knowing more about the quasi-mapping approach underlying Salmon and how transcript abundance estimates are generated [take a look at our additional material](https://github.com/hbctraining/Intro-to-rnaseq-hpc-O2/blob/master/lessons/08_salmon.md#how-does-salmon-estimate-transcript-abundances).
 
 ## Performing DE analysis on Pseudocounts with DESeq2
 
