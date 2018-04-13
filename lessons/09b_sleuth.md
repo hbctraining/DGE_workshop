@@ -272,8 +272,6 @@ so <- sleuth_prep(sfdata,
 
 >**NOTE:** By default the transformation of counts is natural log, which would make the output fold changes somewhat more difficult to interpret. By specifying the `transformation_function` to be `log2(x + 0.5)` we are ensuring our output fold changes are log2.
 
-# Fit the transcript abundance data to the sleuth model
-
 In fitting the sleuth model, sleuth performs shrinkage of variance, parameter estimation and estimation of variance using the general linear model:
 
 ```r
