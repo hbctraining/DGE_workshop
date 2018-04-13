@@ -4,8 +4,6 @@ author: "Mary Piper and Meeta Mistry"
 date: "Wednesday, September 20, 2017"
 ---
 
-Contributors: Mary Piper and Meeta Mistry
-
 Approximate time: 30 minutes
 
 ## Learning Objectives
