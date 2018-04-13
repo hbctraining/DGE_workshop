@@ -76,7 +76,7 @@ First, we create a simple vector containing the paths to the directories contain
 Now, let's use this function to create our list of the paths to our transcript abundance files:
 
 ```R
-sf_dirs <- file.path("data", "salmon", c("Mov10_kd_2.salmon", "Mov10_kd_3.salmon", "Mov10_oe_1.salmon", "Mov10_oe_2.salmon", "Mov10_oe_3.salmon","Irrel_kd_1.salmon", "Irrel_kd_2.salmon", "Irrel_kd_3.salmon"))
+sf_dirs <- file.path("data", c("Mov10_kd_2.salmon", "Mov10_kd_3.salmon", "Mov10_oe_1.salmon", "Mov10_oe_2.salmon", "Mov10_oe_3.salmon","Irrel_kd_1.salmon", "Irrel_kd_2.salmon", "Irrel_kd_3.salmon"))
 
 sf_dirs
 ```
