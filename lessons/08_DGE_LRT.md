@@ -52,10 +52,14 @@ You will find that similar columns are reported for the LRT test. One thing to n
 # Subset the LRT results to return genes with padj < 0.05
 sig_res_LRT <- res_LRT %>%
                data.frame() %>%
+               rownames_to_column(var="gene") %>% 
+               as_tibble() %>% 
                filter(padj < padj.cutoff)
-
+ 
 # Get sig gene lists
-sigLRT_genes <- rownames(sig_res_LRT)
+sigLRT_genes <- sig_res_LRT %>% 
+                pull(gene)
+                
 length(sigLRT_genes)
 
 # Compare to numbers we had from Wald test
@@ -86,11 +90,8 @@ First we will subset our rlog transformed normalized counts to contain only the 
 ```r
 # Subset results for faster cluster finding (for classroom demo purposes)
 clustering_sig_genes <- sig_res_LRT %>%
-        data.frame() %>%
-        rownames_to_column(var="gene") %>% 
-        as_tibble()
-        arrange(padj) %>%
-        head(n=1000)
+                  arrange(padj) %>%
+                  head(n=1000)
 
 
 # Obtain rlog values for those significant genes
