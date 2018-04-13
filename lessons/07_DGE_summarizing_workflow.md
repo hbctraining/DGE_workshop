@@ -22,12 +22,6 @@ We have detailed the various steps in a differential expression analysis workflo
 	
 	# Create DESeq2Dataset object
 	dds <- DESeqDataSetFromMatrix(countData = raw_counts, colData = metadata, design = ~ condition)
-	
-	# Estimate size factors
-	dds <- estimateSizeFactors(dds)
-	
-	# Output normalized counts
-	normalized_counts <- counts(dds, normalized=TRUE)
 	```
 	
 2. Exploratory data analysis (PCA & heirarchical clustering) - identifying outliers and sources of variation in the data:
@@ -52,11 +46,14 @@ We have detailed the various steps in a differential expression analysis workflo
 3. Run DESeq2:
 
 	```r
-	# Optional step - Re-create DESeq2 dataset if the design formula has changed after QC analysis in include other sources of variation
-	dds <- DESeqDataSetFromMatrix(countData = raw_counts, colData = metadata, design = ~ condition)
+		# **Optional step** - Re-create DESeq2 dataset if the design formula has changed after QC analysis in include other sources of variation
+		dds <- DESeqDataSetFromMatrix(countData = raw_counts, colData = metadata, design = ~ condition)
 	
 	# Run DESeq2 differential expression analysis
 	dds <- DESeq(dds)
+	
+		#  **Optional step** - Output normalized counts to save as a file to access outside RStudio
+		normalized_counts <- counts(dds, normalized=TRUE)
 	```
 	
 4. Check the fit of the dispersion estimates:
@@ -69,7 +66,7 @@ We have detailed the various steps in a differential expression analysis workflo
 5. Create contrasts to perform Wald testing on the shrunken log2 foldchanges between specific conditions:
 
 	```r
-	# Output results of Wald test for constrast
+	# Output results of Wald test for contrast
 	contrast <- c("condition", "level_to_compare", "base_level")
 	res <- results(dds, contrast = contrast)
 	res <- lfcShrink(dds, contrast = contrast, res=res)
@@ -82,7 +79,7 @@ We have detailed the various steps in a differential expression analysis workflo
 	res_df <- as.data.frame(res)
 	
 	# Subset the significant results
-	sig_res <- subset(res_df, res_df$padj < padj.cutoff & abs(res_df$log2FoldChange) > lfc.cutoff)
+	sig_res <- filter(res_df, padj < padj.cutoff & abs(log2FoldChange) > lfc.cutoff)
 	```
 
 7. Visualize results: volcano plots, heatmaps, normalized counts plots of top genes, etc.
