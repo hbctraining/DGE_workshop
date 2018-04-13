@@ -118,7 +118,7 @@ non_duplicates <- which(duplicated(ids$symbol) == FALSE)
 ids <- ids[non_duplicates, ] 
 
 ## Merge the IDs with the results 
-res_ids <- merge(data.frame(res_tableOE), ids, by.x=0, by.y="symbol")         
+res_ids <- inner_join(res_tableOE_tb, ids, by=c("gene"="symbol"))         
 ```
 
 To perform the over-representation analysis, we need a list of background genes and a list of significant genes. For our background dataset we will use all genes tested for differential expression (all genes in our results table). For our significant gene list we will use genes with p-adjusted values less than 0.05 (we could include a fold change threshold too if we have many DE genes).
@@ -128,7 +128,7 @@ To perform the over-representation analysis, we need a list of background genes 
 allOE_genes <- as.character(res_ids$ensgene)
 
 ## Extract significant results
-sigOE <- subset(res_ids, padj < 0.05)
+sigOE <- filter(res_ids, padj < 0.05)
 
 sigOE_genes <- as.character(sigOE$ensgene)
 ```
@@ -188,7 +188,7 @@ Finally, the **category netplot** shows the relationships between the genes asso
 ## To color genes by log2 fold changes, we need to extract the log2 fold changes from our results table creating a named vector
 OE_foldchanges <- sigOE$log2FoldChange
 
-names(OE_foldchanges) <- sigOE$Row.names
+names(OE_foldchanges) <- sigOE$gene
 
 ## Cnetplot details the genes associated with one or more terms - by default gives the top 5 significant terms (by padj)
 cnetplot(ego, 
@@ -215,13 +215,17 @@ cnetplot(ego,
 If you are interested in significant processes that are **not** among the top five, you can subset your `ego` dataset to only display these processes:
 
 ```r
-## Subsetting the ego results without overwriting original ego variable
+## Subsetting the ego results without overwriting original `ego` variable
 ego2 <- ego
 
 ego2@result <- ego@result[c(1,3,4,8,9),]
 
 ## Plotting terms of interest
-cnetplot(ego2, categorySize="pvalue", foldChange=OE_foldchanges, showCategory = 5)
+cnetplot(ego2, 
+         categorySize="pvalue", 
+         foldChange=OE_foldchanges, 
+         showCategory = 5, 
+         vertex.label.font=6)
 ```
 
 <img src="../img/mov10oe_cnetplot2.png" width="800">
@@ -256,7 +260,7 @@ To perform GSEA analysis of KEGG gene sets, clusterProfiler requires the genes t
 
 ```r
 ## Remove any NA values
-res_entrez <- subset(res_ids, entrez != "NA")
+res_entrez <- filter(res_ids, entrez != "NA")
 
 ## Remove any Entrez duplicates
 res_entrez <- res_entrez[which(duplicated(res_entrez$entrez) == F), ]
