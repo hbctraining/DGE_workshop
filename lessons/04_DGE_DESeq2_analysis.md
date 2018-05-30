@@ -21,7 +21,7 @@ The final step in the differential expression analysis workflow is fitting the r
 
 <img src="../img/de_theory.png" width="600">
 
-*Image is courtesy  of  Paul  Pavlidis,  UBC*
+*Image credit:  Paul  Pavlidis,  UBC*
 
 
 The [DESeq2 paper](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-014-0550-8) was published in 2014, but the package is continually updated and available for use in R through Bioconductor. It builds on good ideas for dispersion estimation and use of Generalized Linear Models from the [DSS](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4005660/) and [edgeR](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2796818/) methods. 
