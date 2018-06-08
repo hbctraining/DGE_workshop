@@ -150,9 +150,11 @@ To create this Sleuth object, we need to perform the following steps:
 
 #### Create a dataframe needed to generate Sleuth analysis object
 
-Read in the metadata file and use the `data.frame()` function to ensure it is a dataframe, then combine the metadata with the paths to the transcript abundance files to use as input for the Sleuth analysis. 
+First we need to bring in the metadata file:
 
-First we need to read in the metadata file:
+- Download the **metadata** associated with the Salmon files by **right-clicking [this link](https://github.com/hbctraining/DGE_workshop/raw/master/data/Mov10_full_meta.txt)** and selecting `Download Linked File` or `Save Linked File As` and saving to the `meta` directory.
+
+- Read in the metadata file and use the `data.frame()` function to ensure it is a dataframe, then combine the metadata with the paths to the transcript abundance files to use as input for the Sleuth analysis. 
 
 ```r
 # Read in metadata file
