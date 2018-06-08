@@ -159,7 +159,7 @@ plotPCA(rld, intgroup="sampletype")
 > **NOTE:** The `plotPCA()` function will only return the values for PC1 and PC2. If you would like to explore the additional PCs in your data or if you would like to identify genes that contribute most to the PCs, you can use the `prcomp()` function. For example, to plot any of the PCs we could run the following code:
 >
 >  ```r
->  # input is a matrix of log transformed values
+>  # Input is a matrix of log transformed values
 >  rld <- rlog(dds, blind=T)
 >  rld_mat <- assay(rld)
 >  pca <- prcomp(t(rld_mat))
