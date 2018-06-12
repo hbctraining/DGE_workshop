@@ -26,11 +26,11 @@ A useful initial step in an RNA-seq analysis is often to assess overall similari
 - Does this fit to the expectation from the experiment’s design? 
 - What are the major sources of variation in the dataset?
 
-Sample-level QC allows us to see how well our replicates cluster together, as well as, observe whether our experimental condition represents the major source of variation in the data. To explore the variation in our count data, we will be using Principal Component Analysis (PCA) and hierarchical clustering. Performing sample-level QC can also identify any sample outliers, which may need to be explored to determine whether they need to be removed prior to DE analysis. 
+To explore the similarity of our samples, we will be performing sample-level QC using Principal Component Analysis (PCA) and hierarchical clustering methods. Our sample-level QC allows us to see how well our replicates cluster together, as well as, observe whether our experimental condition represents the major source of variation in the data. Performing sample-level QC can also identify any sample outliers, which may need to be explored further to determine whether they need to be removed prior to DE analysis. 
 
 <img src="../img/sample_qc.png" width="700">
 
-Log2-transformation of the normalized counts improves the distances/clustering for these visualization methods. DESeq2 uses a **regularized log transform** (rlog) of the normalized counts for sample-level QC as it moderates the variance across the mean, improving the clustering.
+When using these unsupervised clustering methods, log2-transformation of the normalized counts improves the distances/clustering for visualization. DESeq2 uses a **regularized log transform** (rlog) of the normalized counts for sample-level QC as it moderates the variance across the mean, improving the clustering.
 
 <img src="../img/rlog_transformation.png" width="500">
 
