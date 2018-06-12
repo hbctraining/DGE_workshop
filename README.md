@@ -40,8 +40,86 @@ Download the most recent versions of R and RStudio for your laptop:
  - [R](http://lib.stat.cmu.edu/R/CRAN/) 
  - [RStudio](https://www.rstudio.com/products/rstudio/download/#download)
  
-Install the required R packages by running the following code in RStudio:
+Note:  When installing the following packages, if you are asked to select (a/s/n) or (y/n), please select “a” or "y" as applicable.
 
+(1) Install the below packages on your laptop from CRAN. You DO NOT have to go to the CRAN webpage; you can use the following function to install them one by one:
+
+```r
+install.packages("insert_package_name_in_quotations")
+install.packages("insert_package_name_in_quotations")
+& so on ...
+```
+
+Note that these package names are case sensitive!
+
+```r
+RColorBrewer
+pheatmap
+ggrepel
+devtools
+cowplot
+```
+
+(2) Install the below packages from Bioconductor. Run the `source()` function once, followed by the `biocLite()` function 9 times for the 9 packages:
+
+```r
+source("http://bioconductor.org/biocLite.R") 
+biocLite("insert_first_package_name_in_quotations")
+biocLite("insert_second_package_name_in_quotations")
+& so on ...
+```
+
+Note that these package names are case sensitive!
+
+```r
+DESeq2
+clusterProfiler
+DOSE
+org.Hs.eg.db
+pathview
+DEGreport
+rhdf5
+tximport
+COMBINE-lab/wasabi
+```
+
+(3) Use a new method of installation from GitHub to install the below packages using the following code:
+
+```r
+devtools::install_github("insert_package_name_in_quotations")
+```
+```r
+stephenturner/annotables
+pachterlab/sleuth
+```
+
+(4) Finally, please check that all the packages were installed successfully by loading them one at a time using the library() function.  
+
+```r
+library(DESeq2)
+library(ggplot2)
+library(RColorBrewer)
+library(pheatmap)
+library(ggrepel)
+library(cowplot)
+library(clusterProfiler)
+library(DEGreport)
+library(org.Hs.eg.db)
+library(DOSE)
+library(pathview)
+library(purrr)
+library(rhdf5)
+library(tximport)
+library(annotables)
+library(wasabi)
+library(sleuth)
+```
+
+(5) Once all packages have been loaded, run sessionInfo().  
+
+```r
+sessionInfo()
+```
 ```r
 source("http://bioconductor.org/biocLite.R") 
 biocLite(c("RColorBrewer", "pheatmap", "DESeq2", "clusterProfiler", 
