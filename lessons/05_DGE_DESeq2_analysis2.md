@@ -193,7 +193,7 @@ DESeq2 helps reduce the number of genes tested by removing those genes unlikely 
 
 In DESeq2, the p-values attained by the Wald test are corrected for multiple testing using the Benjamini and Hochberg method by default. There are options to use other methods in the `results()` function. The p-adjusted values should be used to determine significant genes. The significant genes can be output for visualization and/or functional analysis.
 
-> **So what does FDR < 0.05 mean?** By setting the FDR cutoff to < 0.05, we're saying that is the proportion of false positives we expect amongst our differentially expressed genes. For example, if you call 500 genes as differentially expressed with an FDR cutoff of 0.05, you expect 25 of them to be false positives.
+> **So what does FDR < 0.05 mean?** By setting the FDR cutoff to < 0.05, we're saying that the proportion of false positives we expect amongst our differentially expressed genes is 5%. For example, if you call 500 genes as differentially expressed with an FDR cutoff of 0.05, you expect 25 of them to be false positives.
 
 ### MOV10 DE analysis: Control versus Knockdown
 
