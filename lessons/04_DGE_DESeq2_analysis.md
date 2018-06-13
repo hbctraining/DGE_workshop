@@ -221,6 +221,13 @@ Dispersion estimates that are slightly above the curve are also shrunk toward th
 
 **This is a good plot to examine to ensure your data is a good fit for the DESeq2 model.** You expect your data to generally scatter around the curve, with the dispersion decreasing with increasing mean expression levels. If you see a cloud or different shapes, then you might want to explore your data more to see if you have contamination (mitochondrial, etc.) or outlier samples.  Note how much shrinkage you get across the whole range of means in the `plotDispEsts()` plot for any experiment with low degrees of freedom.
 
+Examples of **worrisome dispersion plots** are shown below:
+
+<img src="../img/bad_dispersion1.png" width="600">
+
+<img src="../img/bad_dispersion2.png" width="600">
+
+
 #### MOV10 DE analysis: exploring the dispersion estimates and assessing model fit
 
 Let's take a look at the dispersion estimates for our MOV10 data:
