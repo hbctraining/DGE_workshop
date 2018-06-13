@@ -33,8 +33,9 @@ We will be working with three different data objects we have already created in 
 
 - Metadata for our samples (a dataframe): `meta`
 - Normalized expression data for every gene in each of our samples (a matrix): `normalized_counts`
+- Tibble versions of the DESeq2 results we generated in the last lesson: `res_tableOE_tb` and `res_tableKD_tb`
 
-Let's create tibble objects from all of these before we start plotting. This will enable us to use the `tidyverse` functionality more easily.
+Let's create tibble objects from the `meta` and `normalized_counts` data frames before we start plotting. This will enable us to use the `tidyverse` functionality more easily.
 
 ```r
 # Create tibbles including row names
