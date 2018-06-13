@@ -74,12 +74,12 @@ If you wish to change the appearance of this plot, we can save the output of `pl
 d <- plotCounts(dds, gene="MOV10", intgroup="sampletype", returnData=TRUE)
 
 # Plotting the MOV10 normalized counts, using the samplenames (rownames of d as labels)
-ggplot(d, aes(x=sampletype, y=count, color=sampletype)) + 
-  geom_point(position=position_jitter(w=0.1,h=0)) +
+ggplot(d, aes(x = sampletype, y = count, color = sampletype)) + 
+  geom_point(position=position_jitter(w = 0.1,h = 0)) +
   geom_text_repel(aes(label = rownames(d))) + 
   theme_bw() +
   ggtitle("MOV10") +
-  theme(plot.title=element_text(hjust=0.5))
+  theme(plot.title = element_text(hjust=0.5))
 ```
 
 > Note that in the plot below (code above), we are using `geom_text_repel()` from the `ggrepel` package to label our individual points on the plot.
@@ -119,7 +119,7 @@ The `gather()` function in the **tidyr** package will perform this operation and
 ```r
 # Gathering the columns to have normalized counts to a single column
 gathered_top20_sigOE <- top20_sigOE_norm %>%
-  gather(colnames(top20_sigOE_norm)[2:9], key =  "samplename", value = "normalized_counts")
+  gather(colnames(top20_sigOE_norm)[2:9], key = "samplename", value = "normalized_counts")
 
 ## check the column header in the "gathered" data frame
 View(gathered_top20_sigOE)
@@ -145,7 +145,7 @@ ggplot(gathered_top20_sigOE) +
         ggtitle("Top 20 Significant DE Genes") +
         theme_bw() +
 	theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
-	theme(plot.title = element_text(hjust=0.5))
+	theme(plot.title = element_text(hjust = 0.5))
 ```
 
 <img src="../img/sig_genes_melt.png" width="600">
@@ -177,13 +177,13 @@ heat_colors <- brewer.pal(6, "YlOrRd")
 pheatmap(data.frame(norm_OEsig), 
          color = heat_colors, 
          cluster_rows = T, 
-         show_rownames=F,
-         annotation= annotation, 
-         border_color=NA, 
+         show_rownames = F,
+         annotation = annotation, 
+         border_color = NA, 
          fontsize = 10, 
-         scale="row", 
+         scale = "row", 
          fontsize_row = 10, 
-         height=20)
+         height = 20)
 ```
          
 ![sigOE_heatmap](../img/sigOE_heatmap.png)       
@@ -208,7 +208,7 @@ Now we can start plotting. The `geom_point` object is most applicable, as this i
 ```r
 ## Volcano plot
 ggplot(res_tableOE_tb) +
-        geom_point(aes(x=log2FoldChange, y=-log10(padj), colour=threshold_OE)) +
+        geom_point(aes(x = log2FoldChange, y = -log10(padj), colour = threshold_OE)) +
         ggtitle("Mov10 overexpression") +
         xlab("log2 fold change") + 
         ylab("-log10 adjusted p-value") +
@@ -262,11 +262,11 @@ ggplot(res_tableOE_tb) +
 > ***NOTE:** If using the DESeq2 tool for differential expression analysis, the package 'DEGreport' can use the DESeq2 results output to make the top20 genes and the volcano plots generated above by writing a few lines of simple code. While you can customize the plots above, you may be interested in using the easier code. Below are examples of the code to create these plots:*
 
 > ```r
-> DEGreport::degPlot(dds = dds, res = res, n=20, xs="type", group = "condition") # dds object is output from DESeq2
+> DEGreport::degPlot(dds = dds, res = res, n = 20, xs = "type", group = "condition") # dds object is output from DESeq2
 > 
 > DEGreport::degVolcano(
 >     as.data.frame(res[,c("log2FoldChange","padj")]), # table - 2 columns
->     plot_text=as.data.frame(res[1:10,c("log2FoldChange","padj","id")])) # table to add names
+>     plot_text = as.data.frame(res[1:10,c("log2FoldChange","padj","id")])) # table to add names
 >     
 > # Available in the newer version for R 3.4
 > DEGreport::degPlotWide(dds = dds, genes = row.names(res)[1:5], group = "condition")
