@@ -79,7 +79,7 @@ ggplot(d, aes(x = sampletype, y = count, color = sampletype)) +
   geom_text_repel(aes(label = rownames(d))) + 
   theme_bw() +
   ggtitle("MOV10") +
-  theme(plot.title = element_text(hjust=0.5))
+  theme(plot.title = element_text(hjust = 0.5))
 ```
 
 > Note that in the plot below (code above), we are using `geom_text_repel()` from the `ggrepel` package to label our individual points on the plot.
