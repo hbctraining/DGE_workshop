@@ -183,7 +183,7 @@ A2M           5.8600841    -0.27850841 0.18051805 -1.5428286 0.1228724 0.2148906
 
 Note that we have pvalues and p-adjusted values in the output. Which should we use to identify significantly differentially expressed genes?
 
-If we used the `p-value` directly from the Wald test with a significance cut-off of 0.05 (α = 0.05), then we expect 5% of all differentially expressed genes to be false positives. Each p-value is the result of a single test (single gene). The more genes we test, the more we inflate the false positive rate. **This is the multiple testing problem.** For example, if we test 20,000 genes for differential expression, at p < 0.05 we would expect to find 1,000 genes by chance. If we found 3000 genes to be differentially expressed total, roughly one third of our genes are false positives. We would not want to sift through our "significant" genes to identify which ones are true positives.
+If we used the `p-value` directly from the Wald test with a significance cut-off of 0.05 (α = 0.05), that means there is a 5% chance it is a false positives. Each p-value is the result of a single test (single gene). The more genes we test, the more we inflate the false positive rate. **This is the multiple testing problem.** For example, if we test 20,000 genes for differential expression, at p < 0.05 we would expect to find 1,000 genes by chance. If we found 3000 genes to be differentially expressed total, roughly one third of our genes are false positives. We would not want to sift through our "significant" genes to identify which ones are true positives.
 
 DESeq2 helps reduce the number of genes tested by removing those genes unlikely to be significantly DE prior to testing, such as those with low number of counts and outlier samples (gene-level QC). However, we still need to correct for multiple testing to reduce the number of false positives, and there are a few common approaches:
 
@@ -192,6 +192,8 @@ DESeq2 helps reduce the number of genes tested by removing those genes unlikely 
 - **Q-value / Storey method:** The minimum FDR that can be attained when calling that feature significant. For example, if gene X has a q-value of 0.013 it means that 1.3% of genes that show p-values at least as small as gene X are false positives
 
 In DESeq2, the p-values attained by the Wald test are corrected for multiple testing using the Benjamini and Hochberg method by default. There are options to use other methods in the `results()` function. The p-adjusted values should be used to determine significant genes. The significant genes can be output for visualization and/or functional analysis.
+
+> **So what does FDR < 0.05 mean?** By setting the FDR cutoff to < 0.05, we're saying that is the proportion of false positives we expect amongst our differentially expressed genes. For example, if you call 500 genes as differentially expressed with an FDR cutoff of 0.05, you expect 25 of them to be false positives.
 
 ### MOV10 DE analysis: Control versus Knockdown
 
