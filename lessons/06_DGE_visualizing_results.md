@@ -145,7 +145,7 @@ ggplot(gathered_top20_sigOE) +
         ggtitle("Top 20 Significant DE Genes") +
         theme_bw() +
 	theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
-	theme(plot.title=element_text(hjust=0.5))
+	theme(plot.title = element_text(hjust=0.5))
 ```
 
 <img src="../img/sig_genes_melt.png" width="600">
@@ -155,12 +155,11 @@ ggplot(gathered_top20_sigOE) +
 In addition to plotting subsets, we could also extract the normalized values of *all* the significant genes and plot a heatmap of their expression using `pheatmap()`.
 
 ```r
-### Extract normalized expression for significant genes and set the gene column to row names
-norm_OEsig <- normalized_counts %>% 
+### Extract normalized expression for significant genes from the OE and control samples (4:9), and set the gene column (1) to row names
+norm_OEsig <- normalized_counts[,c(1,4:9)] %>% 
               filter(gene %in% sigOE$gene) %>% 
 	      data.frame() %>%
 	      column_to_rownames(var = "gene") 
-
 ```
 
 Now let's draw the heatmap using `pheatmap`:
@@ -224,7 +223,9 @@ ggplot(res_tableOE_tb) +
 This is a great way to get an overall picture of what is going on, but what if we also wanted to know where the top 10 genes (lowest padj) in our DE list are located on this plot? We could label those dots with the gene name on the Volcano plot using `geom_text_repel()`.
 
 To make this work we have to take the following 3 steps:
+
 (Step 1) Create a new data frame sorted or ordered by padj
+
 (Step 2) Indicate in the data frame which genes we want to label by adding a logical vector to it, wherein "TRUE" = genes we want to label.
  
 ```r
