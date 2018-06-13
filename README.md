@@ -80,7 +80,6 @@ pathview
 DEGreport
 rhdf5
 tximport
-COMBINE-lab/wasabi
 ```
 
 (3) Use a new method of installation from GitHub to install the below packages using the following code:
@@ -91,6 +90,7 @@ devtools::install_github("insert_package_name_in_quotations")
 ```r
 stephenturner/annotables
 pachterlab/sleuth
+COMBINE-lab/wasabi
 ```
 
 (4) Finally, please check that all the packages were installed successfully by loading them one at a time using the library() function.  
