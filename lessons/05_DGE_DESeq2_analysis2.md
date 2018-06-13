@@ -65,7 +65,7 @@ To generate the shrunken log2 fold change estimates, you have to run an addition
 
 ## Hypothesis testing using the Wald test
 
-Generally, **we are interested in the LFC estimates relative to other sample groups**. To determine whether the difference in shrunken LFC estimates differs significantly from zero, the **Wald test** is used. The Wald test is used to make **pair-wise comparisons**.
+Generally, we are interested in the LFC estimates relative to other sample groups. **To determine whether the difference in shrunken LFC estimates differs significantly from zero, the *Wald test is used.** The Wald test is used to make pair-wise comparisons.
 
 ### Creating contrasts
 
