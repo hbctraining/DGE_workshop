@@ -282,7 +282,7 @@ foldchanges <- res_entrez$log2FoldChange
 names(foldchanges) <- res_entrez$entrez
 ```
 
-Order the fold changes in decreasing order:
+Next we need to order the fold changes in decreasing order. To do this we'll use the `sort()` function, which takes a vector as input. This is in contrast to Tidyverse's `arrange()`, which requires a data frame.
 
 ```r
 ## Sort fold changes in decreasing order
