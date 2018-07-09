@@ -78,7 +78,7 @@ To indicate to DESeq2 the two groups we want to compare, we can use **contrasts*
 	
 	# DO NOT RUN!
 	contrast <- c("condition", "level_to_compare", "base_level")
-	results(dds, contrast = contrast)
+	results(dds, contrast = contrast, alpha = alpha_threshold)
 	
 	```
 >
@@ -101,7 +101,7 @@ We will tell DESeq2 the contrasts we would like to make using the `results()` co
 
 contrast_oe <- c("sampletype", "MOV10_overexpression", "control")
 
-res_tableOE_unshrunken <- results(dds, contrast=contrast_oe)
+res_tableOE_unshrunken <- results(dds, contrast=contrast_oe, alpha = 0.05)
 
 res_tableOE <- lfcShrink(dds, contrast=contrast_oe, res=res_tableOE_unshrunken)
 ```
@@ -115,7 +115,7 @@ A plot that can be useful to exploring our results is the MA plot. The MA plot s
 **Let's start with the unshrunken results:**
 
 ```r
-plotMA(res_tableOE_unshrunken, alpha = 0.05, ylim=c(-2,2))
+plotMA(res_tableOE_unshrunken, ylim=c(-2,2))
 ```
 
 <img src="../img/maplot_unshrunken.png" width="600">
@@ -123,7 +123,7 @@ plotMA(res_tableOE_unshrunken, alpha = 0.05, ylim=c(-2,2))
 **And now the shrunken results:**
 
 ```r
-plotMA(res_tableOE, alpha = 0.05, ylim=c(-2,2))
+plotMA(res_tableOE, ylim=c(-2,2))
 ```
 
 <img src="../img/MA_plot.png" width="600">
@@ -203,7 +203,7 @@ Now that we have results for the overexpression results, let's do the same for t
 ## Define contrasts, extract results table and shrink log2 fold changes
 contrast_kd <-  c("sampletype", "MOV10_knockdown", "control")
 
-res_tableKD <- results(dds, contrast=contrast_kd)
+res_tableKD <- results(dds, contrast=contrast_kd, alpha = 0.05)
 
 res_tableKD <- lfcShrink(dds, contrast=contrast_kd, res=res_tableKD)
 ```
@@ -212,28 +212,14 @@ Take a quick peek at the results table containing Wald test statistics for the C
 
 ## Summarizing results
 
-To summarize the results table, a handy function in DESeq2 is `summary()`. Confusingly it has the same name as the function used to inspect data frames. This function when called with a DESeq results table as input, will summarize the results using the default threshold: FDR < 0.1 (padj/FDR is used even though the output says `p-value < 0.1`). Let's start with the OE vs control results:
+To summarize the results table, a handy function in DESeq2 is `summary()`. Confusingly it has the same name as the function used to inspect data frames. This function when called with a DESeq results table as input, will summarize the results using the alpha threshold: FDR < 0.05 (padj/FDR is used even though the output says `p-value < 0.05`). Let's start with the OE vs control results:
 
 ```r
 ## Summarize results
 summary(res_tableOE)
 ```
 
-```r  
-out of 19748 with nonzero total read count
-adjusted p-value < 0.1
-LFC > 0 (up)     : 3657, 19% 
-LFC < 0 (down)   : 3897, 20% 
-outliers [1]     : 0, 0% 
-low counts [2]   : 3912, 20% 
-(mean count < 4)
-[1] see 'cooksCutoff' argument of ?results
-[2] see 'independentFiltering' argument of ?results
-```
-
 In addition to the number of genes up- and down-regulated at the default threshold, **the function also reports the number of genes that were tested (genes with non-zero total read count), and the number of genes not included in multiple test correction due to a low mean count** (which in our case is < 4 and was determined automatically by DESeq2 based on overall counts).
-
-The default FDR threshold is set using the option `alpha` within `summary()`; 0.1 is quite liberal so let's try changing that to `0.05` -- *how many genes are we left with*?
 
 ***
 
