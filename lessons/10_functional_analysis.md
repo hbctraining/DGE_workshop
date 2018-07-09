@@ -156,6 +156,7 @@ cluster_summary <- data.frame(ego)
 write.csv(cluster_summary, "results/clusterProfiler_Mov10oe.csv")
 ```
 >**NOTE:** The different organisms with annotation databases available to use with clusterProfiler can be found [here](../img/orgdb_annotation_databases.png)
+> Also, the `keyType` argument may be coded as `keytype` in different versions of clusterProfiler.
 
 ![cluster_summary](../img/cluster_summary.png)                
 
