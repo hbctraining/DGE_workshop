@@ -282,7 +282,7 @@ sigKD
 
 Now that we have subsetted our data, we are ready for visualization!
 
-> #### Subsetting by fold-change using the `results()` function 
+> ### An alternative approach
 > The `results()` function has an option to add a fold change threshold using the `lfcThrehsold` argument. This method is more statistically motivated, and is recommended when you want a more confident set of genes based on a certain fold-change. It actually performs a statistical test against the desired threshold, by performing a two-tailed test for log2 fold changes greater than the absolute value specified. The user can change the alternative hypothesis using `altHypothesis` and perform two one-tailed tests as well. **This is a more conservative approach, so expect to retrieve a much smaller set of genes!**
 >
 > Test this out using our data:
