@@ -65,7 +65,9 @@ To generate the shrunken log2 fold change estimates, you have to run an addition
 
 ## Hypothesis testing using the Wald test
 
-Generally, we are interested in the LFC estimates relative to other sample groups. **To determine whether the difference in shrunken LFC estimates differs significantly from zero, the *Wald test is used.** The Wald test is used to make pair-wise comparisons.
+The first step in hypothesis testing is to set up a **null hypothesis** for each gene. In our case is, the null hypothesis is that there is **no differential expression across the two sample groups (LFC == 0)**. Notice that we can do this without observing any data, because it is based on a thought experiment. Second, we use a statistical test to determine if based on the observed data, the null hypothesis is true. 
+
+With DESeq2, the Wald test is commonly used for hypothesis testing when comparing two groups. A Wald test statistic is computed along with a probability that a test statistic at least as extreme as the observed value were selected at random. This probability is called the p-value of the test. If the p-value is small we reject the null hypothesis and state that there is evidence against the null (i.e. the gene is differentially expressed).
 
 ### Creating contrasts
 
@@ -94,7 +96,7 @@ We have three sample classes so we can make three possible pairwise comparisons:
 
 **We are really only interested in #1 and #2 from above**. Using the design formula we provided `~ sampletype`, indicating that this is our main factor of interest.
 
-We will tell DESeq2 the contrasts we would like to make using the `results()` contrast argument. For this example we will save the unshruken and shrunken versions of results to separate variables:
+To build our results table we will use the `results()` function. To tell DESeq2 which groups we wish to compare, we supply the contrasts we would like to make using the`contrast` argument. For this example we will save the unshrunken and shrunken versions of results to separate variables. Additionally, we are including the `alpha` argument and setting it to 0.05. This is the significance cutoff used for optimizing the independent filtering (by default it is set to 0.1). If the adjusted p-value cutoff (FDR) will be a value other than 0.1 (for our final list of significant genes), `alpha` should be set to that value.
 
 ```r
 ## Define contrasts, extract results table, and shrink the log2 fold changes
