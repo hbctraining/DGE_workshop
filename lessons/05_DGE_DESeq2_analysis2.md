@@ -96,6 +96,8 @@ We have three sample classes so we can make three possible pairwise comparisons:
 
 **We are really only interested in #1 and #2 from above**. Using the design formula we provided `~ sampletype`, indicating that this is our main factor of interest.
 
+### Building the results table
+
 To build our results table we will use the `results()` function. To tell DESeq2 which groups we wish to compare, we supply the contrasts we would like to make using the`contrast` argument. For this example we will save the unshrunken and shrunken versions of results to separate variables. Additionally, we are including the `alpha` argument and setting it to 0.05. This is the significance cutoff used for optimizing the independent filtering (by default it is set to 0.1). If the adjusted p-value cutoff (FDR) will be a value other than 0.1 (for our final list of significant genes), `alpha` should be set to that value.
 
 ```r
@@ -157,7 +159,7 @@ mcols(res_tableOE, use.names=T)
 Now let's take a look at what information is stored in the results:
 
 ```r
-head(res_tableOE)
+res_tableOE %>% data.frame() %>% View()
 ```
 
 ```
@@ -185,7 +187,7 @@ A2M           5.8600841    -0.27850841 0.18051805 -1.5428286 0.1228724 0.2148906
 
 Note that we have pvalues and p-adjusted values in the output. Which should we use to identify significantly differentially expressed genes?
 
-If we used the `p-value` directly from the Wald test with a significance cut-off of 0.05 (α = 0.05), that means there is a 5% chance it is a false positives. Each p-value is the result of a single test (single gene). The more genes we test, the more we inflate the false positive rate. **This is the multiple testing problem.** For example, if we test 20,000 genes for differential expression, at p < 0.05 we would expect to find 1,000 genes by chance. If we found 3000 genes to be differentially expressed total, roughly one third of our genes are false positives. We would not want to sift through our "significant" genes to identify which ones are true positives.
+If we used the `p-value` directly from the Wald test with a significance cut-off of p < 0.05, that means there is a 5% chance it is a false positives. Each p-value is the result of a single test (single gene). The more genes we test, the more we inflate the false positive rate. **This is the multiple testing problem.** For example, if we test 20,000 genes for differential expression, at p < 0.05 we would expect to find 1,000 genes by chance. If we found 3000 genes to be differentially expressed total, roughly one third of our genes are false positives. We would not want to sift through our "significant" genes to identify which ones are true positives.
 
 DESeq2 helps reduce the number of genes tested by removing those genes unlikely to be significantly DE prior to testing, such as those with low number of counts and outlier samples (gene-level QC). However, we still need to correct for multiple testing to reduce the number of false positives, and there are a few common approaches:
 
@@ -221,21 +223,12 @@ To summarize the results table, a handy function in DESeq2 is `summary()`. Confu
 summary(res_tableOE)
 ```
 
-In addition to the number of genes up- and down-regulated at the default threshold, **the function also reports the number of genes that were tested (genes with non-zero total read count), and the number of genes not included in multiple test correction due to a low mean count** (which in our case is < 4 and was determined automatically by DESeq2 based on overall counts).
+In addition to the number of genes up- and down-regulated at the default threshold, **the function also reports the number of genes that were tested (genes with non-zero total read count), and the number of genes not included in multiple test correction due to a low mean count**.
 
-***
-
-**Exercise**
-
-Explore the results table summary for the **Mov10_knockdown comparison to control**. How many genes are differentially expressed at FDR < 0.1? How many fewer genes do we find at FDR < 0.05?
-
-***
 
 ### Extracting significant differentially expressed genes
 
-What we noticed is that the FDR threshold on it's own doesn't appear to be reducing the number of significant genes. With large significant gene lists it can be hard to extract meaningful biological relevance. To help increase stringency, one can also **add a fold change threshold**. _The `summary()` function doesn't have an argument for fold change threshold_
-
-> *NOTE:* the `results()` function does have an option to add a fold change threshold and subset the data this way. Take a look at the help manual using `?results` and see what argument would be required. 
+What we noticed is that the FDR threshold on it's own doesn't appear to be reducing the number of significant genes. With large significant gene lists it can be hard to extract meaningful biological relevance. To help increase stringency, one can also **add a fold change threshold**. _The `summary()` function doesn't have an argument for fold change threshold._
 
 Let's first create variables that contain our threshold criteria:
 
@@ -288,6 +281,16 @@ sigKD
 ``` 
 
 Now that we have subsetted our data, we are ready for visualization!
+
+> **Subsetting using the `results()` function** The `results()` function has an option to add a fold change threshold using the `lfcThrehsold` argument. This method is more statistically motivated, and is recommended when you want a more confident set of genes based on a certain fold-change. It actually performs a statistical test against the desired threshold, by performing a two-tailed test for log2 fold changes greater than the absolute value specified. The user can change the alternative hypothesis using `altHypothesis` and perform two one-tailed tests as well. **This is a more conservative approach, so expect to retrieve a much smaller set of genes!**
+>
+> Test this out using our data:
+> `results(dds, contrast = contrast_oe, alpha = 0.05, lfcThreshold = 0.58)`
+>
+> **How do the results differ? How many significant genes do we get using this approach?**
+>
+
+
 
 ---
 *This lesson has been developed by members of the teaching team at the [Harvard Chan Bioinformatics Core (HBC)](http://bioinformatics.sph.harvard.edu/). These are open access materials distributed under the terms of the [Creative Commons Attribution license](https://creativecommons.org/licenses/by/4.0/) (CC BY 4.0), which permits unrestricted use, distribution, and reproduction in any medium, provided the original author and source are credited.*
