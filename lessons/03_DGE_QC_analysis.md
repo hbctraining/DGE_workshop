@@ -88,36 +88,11 @@ Still we haven't found if `treatment` is a major source of variation after `stra
 
 We find that the samples separate by `treatment` on PC3, and are optimistic about our DE analysis since our condition of interest, `treatment`, is separating on PC3 and we can regress out the variation driving PC1 and PC2.
 
-Even if your samples do not separate by PC1 or PC2 or you can't identify the sources of variation, you may still get biologically relevant results from the DE analysis, just don't be surprised if you do not get a large number of DE genes. To give more power to the tool for detecting DE genes, it is **best to account for major, known sources of variation** in your model if you can identify them; this includes **batch effects**. 
-
-For details regarding the calculations performed for PCA, we encourage you to explore [StatQuest's video](https://www.youtube.com/watch?v=_UVHneBUBW0). 
-
-------
-
-In the first example, we have a dataset containing a total of eight samples and our main variable of interest is the **two treatment groups** labeled EN and ENR. This is **a paired experimental design**, in which each individual received both treatments. What we hope for, is that our treatment groups separating on PC1 as shown below. PC1 explains 89% of the variation in the data, illustrating the **majority of variation we observe in this data can be attributed to the differences treatment**. 
-
-<img src="../img/PCA_example4.png" width="400">
-
-If we plot the same two principal components, but **this time color the samples (data points) by the two individual IDs** we see that PC2 is explained by differences between the two individuals. PCA analysis is very exploratory, and it is common practice to overlay other variables present in our metadata to **explore other causes of the variation in our data**:
-
-<img src="../img/PCA_example5.png" width="400">
-
-In the next example, the main variable of interest is genotype. In this PCA plot, although PC1 explains 55% of the variance it is not because of genotype. **We do see samples segregating based on genotype, but on PC2 (13% variance)**. The blue data points exhibit higher values and pink data points with lower values. 
-
-> **NOTE:** If we saw one of the red samples below clustering with the blue samples (or vice versa), we might be worried about a mix-up. This would be sufficient cause for sample removal and/or flag it as an outlier to perform some follow-up tests in the lab.
-
-<img src="../img/PCA_example1.png" width="400">
-
-If we overlay plasmid expression level on the same PCA plot we observe that this is the major source of variation in the data. **It is not uncommon to see a higher amount of variation to be attributed to metadata that is not your main experimental variable.**
-
-<img src="../img/PCA_example2.png" width="400">
-
 Depending on how much variation is explained by the first few principal components, you **may want to explore more (i.e consider more components and plot pairwise combinations)**. Even if your samples do not separate clearly by the experimental variable, you may still get biologically relevant results from the DE analysis. If you are expecting very small effect sizes, then it's possible the signal is drowned out by extraneous sources of variation. In situations **where you can identify those sources, it is important to account for these in your model**, as it provides more power to the tool for detecting DE genes.  
 
 ***
 
 **Exercise**
-
 
 The figure below was generated from a time course experiment with sample groups 'Ctrl' and 'Sci' and the following timepoints: 0h, 2h, 8h, and 16h. 
 
