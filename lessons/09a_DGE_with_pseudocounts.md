@@ -128,7 +128,11 @@ Keep in mind that the Ensembl IDs listed in our Salmon output contained version 
 # Create a character vector of Ensembl IDs		
 ids <- read.delim(files[1], sep="\t", header=T)    # extract the transcript ids from one of the files
 ids <- as.character(ids[,1])
-ids.strip <- str_replace(ids, "([.][0-9])", "")     
+
+# Strip the version numbers
+ids.strip <- str_replace(ids, "([.][0-9][0-9])", "") # start with any double digit instances
+ids.strip <- str_replace(ids.strip, "([.][0-9])", "") # now remove single digit instances
+    
 ```
 
 Now, we can subset the `tx2gene` table to keep only those rows that correspond to our IDs using the `filter()` function:
