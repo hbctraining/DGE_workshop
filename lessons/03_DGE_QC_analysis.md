@@ -58,7 +58,41 @@ In reality, your dataset will have larger dimensions (more samples, and many, ma
 
 #### Interpreting PCA plots
 
-We have a few example PCA plots below to get a feel for how to interpret them. 
+We have an example dataset and a few associated PCA plots below to get a feel for how to interpret them. The metadata for the experiment is displayed below. The main condition of interest is `treatment`.
+
+<img src="../img/example_metadata.png" width="600">
+
+When visualizing on PC1 and PC2, we don't see the samples separate by `treatment`, so we decide to explore other sources of variation present in the data. We hope that we have included all possible known sources of variation in our metadata table, and we can use these factors to color the PCA plot. 
+
+<img src="../img/example_PCA_treatmentPC1.png" width="600">
+
+We start with the factor `cage`, but the `cage` factor does not seem to explain the variation on PC1 or PC2.
+
+<img src="../img/example_PCA_cage.png" width="600">
+
+Then, we color by the `sex` factor, which appears to separate samples on PC2. This is good information to take note of, as we can use it downstream to account for the variation due to sex in the model and regress it out.
+
+<img src="../img/example_PCA_sex.png" width="600">
+
+Next we explore the `strain` factor and find that it explains the variation on PC1. 
+
+<img src="../img/example_PCA_strain.png" width="600">
+
+It's great that we have been able to identify the sources of variation for both PC1 and PC2. By accounting for it in our model, we should be able to detect more genes differentially expressed due to `treatment`.
+
+Worrisome about this plot is that we see two samples that do not cluster with the correct strain. This would indicate a likely **sample swap** and should be investigated to determine whether these samples are indeed the labeled strains. If we found there was a switch, we could swap the samples in the metadata. However, if we think they are labeled correctly or are unsure, we could just remove the samples from the dataset.
+
+Still we haven't found if `treatment` is a major source of variation after `strain` and `sex`. So, we explore PC3 and PC4 to see if `treatment` is driving the variation represented by either of these PCs.
+
+<img src="../img/example_PCA_treatmentPC3.png" width="600">
+
+We find that the samples separate by `treatment` on PC3, and are optimistic about our DE analysis since our condition of interest, `treatment`, is separating on PC3 and we can regress out the variation driving PC1 and PC2.
+
+Even if your samples do not separate by PC1 or PC2 or you can't identify the sources of variation, you may still get biologically relevant results from the DE analysis, just don't be surprised if you do not get a large number of DE genes. To give more power to the tool for detecting DE genes, it is **best to account for major, known sources of variation** in your model if you can identify them; this includes **batch effects**. 
+
+For details regarding the calculations performed for PCA, we encourage you to explore [StatQuest's video](https://www.youtube.com/watch?v=_UVHneBUBW0). 
+
+------
 
 In the first example, we have a dataset containing a total of eight samples and our main variable of interest is the **two treatment groups** labeled EN and ENR. This is **a paired experimental design**, in which each individual received both treatments. What we hope for, is that our treatment groups separating on PC1 as shown below. PC1 explains 89% of the variation in the data, illustrating the **majority of variation we observe in this data can be attributed to the differences treatment**. 
 
