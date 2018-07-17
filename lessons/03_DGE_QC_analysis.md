@@ -174,7 +174,7 @@ plotPCA(rld, intgroup="sampletype")
 >
 >  # Create data frame with metadata and PC3 and PC4 values for input to ggplot
 >  df <- cbind(meta, pca$x)
->  ggplot(df, aes(x=PC3, y=PC4, color = condition)) 
+>  ggplot(df) + geom_point(aes(x=PC3, y=PC4, color = sampletype))
 >  ```
 >
 > [Resources](http://www.sthda.com/english/wiki/principal-component-analysis-in-r-prcomp-vs-princomp-r-software-and-data-mining) are available to learn how to do more complex inquiries using the PCs.
