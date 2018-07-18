@@ -174,7 +174,7 @@ annotation <- mov10_meta %>%
 heat_colors <- brewer.pal(6, "YlOrRd")
 
 ### Run pheatmap
-pheatmap(data.frame(norm_OEsig), 
+pheatmap(norm_OEsig, 
          color = heat_colors, 
          cluster_rows = T, 
          show_rownames = F,
@@ -224,11 +224,7 @@ ggplot(res_tableOE_tb) +
 
 This is a great way to get an overall picture of what is going on, but what if we also wanted to know where the top 10 genes (lowest padj) in our DE list are located on this plot? We could label those dots with the gene name on the Volcano plot using `geom_text_repel()`.
 
-To make this work we have to take the following 3 steps:
-
-(Step 1) Create a new data frame sorted or ordered by padj
-
-(Step 2) Indicate in the data frame which genes we want to label by adding a logical vector to it, wherein "TRUE" = genes we want to label.
+First, we need to order the res_tableOE tibble by `padj`, and add an additional column to it, to include on those gene names we want to use to label the plot.
  
 ```r
 ## Create a column to indicate which genes to label
@@ -239,16 +235,12 @@ res_tableOE_tb$genelabels[1:10] <- res_tableOE_tb$gene[1:10]
 View(res_tableOE_tb)
 ```
 
-(Step 3) Finally, we need to add the `geom_text_repel()` layer to the ggplot code we used before, and let it know which genes we want labelled. 
+Next, we plot it as before with an additiona layer for `geom_text_repel()` wherein we can specify the column of gene labels we just created. 
 
 ```r
-ggplot(res_tableOE_tb) +
-        geom_point(aes(x = log2FoldChange, 
-                       y = -log10(padj),
-                       colour = threshold_OE)) +
-        geom_text_repel(aes(x = log2FoldChange, 
-                            y = -log10(padj), 
-                            label = genelabels)) +
+ggplot(res_tableOE_tb, aes(x = log2FoldChange, y = -log10(padj))) +
+        geom_point(aes(colour = threshold_OE)) +
+        geom_text_repel(aes(label = genelabels)) +
         ggtitle("Mov10 overexpression") +
         xlab("log2 fold change") + 
         ylab("-log10 adjusted p-value") +
