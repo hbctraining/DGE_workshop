@@ -253,7 +253,7 @@ Now we can subset that table to only keep the significant genes using our pre-de
 
 ```r
 sigOE <- res_tableOE_tb %>%
-        filter(padj < padj.cutoff, abs(log2FoldChange) > lfc.cutoff)
+        filter(padj < padj.cutoff & abs(log2FoldChange) > lfc.cutoff)
 ```
 
 **How many genes are differentially expressed in the Overexpression compared to Control, given our criteria specified above? Does this reduce our results?**
@@ -272,7 +272,7 @@ res_tableKD_tb <- res_tableKD %>%
   as_tibble()
   
 sigKD <- res_tableKD_tb %>%
-        filter(padj < padj.cutoff, abs(log2FoldChange) > lfc.cutoff)
+        filter(padj < padj.cutoff & abs(log2FoldChange) > lfc.cutoff)
 ```
 
 **How many genes are differentially expressed in the Knockdown compared to Control?** 
