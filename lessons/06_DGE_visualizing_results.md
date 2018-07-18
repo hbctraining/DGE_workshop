@@ -141,14 +141,14 @@ ggplot(gathered_top20_sigOE) +
         geom_point(aes(x = gene, y = normalized_counts, color = sampletype)) +
         scale_y_log10() +
         xlab("Genes") +
-        ylab("Normalized Counts") +
+        ylab("log10 Normalized Counts") +
         ggtitle("Top 20 Significant DE Genes") +
         theme_bw() +
 	theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
 	theme(plot.title = element_text(hjust = 0.5))
 ```
 
-<img src="../img/sig_genes_melt.png" width="600">
+<img src="../img/sig_genes_melt2.png" width="600">
 
 ### Heatmap
 
@@ -186,7 +186,7 @@ pheatmap(norm_OEsig,
          height = 20)
 ```
          
-![sigOE_heatmap](../img/sigOE_heatmap.png)       
+<img src="../img/sigOE_heatmap2.png" width="400">   
 
 > *NOTE:* There are several additional arguments we have included in the function for aesthetics. One important one is `scale="row"`, in which Z-scores are plotted, rather than the actual normalized count value. 
 >
@@ -220,7 +220,7 @@ ggplot(res_tableOE_tb) +
               axis.title = element_text(size = rel(1.25)))  
 ```
 
-<img src="../img/volcanoplot-1.png" width="500"> 
+<img src="../img/volcano_plot_new1.png" width="500"> 
 
 This is a great way to get an overall picture of what is going on, but what if we also wanted to know where the top 10 genes (lowest padj) in our DE list are located on this plot? We could label those dots with the gene name on the Volcano plot using `geom_text_repel()`.
 
@@ -249,7 +249,7 @@ ggplot(res_tableOE_tb, aes(x = log2FoldChange, y = -log10(padj))) +
               axis.title = element_text(size = rel(1.25))) 
 ```
 
-<img src="../img/volcanoplot-2.png" width="500"> 
+<img src="../img/volcano_plot_new2.png" width="500"> 
 
 ***
 
