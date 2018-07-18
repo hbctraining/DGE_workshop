@@ -148,7 +148,7 @@ ggplot(gathered_top20_sigOE) +
 	theme(plot.title = element_text(hjust = 0.5))
 ```
 
-<img src="../img/sig_genes_melt2.png" width="600">
+<img src="../img/sig_genes_melt2.png" width="700">
 
 ### Heatmap
 
@@ -186,7 +186,7 @@ pheatmap(norm_OEsig,
          height = 20)
 ```
          
-<img src="../img/sigOE_heatmap2.png" width="400">   
+<img src="../img/sigOE_heatmap2.png" width="600">   
 
 > *NOTE:* There are several additional arguments we have included in the function for aesthetics. One important one is `scale="row"`, in which Z-scores are plotted, rather than the actual normalized count value. 
 >
