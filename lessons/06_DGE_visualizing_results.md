@@ -199,8 +199,10 @@ The above plot would be great to look at the expression levels of a good number 
 To generate a volcano plot, we first need to have a column in our results data indicating whether or not the gene is considered differentially expressed based on p-adjusted values.
 
 ```r
-## Obtain logical vector regarding whether padj values are less than 0.05 and fold change greater than 1.5 in either direction
-res_tableOE_tb <- res_tableOE_tb %>% mutate(threshold_OE = padj < 0.05 & abs(log2FoldChange) >= 0.58)
+## Obtain logical vector where TRUE values denote padj values < 0.05 and fold change > 1.5 in either direction
+
+res_tableOE_tb <- res_tableOE_tb %>% 
+                  mutate(threshold_OE = padj < 0.05 & abs(log2FoldChange) >= 0.58)
 ```
 
 Now we can start plotting. The `geom_point` object is most applicable, as this is essentially a scatter plot:
