@@ -44,7 +44,7 @@ mov10_meta <- meta %>%
   as_tibble()
         
 normalized_counts <- normalized_counts %>% 
-  as.data.frame() %>%
+  data.frame() %>%
   rownames_to_column(var="gene") %>% 
   as_tibble()
 ```
@@ -267,8 +267,8 @@ ggplot(res_tableOE_tb) +
 > DEGreport::degPlot(dds = dds, res = res, n = 20, xs = "type", group = "condition") # dds object is output from DESeq2
 > 
 > DEGreport::degVolcano(
->     as.data.frame(res[,c("log2FoldChange","padj")]), # table - 2 columns
->     plot_text = as.data.frame(res[1:10,c("log2FoldChange","padj","id")])) # table to add names
+>     data.frame(res[,c("log2FoldChange","padj")]), # table - 2 columns
+>     plot_text = data.frame(res[1:10,c("log2FoldChange","padj","id")])) # table to add names
 >     
 > # Available in the newer version for R 3.4
 > DEGreport::degPlotWide(dds = dds, genes = row.names(res)[1:5], group = "condition")

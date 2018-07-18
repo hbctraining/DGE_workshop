@@ -76,7 +76,7 @@ We have detailed the various steps in a differential expression analysis workflo
 
 	```r
 	# Turn the results object into a data frame
-	res_df <- as.data.frame(res)
+	res_df <- data.frame(res)
 	
 	# Subset the significant results
 	sig_res <- filter(res_df, padj < padj.cutoff & abs(log2FoldChange) > lfc.cutoff)
