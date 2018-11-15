@@ -124,7 +124,7 @@ View(meta)
 View(data)
 ```
 
-> #### Using the abundance estimates from Salmon as input to DESeq2
+> ### Using the abundance estimates from Salmon as input to DESeq2
 > The counts used in these lessons were generated using the standard approach for RNA-seq analysis, where samples were aligned to the genome using a splice-aware aligner followed by counting. If you are using lightweight algorithms such as Salmon, Sailfish or Kallisto to generate abundance estimates, you can also use DESeq2 to perform gene-level differential expression analysis. These transcript abundance estimates, often referred to as ‘pseudocounts’, can be converted for use with DESeq2 but the setup is slightly more involved. If you are interested in knowing more about using Salmon pseudocounts for DESeq2, we have [materials linked here](https://hbctraining.github.io/DGE_workshop_salmon/lessons/01_DGE_setup_and_overview.html). 
 
 ## Differential gene expression analysis overview
