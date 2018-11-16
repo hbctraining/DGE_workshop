@@ -34,15 +34,15 @@ The goal of functional analysis is provide biological insight, so it's necessary
 
 There are a plethora of functional enrichment tools that perform some type of "over-representation" analysis by querying databases containing information about gene function and interactions.
 
-These databases typically categorize genes into groups based on shared function, or involvement in a pathway, or presence in a specific cellular location, or other categorizations, e.g. functional pathways, etc. Essentially, known genes are binned into categories that have been consistently named (controlled vocabulary) based on how the gene has been annotated functionally. These categories are independent of any organism, however each organism will have distinct categorizations availble and should be appropriately used as the background *or Universe*. 
+These databases typically categorize genes into groups based on shared function, or involvement in a pathway, or presence in a specific cellular location, or other categorizations, e.g. functional pathways, etc. Essentially, known genes are binned into categories that have been consistently named (controlled vocabulary) based on how the gene has been annotated functionally. These categories are independent of any organism, however each organism has distinct categorizations available.
 
-To determine whether any categories are over- or under-represented, you can determine the probability of having the observed proportion of genes associated with a specific category in your gene list based on the proportion of genes associated with the same category in the background set. See below for an example:
+To determine whether any categories are over-represented, you can determine the probability of having the observed proportion of genes associated with a specific category in your gene list based on the proportion of genes associated with the same category in the background set (gene categorizations for the appropriate organism). See below for an example:
 
 <img src="../img/go_proportions.png" width="600">
 
-<img src="../img/go_proportions_table.png" width="600">
+<img src="../img/go_proportions_table2.png" width="600">
 
-The statistical test that will determine whether something is actually over- or under-represented is the *Hypergeometric test*.
+The statistical test that will determine whether something is actually over-represented is the *Hypergeometric test*.
 
 ### Hypergeometric testing
 
