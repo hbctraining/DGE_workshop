@@ -40,7 +40,7 @@ To determine whether any categories are over-represented, you can determine the 
 
 <img src="../img/go_proportions.png" width="600">
 
-<img src="../img/go_proportions_table2.png" width="600">
+<img src="../img/go_proportions_table3.png" width="600">
 
 The statistical test that will determine whether something is actually over-represented is the *Hypergeometric test*.
 
