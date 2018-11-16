@@ -52,7 +52,7 @@ The calculation of probability of k successes follows the formula:
 
 ![hypergeo](../img/hypergeo.png) 
 
-This type of test will result in an adjusted p-value (after multiple test correction) for each category tested.
+This test will result in an adjusted p-value (after multiple test correction) for each category tested.
 
 ### Gene Ontology project
 
