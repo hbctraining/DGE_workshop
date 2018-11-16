@@ -183,7 +183,7 @@ The next plot is the **enrichment GO plot**, which shows the relationship betwee
 
 ```r
 ## Enrichmap clusters the 50 most significant (by padj) GO terms to visualize relationships between terms
-enrichMap(ego, n=50, vertex.label.font=6)
+emapplot(ego, showCategory = 50)
 ```
 
 **To save the figure,** click on the `Export` button in the RStudio `Plots` tab and `Save as PDF...`. In the pop-up window, change the `PDF size` to `24 x 32` to give a figure of appropriate size for the text labels.
