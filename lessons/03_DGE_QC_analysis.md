@@ -16,7 +16,7 @@ Approximate time: 80 minutes
 
 The next step in the DESeq2 workflow is QC, which includes sample-level and gene-level steps to perform QC checks on the count data to help us ensure that the samples/replicates look good. 
 
-<img src="../img/deseq_workflow_qc.png" width="200">
+<img src="../img/deseq_workflow_qc_2018.png" width="400">
 
 ## Sample-level QC
 
