@@ -99,7 +99,7 @@ To do this, we first need to determine the gene names of our top 20 genes by ord
 top20_sigOE_genes <- res_tableOE_tb %>% 
         arrange(padj) %>% 	#Arrange rows by padj values
         pull(gene) %>% 		#Extract character vector of ordered genes
-        .[1:20] 		#Extract the first 20 genes
+        head(n=20) 		#Extract the first 20 genes
 ```
 
 Then, we can extract the normalized count values for these top 20 genes:
