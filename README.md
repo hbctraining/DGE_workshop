@@ -52,7 +52,7 @@ Packages to install from CRAN (note that these package names are case sensitive!
 * devtools
 
 
-(b) Install the below packages from Bioconductor, using `BiocManager::install()` function 7 times for the 7 packages:
+(b) Install the below **packages from Bioconductor**, using `BiocManager::install()` function 7 times for the 7 packages:
 
 ```
 BiocManager::install("insert_first_package_name_in_quotations")
@@ -70,13 +70,11 @@ Packages to install from Bioconductor (note that these package names are case se
 * DEGreport
 
 
-(c) Use a new method of installation from GitHub to install the below packages using the following code:
+(c) Use a new method of **installation from GitHub** to install the below packages using the following code:
 
 ```
-devtools::install_github("insert_package_name_in_quotations")
+devtools::install_github("stephenturner/annotables")
 ```
-
-* stephenturner/annotables
 
 
 3. Finally, please check that all the packages were installed successfully by loading them one at a time using the library() function.  
