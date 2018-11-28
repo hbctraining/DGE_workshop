@@ -217,8 +217,7 @@ As we go through the workflow we will use the relevant functions to check what i
 
 The next step is to normalize the count data in order to be able to make fair gene comparisons between samples.
 
-
-<img src="../img/slide5_DGE.png" width="400">
+<img src="../img/deseq_workflow_normalization_2018.png" width="400">
 
 To perform the **median of ratios method** of normalization, DESeq2 has a single `estimateSizeFactors()` function that will generate size factors for us. We will use the function in the example below, but **in a typical RNA-seq analysis this step is automatically performed by the `DESeq()` function**, which we will see later. 
 
