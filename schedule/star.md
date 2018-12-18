@@ -1,6 +1,6 @@
-# Suggested lecture durations
+# Suggested lesson duration:
 
-| Duration (minutes)       |  Topic  |
+| Duration (minutes)       |  Lesson  |
 |:------------------------:|:------------------------------------------------:|
 | 60 | [Overview of DGE Analysis Workflow](https://hbctraining.github.io/DGE_workshop/lessons/01_DGE_setup_and_overview.html) | 
 | 45 | [Setting up for DGE Analysis: Count Normalization](https://hbctraining.github.io/DGE_workshop/lessons/02_DGE_count_normalization.html) | 
