@@ -1,4 +1,4 @@
-# Workshop Schedule
+# Suggested lecture durations
 
 | Duration (minutes)       |  Topic  |
 |:------------------------:|:------------------------------------------------:|
