@@ -21,7 +21,8 @@ This repository has teaching materials for a **1.5-day**, hands-on **Introductio
 
 Below are links to the lessons and suggested schedules:
 
-* [Schedule]()
+* [Click here for schedule](schedule/star.md) for differential gene expression with counts from *STAR and FeatureCounts*
+* Schedule for differential gene expression with counts from *Salmon* coming soon!
 
 
 ### Installation Requirements
