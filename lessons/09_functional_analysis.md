@@ -102,9 +102,10 @@ Then load the following libraries:
 library(org.Hs.eg.db)
 library(DOSE)
 library(pathview)
-library(purrr)
 library(clusterProfiler)
-library(annotables)
+library(AnnotationHub)
+library(ensembldb)
+library(tidyverse)
 ```
 
 For the different steps in the functional analysis, we require Ensembl and Entrez IDs. To convert the gene symbols to these IDs, we will use the **annotables** package and merge the IDs with the DE results. 
@@ -216,7 +217,7 @@ cnetplot(ego,
          vertex.label.font=6)
 ```
 
-**Again, to save the figure,** click on the `Export` button in the RStudio `Plots` tab and `Save as PDF...`. Change the `PDF size` to `48 x 56` to give a figure of appropriate size for the text labels.
+**Again, to save the figure,** click on the `Export` button in the RStudio `Plots` tab and `Save as PDF...`. Change the `PDF size` to `24 x 32` to give a figure of appropriate size for the text labels.
 
 <img src="../img/mov10oe_cnetplot.png" width="800">
 
@@ -331,6 +332,7 @@ Use the [Pathview R package](http://bioconductor.org/packages/release/bioc/html/
 
 ```r
 ## Output images for a single significant KEGG pathway
+detach("package:dplyr", unload=TRUE) # first unload dplyr to avoid conflicts
 pathview(gene.data = foldchanges,
               pathway.id = "hsa03040",
               species = "hsa",
@@ -347,7 +349,7 @@ pathview(gene.data = foldchanges,
 >        limit = list(gene = 2, cpd = 1))
 > }
 >
-> purrr::map(1:length(gsea_results$ID), get_kegg_plots)
+> purrr::map(1:length(gseaKEGG_results$ID), get_kegg_plots)
 > ```
 
 Instead of exploring enrichment of KEGG gene sets, we can also explore the enrichment of BP Gene Ontology terms using gene set enrichment analysis: 
@@ -447,7 +449,7 @@ If we choose to explore the significant genes from our dataset occurring in thes
 subset(spia_result, ID == "03013")
 ```
 
-Then, click on the KEGGLINK, we can view the genes within our dataset from these perturbed pathways:
+Then, click on the [KEGGLINK](http://www.genome.jp/dbget-bin/show_pathway?hsa03013+5901+7514+4686+51808+1207+25929+50628+79760+11171+3837+10073+9939+9775+22985+10921+10482+56000+5411+10189+29107+55916+23165+23511+9688+53371+10762+59343+4928+6396+57122+79902+81929+8480+55746+23225+100101267+94026+9883+8021+4927+7329+5905+6612+10419+57510+1915+1917+51068+5976+84305+10209+10289+8661+8662+8666+8667+8668+8669+10556+10775+10799+10940+11102+9984+57187+80145+132430+26986+5042+80336+8894+10605+1981+1982+8672+1983+1975+10460+9669+1967+8890+8892+8893+26999+2332+9513), we can view the genes within our dataset from these perturbed pathways:
 
 ![perturbed_pathway](../img/hsa05222.png)
 
