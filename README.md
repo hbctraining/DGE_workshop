@@ -21,7 +21,8 @@ This repository has teaching materials for a **1.5-day**, hands-on **Introductio
 
 Below are links to the lessons and suggested schedules:
 
-* [Click here for schedule](schedule/1.5-day.md)
+* [Click here for schedule using Salmon count matrix]()
+* [Click here for schedule using FeatureCounts count matrix](schedule/1.5-day.md)
 
 
 ### Installation Requirements
