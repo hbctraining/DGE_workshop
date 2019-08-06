@@ -51,6 +51,7 @@ Packages to install from CRAN (note that these package names are case sensitive!
 * pheatmap
 * ggrepel
 * devtools
+* tidyverse
 
 
 (b) Install the below **packages from Bioconductor**, using `BiocManager::install()` function 7 times for the 7 packages:
@@ -72,13 +73,6 @@ Packages to install from Bioconductor (note that these package names are case se
 * EnsDb.Hsapiens.v86
 
 
-(c) Use a new method of **installation from GitHub** to install the below packages using the following code:
-
-```
-devtools::install_github("stephenturner/annotables")
-```
-
-
 3. Finally, please check that all the packages were installed successfully by loading them one at a time using the library() function.  
 
 ```r
@@ -93,7 +87,7 @@ library(org.Hs.eg.db)
 library(DOSE)
 library(pathview)
 library(tidyverse)
-library(annotables)
+library(EnsDb.Hsapiens.v86)
 ```
 
 4. Once all packages have been loaded, run sessionInfo().  
