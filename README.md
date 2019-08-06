@@ -69,6 +69,7 @@ Packages to install from Bioconductor (note that these package names are case se
 * org.Hs.eg.db
 * pathview
 * DEGreport
+* EnsDb.Hsapiens.v86
 
 
 (c) Use a new method of **installation from GitHub** to install the below packages using the following code:
