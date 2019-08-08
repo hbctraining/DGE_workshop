@@ -71,6 +71,8 @@ Packages to install from Bioconductor (note that these package names are case se
 * pathview
 * DEGreport
 * EnsDb.Hsapiens.v86
+* AnnotationHub
+* ensembldb
 
 
 3. Finally, please check that all the packages were installed successfully by loading them one at a time using the library() function.  
@@ -88,6 +90,8 @@ library(DOSE)
 library(pathview)
 library(tidyverse)
 library(EnsDb.Hsapiens.v86)
+library(AnnotationHub)
+library(ensembldb)
 ```
 
 4. Once all packages have been loaded, run sessionInfo().  
