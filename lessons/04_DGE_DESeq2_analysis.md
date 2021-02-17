@@ -129,7 +129,7 @@ The first step in the differential expression analysis is to estimate the size f
 
 DESeq2 will automatically estimate the size factors when performing the differential expression analysis. However, if you have already generated the size factors using `estimateSizeFactors()`, as we did earlier, then DESeq2 will use these values.
 
-To normalize the count data, DESeq2 calculates size factors for each sample using the *median of ratios method* discussed previously in the ['Count normalization'](https://github.com/hbctraining/Intro-to-R-with-DGE/blob/master/lessons/11_DGE_count_normalization.md#deseq2-normalized-counts-median-of-ratios-method) lesson. 
+To normalize the count data, DESeq2 calculates size factors for each sample using the *median of ratios method* discussed previously in the ['Count normalization'](02_DGE_count_normalization.md) lesson. 
 
 #### MOV10 DE analysis: examining the size factors
 
