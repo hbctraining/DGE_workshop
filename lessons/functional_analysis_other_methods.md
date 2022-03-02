@@ -29,7 +29,7 @@ We can run gProfileR relatively easily from R, by loading the library and runnin
 ```r
 source("http://bioconductor.org/biocLite.R") 
 biocLite(c("gProfiler", "treemap"))
-library(gProfiler)
+library(gProfileR)
 library(treemap)
 
 ## Running gprofiler to identify enriched processes among significant genes
